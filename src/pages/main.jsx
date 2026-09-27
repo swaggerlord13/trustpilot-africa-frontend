@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorBoundary from "../components/ErrorBoundary.jsx";
 import { ToastProvider } from "../components/Toast.jsx";
+import ThemeProvider from "../components/ThemeProvider.jsx";
 
 import App from "../pages/App.jsx";
 import About from "../pages/About.jsx";
@@ -60,9 +61,11 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ErrorBoundary>
-      <ToastProvider>
-        <RouterProvider router={router} />
-      </ToastProvider>
+      <ThemeProvider>
+        <ToastProvider>
+          <RouterProvider router={router} />
+        </ToastProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>
 );

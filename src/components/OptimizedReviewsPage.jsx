@@ -1,7 +1,7 @@
 import { API_BASE_URL } from "../config.js";
 import ReviewBox from "./ReviewBox.jsx";
 import "../styles/ReviewsText.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Loader from "./Loader.jsx";
 import ReviewForm from "./ReviewForm.jsx";
 import axios from "axios";
@@ -27,19 +27,65 @@ function useIsDesktop(breakpoint = 1024) {
   return isDesktop;
 }
 
+/* Scroll indicator dots for mobile horizontal scroll */
+function ScrollDots({ scrollRef, itemCount }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el || !el.children.length) return;
+    const firstChild = el.children[0];
+    if (!firstChild) return;
+    const cardWidth = firstChild.offsetWidth + 12; // card width + gap
+    const index = Math.round(el.scrollLeft / cardWidth);
+    setActiveIndex(Math.min(index, itemCount - 1));
+  }, [scrollRef, itemCount]);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
+  const handleDotClick = (index) => {
+    const el = scrollRef.current;
+    if (!el || !el.children[index]) return;
+    el.children[index].scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+  };
+
+  // Show max 7 dots, collapsing extras
+  const maxDots = Math.min(itemCount, 7);
+  if (itemCount <= 1) return null;
+
+  return (
+    <div className="scroll-dots">
+      {Array.from({ length: maxDots }, (_, i) => (
+        <button
+          key={i}
+          className={`scroll-dot ${i === activeIndex ? "active" : ""}`}
+          onClick={() => handleDotClick(i)}
+          aria-label={`Go to review ${i + 1}`}
+        />
+      ))}
+      {itemCount > maxDots && (
+        <span className="scroll-dots-more">+{itemCount - maxDots}</span>
+      )}
+    </div>
+  );
+}
+
 export default function OptimizedReviewsPage({ companyId }) {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const isDesktop = useIsDesktop(1200);
+  const isDesktop = useIsDesktop(1024);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         if (companyId) {
-          // Company-specific reviews - keep existing logic
           const reviewsRes = await axios.get(`${API_BASE_URL}/reviews/company/${companyId}`);
-          
-          // Get the company data to ensure we have populated category info
           const companyRes = await axios.get(`${API_BASE_URL}/companies/slug/${companyId}/with-ratings`);
           
           const mappedReviews = reviewsRes.data.map((review) => ({
@@ -72,14 +118,8 @@ export default function OptimizedReviewsPage({ companyId }) {
 
           setReviews(mappedReviews);
         } else {
-          // Homepage: Get optimized latest best reviews from backend
-          console.log("Fetching latest best reviews from backend...");
-          
           const response = await axios.get(`${API_BASE_URL}/companies/latest-best-reviews`);
           
-          console.log("Received reviews:", response.data.reviews.length);
-          
-          // Reviews are already formatted by the backend
           const formattedReviews = response.data.reviews.map(review => ({
             _id: review._id,
             title: review.title,
@@ -87,11 +127,11 @@ export default function OptimizedReviewsPage({ companyId }) {
             rating: review.rating,
             user: review.user || "Anonymous",
             image: review.image,
-            date: review.date, // Already formatted by backend
+            date: review.date,
             company: review.company,
             url: review.url,
             companyimage: review.companyimage,
-            category: review.category, // This will now show properly!
+            category: review.category,
             createdAt: review.createdAt
           }));
           
@@ -108,7 +148,6 @@ export default function OptimizedReviewsPage({ companyId }) {
     fetchReviews();
   }, [companyId]);
 
-  // Keep your existing logic for desktop/mobile display limits
   const visibleReviews = isDesktop ? reviews.slice(0, 6) : reviews.slice(0, 25);
 
   if (loading) {
@@ -122,17 +161,16 @@ export default function OptimizedReviewsPage({ companyId }) {
   return (
     <>
       <div className="reviews-header mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-100">
           {companyId ? "Company Reviews" : "Latest Best Reviews"}
         </h2>
         {!companyId && (
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 dark:text-slate-400 mt-2">
             {reviews.length} latest reviews from top-rated companies
           </p>
         )}
       </div>
 
-      {/* Only show form if we are on a company page */}
       {companyId && (
         <ReviewForm
           companyId={companyId}
@@ -143,11 +181,11 @@ export default function OptimizedReviewsPage({ companyId }) {
       )}
 
       <div className="reviews">
-        <div className="reviewscomments-row">
+        <div className="reviewscomments-row" ref={scrollRef}>
           {visibleReviews.map((review, index) => (
-           <ReviewBox
+            <ReviewBox
               key={review._id || index}
-              _id={review._id} // Add this line
+              _id={review._id}
               image={review.image}
               company={review.company}
               url={review.url}
@@ -161,15 +199,20 @@ export default function OptimizedReviewsPage({ companyId }) {
             />
           ))}
         </div>
+
+        {/* Dot indicators — mobile only */}
+        {!isDesktop && visibleReviews.length > 1 && (
+          <ScrollDots scrollRef={scrollRef} itemCount={visibleReviews.length} />
+        )}
       </div>
       
       {reviews.length === 0 && !loading && (
         <div className="text-center py-12">
           <div className="text-6xl mb-4">💭</div>
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+          <h3 className="text-xl font-semibold text-gray-700 dark:text-slate-200 mb-2">
             No reviews found
           </h3>
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-slate-400">
             {companyId ? "This company has no reviews yet." : "No reviews available at the moment."}
           </p>
         </div>

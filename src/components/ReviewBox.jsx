@@ -40,32 +40,45 @@ export default function ReviewBox({ _id, title, comment, rating, user, date, com
 
   return (
     <div className="Reviewcomments">
+      {/* Reviewer */}
       <div className="profiledetails">
         <img 
           src={image} 
-          alt="Profile Image" 
+          alt={`${user}'s profile`}
           onError={handleImageError}
         />
         <p><strong>{user}</strong></p>
       </div>
-      <h3 className='review-title'>{title}</h3>
-      <StarRating rating={rating} />
-      <p>{displayText}{""}{isLong && ( 
-         <Link className="readmore" to={`/review/${_id}`}>Read More</Link>
-         )}</p>
-         
-      <p className='bydate'>
-          <strong>{date}</strong> 
-      </p>
+
+      {/* Review content — flex-grows to fill space */}
+      <div className="review-body">
+        <h3 className="review-title">{title}</h3>
+        <StarRating rating={rating} />
+        <p>
+          {displayText}
+          {isLong && (
+            <Link className="readmore" to={`/review/${_id}`}>Read More</Link>
+          )}
+        </p>
+        <p className="bydate">
+          <strong>{date}</strong>
+        </p>
+      </div>
+
+      {/* Company footer — always pinned to bottom */}
       <Link to={url}>
         <div className="companydetails">
-          <img 
-            src={companyimage} 
-            alt="Company-image" 
-            onError={handleCompanyImageError}
-          />
-          <h2 className="company !mt-0">{company}</h2> 
-          <p>{category}</p>
+          <div className="company-logo-wrap">
+            <img 
+              src={companyimage} 
+              alt={`${company} logo`}
+              onError={handleCompanyImageError}
+            />
+          </div>
+          <div className="company-info">
+            <span className="company-name">{company}</span>
+            <span className="company-category">{category}</span>
+          </div>
         </div>
       </Link>
     </div>

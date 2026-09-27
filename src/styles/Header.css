@@ -148,3 +148,85 @@
     display: none;
   }
 }
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] .Headercontainer {
+  background: rgba(15, 23, 42, 0.95);
+  box-shadow: 0 1px 0 #334155;
+}
+[data-theme="dark"] .hamburger-menu span {
+  background: #E2E8F0;
+}
+[data-theme="dark"] .rightsection span {
+  color: #E2E8F0;
+}
+[data-theme="dark"] .Loginbutton {
+  border-color: #3B82F6;
+  color: #60A5FA;
+}
+[data-theme="dark"] .Loginbutton:hover {
+  background: rgba(59, 130, 246, 0.15);
+}
+[data-theme="dark"] .Registerbutton {
+  background: #2563EB;
+}
+[data-theme="dark"] .Registerbutton:hover {
+  background: #1D4ED8;
+}
+[data-theme="dark"] .mobile-overlay.active {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Theme toggle */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  color: var(--slate-600, #475569);
+  font-size: 20px;
+  transition: all 0.2s;
+  padding: 0;
+}
+.theme-toggle:hover {
+  background: var(--slate-100, #F1F5F9);
+  color: var(--brand-500, #0052CC);
+}
+[data-theme="dark"] .theme-toggle {
+  color: #F59E0B;
+}
+[data-theme="dark"] .theme-toggle:hover {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+}
+
+/* Mobile: theme toggle sits next to hamburger */
+.mobile-theme-group {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  position: absolute;
+  right: 52px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+@media screen and (max-width: 1024px) {
+  .mobile-theme-group {
+    display: flex;
+  }
+  /* Hide the desktop theme toggle inside rightsection on mobile */
+  .rightsection .theme-toggle {
+    display: none;
+  }
+}
+/* On desktop: hide the mobile theme group */
+@media screen and (min-width: 1025px) {
+  .mobile-theme-group {
+    display: none;
+  }
+}

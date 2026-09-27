@@ -34,10 +34,10 @@ const CategorySection = ({ category, companies, index }) => {
         <>
           {/* Category Header */}
           <div className="mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-1.5">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-1.5">
               Best in {category.name}
             </h2>
-            <p className="text-slate-500">
+            <p className="text-slate-500 dark:text-slate-400">
               Top {companies.length} rated companies in {category.name}
             </p>
             <div className="w-16 h-1 bg-gradient-to-r from-brand-500 to-coral-400 mt-3 rounded-full"></div>
@@ -79,8 +79,8 @@ const CategorySection = ({ category, companies, index }) => {
       ) : (
         /* Loading skeleton */
         <div className="animate-pulse">
-          <div className="h-7 bg-slate-200 rounded-lg w-1/3 mb-2"></div>
-          <div className="h-4 bg-slate-100 rounded w-1/2 mb-8"></div>
+          <div className="h-7 bg-slate-200 dark:bg-slate-700 rounded-lg w-1/3 mb-2"></div>
+          <div className="h-4 bg-slate-100 dark:bg-slate-700 rounded w-1/2 mb-8"></div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="bg-slate-100 rounded-2xl h-64"></div>
@@ -97,7 +97,7 @@ const CompanyCard = ({ company, ranking }) => {
   return (
     <Link
       to={company.url}
-      className="company-card bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-4 md:p-5 relative group hover:-translate-y-1 transform w-[260px] h-[280px] md:w-auto md:h-[300px] flex flex-col"
+      className="company-card bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-4 md:p-5 relative group hover:-translate-y-1 transform w-[260px] h-[280px] md:w-auto md:h-[300px] flex flex-col"
     >
       {/* Ranking Badge */}
       <div className="absolute -top-2.5 -left-2.5 bg-gradient-to-r from-coral-400 to-coral-500 text-white text-sm md:text-base font-bold rounded-full w-8 h-8 md:w-9 md:h-9 flex items-center justify-center shadow-md z-10">
@@ -109,7 +109,7 @@ const CompanyCard = ({ company, ranking }) => {
         <img
           src={company.companyimage}
           alt={company.company}
-          className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover border border-slate-100"
+          className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover border border-slate-100 dark:border-slate-600 dark:bg-slate-700"
           onError={(e) => {
             e.target.src = "https://via.placeholder.com/150?text=Company+Logo";
           }}
@@ -117,7 +117,7 @@ const CompanyCard = ({ company, ranking }) => {
       </div>
 
       {/* Company Name */}
-      <h3 className="text-base md:text-lg font-semibold text-slate-800 text-center mb-2 group-hover:text-brand-600 transition-colors line-clamp-2 flex-shrink-0">
+      <h3 className="text-base md:text-lg font-semibold text-slate-800 dark:text-slate-100 text-center mb-2 group-hover:text-brand-600 transition-colors line-clamp-2 flex-shrink-0">
         {company.company}
       </h3>
 
@@ -129,7 +129,7 @@ const CompanyCard = ({ company, ranking }) => {
           </div>
         </div>
 
-        <div className="text-xl md:text-2xl font-bold text-slate-800 mb-0.5">
+        <div className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-0.5">
           {company.avgRating}
         </div>
 
@@ -181,7 +181,7 @@ export default function LazyLoadingCompanyCards() {
       <div className="text-center py-12">
         <div className="text-5xl mb-4"><i className="bx bx-error-circle text-slate-300"></i></div>
         <h3 className="text-xl font-semibold text-slate-700 mb-2">Error Loading Data</h3>
-        <p className="text-slate-500">{error}</p>
+        <p className="text-slate-500 dark:text-slate-400">{error}</p>
       </div>
     );
   }
@@ -191,13 +191,13 @@ export default function LazyLoadingCompanyCards() {
       <div className="text-center py-12">
         <div className="text-5xl mb-4"><i className="bx bxs-building-house text-slate-300"></i></div>
         <h3 className="text-xl font-semibold text-slate-700 mb-2">No Companies Available</h3>
-        <p className="text-slate-500">No companies have reviews yet.</p>
+        <p className="text-slate-500 dark:text-slate-400">No companies have reviews yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="lazy-loading-company-cards py-10 bg-white">
+    <div className="lazy-loading-company-cards py-10 bg-white dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4">
         {categoryData.map((categoryGroup, index) => (
           <CategorySection

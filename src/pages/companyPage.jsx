@@ -233,7 +233,7 @@ export default function CompanyPage() {
           </div>
 
           {/* Company Header */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-slate-100">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8 border border-slate-100 dark:border-slate-700">
             <div className="flex flex-col md:flex-row items-start gap-6">
               {/* Company Logo */}
               <CompanyLogo
@@ -385,7 +385,7 @@ export default function CompanyPage() {
           )}
 
           {/* Reviews Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-100">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-100 dark:border-slate-700">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-slate-800">
                 <i className="bx bx-chat text-brand-500 mr-2"></i>
@@ -572,7 +572,7 @@ export default function CompanyPage() {
 
           {/* Google Reviews Section */}
           {company.googleReviews && company.googleReviews.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 mt-8 border border-slate-100">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8 mt-8 border border-slate-100 dark:border-slate-700">
               <div className="flex items-center gap-3 mb-6">
                 <img src="https://www.google.com/favicon.ico" alt="Google" className="w-6 h-6" />
                 <h2 className="text-2xl font-bold text-slate-800">Reviews from Google</h2>
@@ -626,7 +626,7 @@ export default function CompanyPage() {
 
           {/* Related Companies */}
           {company.category && (
-            <div className="mt-8 bg-white rounded-2xl shadow-lg p-8 border border-slate-100">
+            <div className="mt-8 bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-100 dark:border-slate-700">
               <h3 className="text-xl font-bold text-slate-800 mb-4">
                 <i className="bx bx-buildings text-brand-500 mr-2"></i>
                 More companies in {company.category.name}
@@ -645,7 +645,7 @@ export default function CompanyPage() {
       {/* Claim Modal */}
       {showClaimModal && isLoggedIn && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center px-4" style={{ zIndex: 200 }}>
-          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-slate-800">
                 <i className="bx bx-badge-check text-brand-500 mr-2"></i>

@@ -218,3 +218,37 @@
     padding: 1rem 0.75rem;
   }
 }
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] .register-page {
+  background: linear-gradient(160deg, #0F172A, #1E293B);
+}
+[data-theme="dark"] .register-card {
+  background: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+[data-theme="dark"] .register-card h2 {
+  color: #F1F5F9;
+}
+[data-theme="dark"] .register-card label {
+  color: #CBD5E1;
+}
+[data-theme="dark"] .register-card input {
+  background: #0F172A;
+  border-color: #334155;
+  color: #F1F5F9;
+}
+[data-theme="dark"] .register-card input:focus {
+  border-color: #3B82F6;
+}
+[data-theme="dark"] .register-card input::placeholder {
+  color: #64748B;
+}
+[data-theme="dark"] .register-card p,
+[data-theme="dark"] .register-card span {
+  color: #94A3B8;
+}
+[data-theme="dark"] .register-card a {
+  color: #60A5FA;
+}

@@ -1,9 +1,11 @@
+/* ── Review Card ── */
 .Reviewcomments {
   position: relative;
   width: 100%;
-  min-height: 280px; height: auto;
+  min-height: 280px;
+  height: auto;
   border: 1px solid #E2E8F0;
-  padding: 5px 20px;
+  padding: 12px 20px 14px;
   border-radius: 14px;
   margin-bottom: 12px;
   background-color: #ffffff;
@@ -14,40 +16,149 @@
   flex: 0 0 calc((100% / 3) - (16px * 2 / 3));
   box-sizing: border-box;
   max-width: 100%;
-  max-height: 100%;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 .Reviewcomments:hover {
   box-shadow: 0px 4px 16px rgba(0,0,0,0.1);
   transform: translateY(-2px);
 }
+
+/* ── Title ── */
 .Reviewcomments h3 {
   font-size: 15px;
   font-weight: 700;
   color: #1e293b;
+  margin: 0 0 2px;
 }
 .Reviewcomments h3.review-title {
   color: #0052CC;
 }
+
+/* ── Review text ── */
+.review-body {
+  flex: 1 1 auto;          /* pushes company details to the bottom */
+}
 .Reviewcomments p {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   color: #334155;
   text-align: left;
-  
-  
   max-width: 600px;
-  line-height: 1.4;
-  
-  
-  
+  line-height: 1.45;
+  margin: 0 0 4px;
 }
+
+/* ── Stars ── */
+.star {
+  font-size: 15px;
+  margin: 0;
+}
+
+/* ── "Read More" pill ── */
+.Reviewcomments .readmore {
+  background-color: #0052CC;
+  color: #ffffff;
+  padding: 1px 8px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+  margin-left: 10px;
+  transition: background-color 0.2s ease;
+}
+.Reviewcomments .readmore:hover {
+  background-color: #0047B3;
+}
+
+/* ── Date ── */
+.Reviewcomments .bydate {
+  font-size: 0.85em;
+  font-style: italic;
+  color: #64748b;
+  margin: 2px 0 0;
+}
+
+/* ── Profile (reviewer) ── */
+.profiledetails {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.profiledetails img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.profiledetails p {
+  margin: 0 0 0 8px;
+  font-size: 14px;
+}
+
+/* ── Company footer — always pinned to bottom ── */
+.companydetails {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: auto;          /* pin to bottom of flex column */
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+  gap: 10px;
+}
+
+/* Logo container: fixed size, colored background, consistent aspect ratio */
+.company-logo-wrap {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f0f4ff, #e8ecf4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+.company-logo-wrap img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Company name & category text */
+.company-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;           /* allow text truncation */
+  gap: 1px;
+}
+.company-info .company-name {
+  color: #0052CC;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.company-info .company-category {
+  color: #64748b;
+  font-size: 12px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Old h2/a overrides inside card ── */
 .Reviewcomments h2 {
   color: #0052CC;
   font-weight: bold;
   text-align: left;
   font-size: 15px;
-  margin-top: 5px;
+  margin: 0;
 }
 .Reviewcomments .subcategory {
   display: flex;
@@ -62,8 +173,6 @@
 }
 .Reviewcomments .category {
   color: #64748b;
-}
-.Reviewcomments .category {
   display: flex;
   align-items: center;
 }
@@ -71,68 +180,69 @@
   color: #64748b;
   text-decoration: none;
 }
-.star {
-  font-size: 15px;
-  margin: 0;
-}
 
-.Reviewcomments .readmore {
-  background-color: #0052CC;
-  color: #ffffff;
-  padding: 1px 8px;
-  border-radius: 4px;
-  border: none;
-  font-weight: 500;
-  font-size: 14px;
-  text-align: center;
-  margin-left: 10px;
-  transition: background-color 0.2s ease;
-}
-
-.Reviewcomments .readmore:hover {
-  background-color: #0047B3;
-}
-
+/* ── Mobile ── */
 @media screen and (max-width: 768px) {
   .Reviewcomments {
     flex: 0 0 auto;
     margin-left: 0;
-    width: 100%; max-width: 340px;
+    width: 100%;
+    max-width: 340px;
+  }
+  .company-logo-wrap {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+  }
+  .company-logo-wrap img {
+    width: 28px;
+    height: 28px;
   }
 }
 
-.profiledetails img {
-  width: 40px; 
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
+/* ===== Dark Mode ===== */
+[data-theme="dark"] .Reviewcomments {
+  background-color: #1E293B;
+  border-color: #334155;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
 }
-.profiledetails p {
-  margin-left: 5px;
+[data-theme="dark"] .Reviewcomments:hover {
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
 }
-.profiledetails {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
+[data-theme="dark"] .Reviewcomments h3 {
+  color: #F1F5F9;
 }
-
-.companydetails img {
-  width: 50px;
-  margin-top: 5px;
+[data-theme="dark"] .Reviewcomments h3.review-title {
+  color: #60A5FA;
 }
-.companydetails {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 10px;
+[data-theme="dark"] .Reviewcomments p {
+  color: #CBD5E1;
 }
-.companydetails p {
-  margin-left: 10px;
-  color: #64748b;
+[data-theme="dark"] .Reviewcomments .bydate {
+  color: #64748B;
 }
-.Reviewcomments .bydate {
-  font-size: 1em;
-  font-style: italic;
-  color: #64748b;
+[data-theme="dark"] .Reviewcomments .readmore {
+  background-color: #2563EB;
+}
+[data-theme="dark"] .Reviewcomments .readmore:hover {
+  background-color: #1D4ED8;
+}
+[data-theme="dark"] .profiledetails p {
+  color: #E2E8F0;
+}
+[data-theme="dark"] .companydetails {
+  border-top-color: #334155;
+}
+[data-theme="dark"] .company-logo-wrap {
+  background: linear-gradient(135deg, #334155, #1E293B);
+  border-color: #475569;
+}
+[data-theme="dark"] .company-info .company-name {
+  color: #60A5FA;
+}
+[data-theme="dark"] .company-info .company-category {
+  color: #94A3B8;
+}
+[data-theme="dark"] .Reviewcomments a {
+  color: #94A3B8;
 }

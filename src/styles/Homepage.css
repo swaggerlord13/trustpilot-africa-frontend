@@ -222,3 +222,45 @@
     max-width: 100%;
   }
 }
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] .hero-section {
+  background: linear-gradient(160deg, #0F172A 0%, #1E293B 40%, #0F172A 100%);
+}
+[data-theme="dark"] .hero-heading {
+  color: #F8FAFC;
+}
+[data-theme="dark"] .hero-subtext {
+  color: #94A3B8;
+}
+[data-theme="dark"] .hero-search-input {
+  background: #1E293B;
+  border-color: #334155;
+  color: #F1F5F9;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+[data-theme="dark"] .hero-search-input::placeholder {
+  color: #64748B;
+}
+[data-theme="dark"] .hero-search-input:focus {
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2), 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+[data-theme="dark"] .search-dropdown {
+  background: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+[data-theme="dark"] .search-dropdown a {
+  color: #CBD5E1;
+}
+[data-theme="dark"] .search-dropdown a:hover {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60A5FA;
+}
+[data-theme="dark"] .hero-badge {
+  color: #94A3B8;
+}
+[data-theme="dark"] .hero-badge i {
+  color: #60A5FA;
+}

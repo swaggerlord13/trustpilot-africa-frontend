@@ -82,12 +82,12 @@ function Homepage() {
             placeholder="Search for a company..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-14 md:h-16 rounded-2xl border-2 border-slate-200 pl-14 pr-5 text-base md:text-lg focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-100 transition-all bg-white shadow-sm"
+            className="w-full h-14 md:h-16 rounded-2xl border-2 border-slate-200 pl-14 pr-5 text-base md:text-lg focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-100 transition-all bg-white dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 shadow-sm"
           />
 
           {/* Search Results Dropdown */}
           {search.trim() !== "" && (
-            <div className="absolute top-full left-0 mt-2 w-full bg-white shadow-xl rounded-xl max-h-60 overflow-y-auto z-50 border border-slate-100">
+            <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 shadow-xl rounded-xl max-h-60 overflow-y-auto z-50 border border-slate-100">
               {filtered.length > 0 ? (
                 filtered.map((company) => (
                   <Link
@@ -137,7 +137,7 @@ function Homepage() {
       </div>
 
       {/* Latest Reviews Section */}
-      <div className="py-12 bg-slate-50">
+      <div className="py-12 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4">
           <OptimizedReviewsPage />
         </div>

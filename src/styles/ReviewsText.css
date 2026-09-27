@@ -8,7 +8,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
   padding: 0 16px;
   box-sizing: border-box;
@@ -21,6 +21,7 @@ h2 {
   margin: 10px 0 0 10px;
 }
 
+/* ── Mobile horizontal scroll ── */
 @media screen and (max-width: 1024px) {
   .reviewscomments-row {
     display: flex;
@@ -28,7 +29,7 @@ h2 {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 12px;
-    padding: 0 4px 12px;
+    padding: 0 16px 12px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -36,17 +37,58 @@ h2 {
   .reviewscomments-row::-webkit-scrollbar {
     display: none;
   }
+  /* Card width leaves ~15% peek of the next card */
   .reviewscomments-row > * {
     scroll-snap-align: start;
     flex-shrink: 0;
-    width: 85vw;
-    max-width: 320px;
+    width: 80vw;
+    max-width: 300px;
   }
 }
 
 @media screen and (max-width: 480px) {
   .reviewscomments-row > * {
-    width: 88vw;
-    max-width: 340px;
+    width: 82vw;
+    max-width: 320px;
   }
+}
+
+/* ── Scroll dot indicators ── */
+.scroll-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0 4px;
+}
+.scroll-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: #cbd5e1;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.scroll-dot.active {
+  background: #0052CC;
+  width: 20px;
+  border-radius: 4px;
+}
+.scroll-dots-more {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-left: 2px;
+}
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] .scroll-dot {
+  background: #475569;
+}
+[data-theme="dark"] .scroll-dot.active {
+  background: #3B82F6;
+}
+[data-theme="dark"] .scroll-dots-more {
+  color: #64748B;
 }

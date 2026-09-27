@@ -149,3 +149,35 @@
     flex-shrink: 0;
   }
 }
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] .middlesection a {
+  color: #CBD5E1;
+}
+[data-theme="dark"] .middlesection a:hover {
+  color: #60A5FA;
+  background: rgba(59, 130, 246, 0.12);
+}
+[data-theme="dark"] .middlesection ul li a.active {
+  color: #60A5FA;
+  background: rgba(59, 130, 246, 0.15);
+}
+
+@media screen and (max-width: 1024px) {
+  [data-theme="dark"] .middlesection {
+    background: #1E293B;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  }
+  [data-theme="dark"] .middlesection a:hover {
+    background: #334155;
+  }
+  [data-theme="dark"] .mobile-auth-section {
+    border-top-color: #334155;
+  }
+  [data-theme="dark"] .mobile-profile-section {
+    border-top-color: #334155;
+  }
+  [data-theme="dark"] .mobile-profile-section .user-name {
+    color: #F1F5F9;
+  }
+}

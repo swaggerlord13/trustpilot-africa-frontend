@@ -484,3 +484,37 @@
   color: #1D1D1F;
   background: #F1F5F9;
 }
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] .login-page {
+  background: linear-gradient(160deg, #0F172A, #1E293B);
+}
+[data-theme="dark"] .login-card {
+  background: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+[data-theme="dark"] .login-card h2 {
+  color: #F1F5F9;
+}
+[data-theme="dark"] .login-card label {
+  color: #CBD5E1;
+}
+[data-theme="dark"] .login-card input {
+  background: #0F172A;
+  border-color: #334155;
+  color: #F1F5F9;
+}
+[data-theme="dark"] .login-card input:focus {
+  border-color: #3B82F6;
+}
+[data-theme="dark"] .login-card input::placeholder {
+  color: #64748B;
+}
+[data-theme="dark"] .login-card p,
+[data-theme="dark"] .login-card span {
+  color: #94A3B8;
+}
+[data-theme="dark"] .login-card a {
+  color: #60A5FA;
+}

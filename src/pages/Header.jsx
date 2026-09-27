@@ -2,11 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import Nav from "../components/Nav.jsx";
 import "../styles/Header.css";
 import { useState, useEffect } from "react";
+import { useTheme } from "../components/ThemeProvider.jsx";
 
 export default function Header() {
   const [user, setUser] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { resolved, toggle } = useTheme();
 
   useEffect(() => {
     try {
@@ -21,14 +23,12 @@ export default function Header() {
     }
   }, []);
 
-  // Close mobile menu when window is resized to desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1024) {
         setIsMobileMenuOpen(false);
       }
     };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -54,8 +54,18 @@ export default function Header() {
         <div className="leftsection">
           <img className="logo" src="/trustpilotafricalogo.png" alt="logo" />
         </div>
-        
-        {/* Hamburger Menu Button */}
+
+        {/* Mobile: theme toggle next to hamburger */}
+        <div className="mobile-theme-group">
+          <button
+            className="theme-toggle"
+            onClick={toggle}
+            aria-label={resolved === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <i className={resolved === "dark" ? "bx bx-sun" : "bx bx-moon"}></i>
+          </button>
+        </div>
+
         <div 
           className={`hamburger-menu ${isMobileMenuOpen ? 'open' : ''}`}
           onClick={toggleMobileMenu}
@@ -73,6 +83,15 @@ export default function Header() {
         />
         
         <div className="rightsection">
+          {/* Desktop: theme toggle in the right section */}
+          <button
+            className="theme-toggle"
+            onClick={toggle}
+            aria-label={resolved === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <i className={resolved === "dark" ? "bx bx-sun" : "bx bx-moon"}></i>
+          </button>
+
           {user ? (
             <>
               <Link to="/profile" onClick={closeMobileMenu}>
@@ -100,7 +119,6 @@ export default function Header() {
         </div>
       </div>
       
-      {/* Mobile Overlay */}
       <div 
         className={`mobile-overlay ${isMobileMenuOpen ? 'active' : ''}`}
         onClick={closeMobileMenu}
