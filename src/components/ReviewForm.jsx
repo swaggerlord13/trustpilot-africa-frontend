@@ -37,6 +37,11 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
       return;
     }
 
+    if (rating === 0) {
+      showToast("Please select a star rating — tap a star to rate this company", "warning");
+      return;
+    }
+
     if (!comment.trim()) {
       showToast("Please write a comment", "warning");
       return;
@@ -128,7 +133,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
               color: star <= currentRating ? activeColor : "#ccc"
             }}
           >
-            \u2605
+            ★
           </button>
         ))}
         <div className="ml-3 flex flex-col justify-center">
@@ -200,7 +205,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
         <div className="text-center">
           <button
             type="submit"
-            disabled={submitting || !comment.trim()}
+            disabled={submitting || !comment.trim() || rating === 0}
             className={`px-8 py-4 rounded-xl font-semibold text-white text-lg transition-all duration-200 transform ${
               submitting || !comment.trim()
                 ? "bg-slate-300 cursor-not-allowed"

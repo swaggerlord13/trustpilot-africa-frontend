@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 /**
  * Extracts the domain from a URL string.
- * e.g. "https://www.flutterwave.com/about" → "flutterwave.com"
+ * e.g. "https://www.flutterwave.com/about" -> "flutterwave.com"
  */
 function getDomain(url) {
   if (!url) return null;
@@ -10,7 +10,6 @@ function getDomain(url) {
     let cleaned = url.trim();
     if (!cleaned.startsWith("http")) cleaned = "https://" + cleaned;
     const hostname = new URL(cleaned).hostname;
-    // Strip "www." prefix
     return hostname.replace(/^www\./, "");
   } catch {
     return null;
@@ -18,8 +17,7 @@ function getDomain(url) {
 }
 
 /**
- * Picks a background color from the company name — keeps it consistent
- * every time the same company renders.
+ * Picks a background color from the company name.
  */
 const COLORS = [
   "#1B6B3A", "#2563EB", "#7C3AED", "#DC2626",
@@ -36,19 +34,17 @@ function nameColor(name) {
 }
 
 /**
- * CompanyLogo — shows the real logo when available, tries Clearbit when
- * only a URL exists, and falls back to a colorful letter avatar.
+ * CompanyLogo — tries multiple logo sources before falling back to a letter.
  *
- * Props:
- *   logo     - stored logo URL (from the DB)
- *   url      - company website URL (used to try Clearbit)
- *   name     - company name (used for the letter avatar fallback)
- *   size     - pixel size, default 56
- *   className - extra CSS classes on the outer wrapper
+ * Chain: DB logo -> Clearbit -> Google Favicon (high-res) -> letter avatar
+ *
+ * Google Favicon covers virtually every website on the internet,
+ * so this catches African companies that Clearbit doesn't have.
  */
 const CompanyLogo = ({ logo, url, name = "?", size = 56, className = "" }) => {
   const [imgFailed, setImgFailed] = useState(false);
   const [clearbitFailed, setClearbitFailed] = useState(false);
+  const [googleFailed, setGoogleFailed] = useState(false);
 
   const domain = getDomain(url);
   const letter = name.charAt(0).toUpperCase();
@@ -73,7 +69,7 @@ const CompanyLogo = ({ logo, url, name = "?", size = 56, className = "" }) => {
     objectFit: "contain",
   };
 
-  // 1. If there's a stored logo in the DB — show it
+  // 1. Stored logo from DB
   if (logo && !imgFailed) {
     return (
       <div style={wrapperStyle} className={className}>
@@ -88,7 +84,7 @@ const CompanyLogo = ({ logo, url, name = "?", size = 56, className = "" }) => {
     );
   }
 
-  // 2. If there's a URL, try Clearbit logo API
+  // 2. Clearbit Logo API
   if (domain && !clearbitFailed) {
     return (
       <div style={wrapperStyle} className={className}>
@@ -103,7 +99,22 @@ const CompanyLogo = ({ logo, url, name = "?", size = 56, className = "" }) => {
     );
   }
 
-  // 3. Fallback: colorful letter avatar
+  // 3. Google Favicon API (high-res 128px) — covers almost every website
+  if (domain && !googleFailed) {
+    return (
+      <div style={wrapperStyle} className={className}>
+        <img
+          src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
+          alt={name}
+          style={{ ...imgStyle, padding: size > 40 ? 8 : 4 }}
+          onError={() => setGoogleFailed(true)}
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
+  // 4. Colorful letter avatar fallback
   return (
     <div
       style={{

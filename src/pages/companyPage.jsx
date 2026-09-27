@@ -33,6 +33,13 @@ export default function CompanyPage() {
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyContent, setReplyContent] = useState("");
   const [replyLoading, setReplyLoading] = useState(false);
+
+  // User review actions state
+  const [editingReview, setEditingReview] = useState(null);
+  const [editComment, setEditComment] = useState("");
+  const [editRating, setEditRating] = useState(0);
+  const [userReplyingTo, setUserReplyingTo] = useState(null);
+  const [userReplyContent, setUserReplyContent] = useState("");
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -79,7 +86,9 @@ export default function CompanyPage() {
           })(),
           category: review.company.category?.name || "General",
           createdAt: review.createdAt,
-          companyReply: review.companyReply || null
+          companyReply: review.companyReply || null,
+          userId: review.user?._id || null,
+          userReply: review.userReply || null
         }));
 
         setReviews(mappedReviews);
@@ -176,6 +185,55 @@ export default function CompanyPage() {
       showToast(err.response?.data?.error || "Failed to post reply", "error");
     } finally {
       setReplyLoading(false);
+    }
+  };
+
+  // Current user for review ownership checks
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const handleEditReview = async (reviewId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `${API_BASE_URL}/reviews/${reviewId}`,
+        { comment: editComment, rating: editRating },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setReviews(prev => prev.map(r => r._id === reviewId ? { ...r, comment: editComment, rating: editRating } : r));
+      setEditingReview(null);
+      showToast("Review updated!", "success");
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to update review", "error");
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm("Are you sure you want to delete your review? This cannot be undone.")) return;
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`${API_BASE_URL}/reviews/${reviewId}`, { headers: { Authorization: `Bearer ${token}` } });
+      setReviews(prev => prev.filter(r => r._id !== reviewId));
+      showToast("Review deleted", "success");
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to delete review", "error");
+    }
+  };
+
+  const handleUserReply = async (reviewId) => {
+    if (!userReplyContent.trim()) return;
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(
+        `${API_BASE_URL}/reviews/${reviewId}/user-reply`,
+        { content: userReplyContent },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setReviews(prev => prev.map(r => r._id === reviewId ? { ...r, userReply: res.data } : r));
+      setUserReplyingTo(null);
+      setUserReplyContent("");
+      showToast("Reply posted!", "success");
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to post reply", "error");
     }
   };
 
@@ -516,6 +574,76 @@ export default function CompanyPage() {
                               </div>
                             )}
                           </>
+                        )}
+
+                        {/* Existing user reply to company response */}
+                        {review.userReply && (
+                          <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/30 rounded-xl p-4 mb-4">
+                            <div className="flex items-center gap-2 mb-1">
+                              <i className="bx bx-user text-blue-500"></i>
+                              <span className="font-semibold text-blue-700 dark:text-blue-300 text-sm">Author's Reply</span>
+                            </div>
+                            <p className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed m-0">{review.userReply.content}</p>
+                          </div>
+                        )}
+
+                        {/* User Actions — only for review author */}
+                        {currentUser._id && review.userId === currentUser._id && (
+                          <div className="flex items-center gap-3 mb-4 pt-2">
+                            {editingReview !== review._id && (
+                              <>
+                                <button onClick={() => { setEditingReview(review._id); setEditComment(review.comment); setEditRating(review.rating); }}
+                                  className="text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 flex items-center gap-1 bg-transparent border-none cursor-pointer">
+                                  <i className="bx bx-edit"></i> Edit
+                                </button>
+                                <button onClick={() => handleDeleteReview(review._id)}
+                                  className="text-xs text-slate-500 dark:text-slate-400 hover:text-red-600 flex items-center gap-1 bg-transparent border-none cursor-pointer">
+                                  <i className="bx bx-trash"></i> Delete
+                                </button>
+                                {review.companyReply && !review.userReply && (
+                                  <button onClick={() => { setUserReplyingTo(review._id); setUserReplyContent(""); }}
+                                    className="text-xs text-blue-500 hover:text-blue-700 flex items-center gap-1 bg-transparent border-none cursor-pointer">
+                                    <i className="bx bx-reply"></i> Reply to Company
+                                  </button>
+                                )}
+                              </>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Inline edit form */}
+                        {editingReview === review._id && (
+                          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl p-4 mb-4 space-y-3">
+                            <div className="flex gap-1">
+                              {[1,2,3,4,5].map(star => (
+                                <button key={star} type="button" onClick={() => setEditRating(star)}
+                                  className={"text-2xl bg-transparent border-none cursor-pointer " + (star <= editRating ? "text-yellow-400" : "text-slate-300 dark:text-slate-600")}>&#9733;</button>
+                              ))}
+                            </div>
+                            <textarea value={editComment} onChange={e => setEditComment(e.target.value)}
+                              className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 text-sm resize-none outline-none box-border" rows="4" />
+                            <div className="flex gap-2">
+                              <button onClick={() => handleEditReview(review._id)}
+                                className="px-4 py-2 bg-blue-500 text-white rounded-lg text-xs font-semibold hover:bg-blue-600 border-none cursor-pointer">Save</button>
+                              <button onClick={() => setEditingReview(null)}
+                                className="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 bg-transparent cursor-pointer">Cancel</button>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* User reply form */}
+                        {userReplyingTo === review._id && (
+                          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl p-4 mb-4 space-y-2">
+                            <textarea value={userReplyContent} onChange={e => setUserReplyContent(e.target.value)}
+                              placeholder="Reply to the company's response..." rows="3"
+                              className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 text-sm resize-none outline-none box-border" />
+                            <div className="flex gap-2">
+                              <button onClick={() => handleUserReply(review._id)} disabled={!userReplyContent.trim()}
+                                className="px-4 py-2 bg-blue-500 text-white rounded-lg text-xs font-semibold hover:bg-blue-600 border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">Post Reply</button>
+                              <button onClick={() => setUserReplyingTo(null)}
+                                className="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-600 dark:text-slate-300 bg-transparent cursor-pointer">Cancel</button>
+                            </div>
+                          </div>
                         )}
                       </div>
                     ))}

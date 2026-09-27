@@ -12,13 +12,23 @@ const BrowseReviews = () => {
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+      setCurrentPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     const fetchMixedReviews = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${API_BASE_URL}/reviews/browse-mixed?page=${currentPage}&limit=20`
+          `${API_BASE_URL}/reviews/browse-mixed?page=${currentPage}&limit=20${debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ""}`
         );
         setReviews(response.data.reviews || []);
         setPagination(response.data.pagination || {});
@@ -29,7 +39,7 @@ const BrowseReviews = () => {
       }
     };
     fetchMixedReviews();
-  }, [currentPage]);
+  }, [currentPage, debouncedSearch]);
 
   const truncateText = (text, limit = 200) => {
     if (text.length <= limit) return text;
@@ -69,7 +79,40 @@ const BrowseReviews = () => {
             <div className="w-20 h-1 bg-gradient-to-r from-brand-500 to-coral-400 mx-auto mt-6 rounded-full"></div>
           </div>
 
+          {/* Search Bar */}
+          <div className="max-w-xl mx-auto mb-10">
+            <div className="relative">
+              <i className="bx bx-search absolute left-4 top-1/2 -translate-y-1/2 text-xl text-slate-400"></i>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search reviews by company name..."
+                className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all text-sm"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                  <i className="bx bx-x text-xl"></i>
+                </button>
+              )}
+            </div>
+            {debouncedSearch && (
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 text-center">
+                Showing results for \"<span className="font-medium text-slate-700 dark:text-slate-200">{debouncedSearch}</span>\"
+                {pagination.totalReviews !== undefined && \` — \${pagination.totalReviews} review\${pagination.totalReviews !== 1 ? "s" : ""} found\`}
+              </p>
+            )}
+          </div>
+
           {/* Reviews Grid */}
+          {reviews.length === 0 && debouncedSearch ? (
+            <div className="text-center py-16">
+              <i className="bx bx-search-alt text-5xl text-slate-300 dark:text-slate-600 mb-4"></i>
+              <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-200 mb-2">No reviews found</h3>
+              <p className="text-slate-500 dark:text-slate-400">No reviews match \"{debouncedSearch}\". Try a different company name.</p>
+              <button onClick={() => setSearchQuery("")} className="mt-4 text-brand-500 hover:text-brand-700 font-medium">Clear search</button>
+            </div>
+          ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {reviews.map((review) => (
               <div key={review._id} className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-slate-100 dark:border-slate-700">
@@ -120,6 +163,24 @@ const BrowseReviews = () => {
                   </div>
                 </div>
 
+                {/* Company Reply */}
+                {review.hasReply && review.companyReply && (
+                  <div className="mx-6 mb-4 p-3 bg-brand-50 dark:bg-brand-500/10 border border-brand-100 dark:border-brand-500/30 rounded-lg">
+                    <div className="flex items-center gap-2 mb-1">
+                      <i className="bx bx-buildings text-brand-500 text-sm"></i>
+                      <span className="text-xs font-semibold text-brand-700 dark:text-brand-300">Company Reply</span>
+                    </div>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                      {review.companyReply.length > 120 ? (
+                        <>
+                          {review.companyReply.slice(0, 120)}...
+                          <Link to={\`/review/\${review._id}\`} className="text-brand-500 hover:text-brand-700 font-medium ml-1">Read More</Link>
+                        </>
+                      ) : review.companyReply}
+                    </p>
+                  </div>
+                )}
+
                 <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-700">
                   <Link
                     to={review.url}
@@ -143,6 +204,7 @@ const BrowseReviews = () => {
               </div>
             ))}
           </div>
+          )}
 
           {/* Pagination */}
           {pagination.totalPages > 1 && (
