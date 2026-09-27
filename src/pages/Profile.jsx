@@ -249,16 +249,16 @@ export default function ProfilePage() {
                 
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-6 max-w-md mx-auto md:mx-0">
-                  <div className="text-center p-4 bg-brand-50 rounded-xl border border-brand-100">
-                    <div className="text-2xl font-bold text-brand-600">
+                  <div className="text-center p-4 bg-brand-50 dark:bg-brand-500/20 rounded-xl border border-brand-100 dark:border-brand-500/30">
+                    <div className="text-2xl font-bold text-brand-600 dark:text-brand-400">
                       {userReviews.length}
                     </div>
                     <div className="text-sm text-slate-600 dark:text-slate-300">
                       Review{userReviews.length !== 1 ? `s` : ''} Written
                     </div>
                   </div>
-                  <div className="text-center p-4 bg-coral-50 rounded-xl border border-coral-100">
-                    <div className="text-2xl font-bold text-coral-500">
+                  <div className="text-center p-4 bg-coral-50 dark:bg-coral-500/20 rounded-xl border border-coral-100 dark:border-coral-500/30">
+                    <div className="text-2xl font-bold text-coral-500 dark:text-coral-400">
                       {userReviews.reduce((sum, review) => sum + review.rating, 0)}
                     </div>
                     <div className="text-sm text-slate-600 dark:text-slate-300">Total Stars Given</div>

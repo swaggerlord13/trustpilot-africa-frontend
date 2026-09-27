@@ -67,7 +67,7 @@ function Homepage() {
         <img src="trustpilotafricalogo.png" alt="Logo" className="w-[80px] sm:w-[120px] mb-4 relative z-10" />
 
         {/* Heading */}
-        <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-center mb-2 px-2 text-slate-900 relative z-10 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-center mb-2 px-2 text-slate-900 dark:text-white relative z-10 tracking-tight">
           Find Companies You Can Trust
         </h1>
         <p className="text-base sm:text-lg text-slate-500 text-center mb-6 sm:mb-10 max-w-xl relative z-10">

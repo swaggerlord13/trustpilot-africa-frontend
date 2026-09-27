@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Loader from "./Loader";
 import StarRating from "./StarRatings";
+import ScrollDots from "./ScrollDots.jsx";
 
 // Individual Category Section Component with Intersection Observer
 const CategorySection = ({ category, companies, index }) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -54,7 +56,7 @@ const CategorySection = ({ category, companies, index }) => {
 
             {/* Mobile Horizontal Scroll */}
             <div className="md:hidden">
-              <div className="flex gap-4 overflow-x-auto pt-3 pl-3 pb-4 scrollbar-hide snap-x snap-mandatory"
+              <div className="flex gap-4 overflow-x-auto pt-3 pl-3 pb-4 scrollbar-hide snap-x snap-mandatory" ref={scrollRef}
                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {companies.map((company, companyIndex) => (
                   <div key={company.companyId} className="flex-shrink-0 snap-center">
@@ -62,6 +64,7 @@ const CategorySection = ({ category, companies, index }) => {
                   </div>
                 ))}
               </div>
+              <ScrollDots scrollRef={scrollRef} itemCount={companies.length} />
             </div>
           </div>
 
