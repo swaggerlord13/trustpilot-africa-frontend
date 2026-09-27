@@ -58,7 +58,7 @@ function Homepage() {
       <Header />
 
       {/* Hero Section */}
-      <div className="hero-section flex flex-col items-center justify-center w-full min-h-[520px] py-16 px-4 relative overflow-hidden bg-gradient-to-br from-brand-50 via-white to-coral-50">
+      <div className="hero-section flex flex-col items-center justify-center w-full min-h-[520px] py-16 px-4 relative overflow-hidden bg-gradient-to-br from-brand-50 via-white to-coral-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         {/* Subtle decorative circles */}
         <div className="absolute top-[-120px] right-[-80px] w-[400px] h-[400px] rounded-full bg-brand-100/30 blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-[-80px] left-[-60px] w-[300px] h-[300px] rounded-full bg-coral-100/30 blur-3xl pointer-events-none"></div>
