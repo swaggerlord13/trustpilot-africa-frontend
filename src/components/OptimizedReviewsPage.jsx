@@ -67,6 +67,7 @@ export default function OptimizedReviewsPage({ companyId }) {
               return "https://via.placeholder.com/150?text=Company+Logo";
             })(),
             category: companyRes.data.company.category?.name || "General",
+            companyUrl: companyRes.data.company.url || "",
             createdAt: review.createdAt
           }));
 
@@ -85,6 +86,7 @@ export default function OptimizedReviewsPage({ companyId }) {
             company: review.company,
             url: review.url,
             companyimage: review.companyimage,
+            companyUrl: review.companyUrl || "",
             category: review.category,
             createdAt: review.createdAt
           }));
@@ -149,6 +151,7 @@ export default function OptimizedReviewsPage({ companyId }) {
               user={review.user}
               date={review.date}
               companyimage={review.companyimage}
+              companyUrl={review.companyUrl}
               category={review.category}
             />
           ))}

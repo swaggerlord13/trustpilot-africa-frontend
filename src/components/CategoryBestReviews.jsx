@@ -112,6 +112,7 @@ export default function CategoryBestReviews() {
                   return "https://via.placeholder.com/150?text=Company+Logo";
                 })(),
                 category: category.name,
+                companyUrl: company.url || company.website || "",
                 avgRating: company.avgRating,
                 reviewCount: company.reviewCount,
                 createdAt: company.bestReview.createdAt
@@ -196,6 +197,7 @@ export default function CategoryBestReviews() {
                     user={review.user}
                     date={review.date}
                     companyimage={review.companyimage}
+                    companyUrl={review.companyUrl}
                     category={review.category}
                   />
                 </div>

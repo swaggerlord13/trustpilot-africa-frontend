@@ -97,6 +97,34 @@ const CategorySection = ({ category, companies, index }) => {
 
 // Individual Company Card Component
 const CompanyCard = ({ company, ranking }) => {
+  const [imgStage, setImgStage] = useState(0); // 0=original, 1=google favicon, 2=letter
+
+  const getDomain = (url) => {
+    if (!url) return null;
+    try {
+      return new URL(url.startsWith("http") ? url : "https://" + url).hostname;
+    } catch (e) { return null; }
+  };
+
+  const domain = getDomain(company.companyUrl);
+
+  const handleImageError = (e) => {
+    if (imgStage === 0 && domain) {
+      e.target.src = "https://www.google.com/s2/favicons?domain=" + domain + "&sz=128";
+      setImgStage(1);
+    } else {
+      setImgStage(2);
+    }
+  };
+
+  // Letter avatar color from company name
+  const getLetterColor = (name) => {
+    const colors = ["#3B82F6","#10B981","#F59E0B","#EF4444","#8B5CF6","#EC4899","#06B6D4","#F97316"];
+    let hash = 0;
+    for (let i = 0; i < (name || "").length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    return colors[Math.abs(hash) % colors.length];
+  };
+
   return (
     <Link
       to={company.url}
@@ -109,14 +137,21 @@ const CompanyCard = ({ company, ranking }) => {
 
       {/* Company Logo */}
       <div className="flex justify-center mb-3">
-        <img
-          src={company.companyimage}
-          alt={company.company}
-          className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover border border-slate-100 dark:border-slate-600 dark:bg-slate-700"
-          onError={(e) => {
-            e.target.src = "https://via.placeholder.com/150?text=Company+Logo";
-          }}
-        />
+        {imgStage === 2 ? (
+          <div
+            className="w-16 h-16 md:w-20 md:h-20 rounded-xl border border-slate-100 dark:border-slate-600 flex items-center justify-center text-white text-2xl md:text-3xl font-bold"
+            style={{ backgroundColor: getLetterColor(company.company) }}
+          >
+            {(company.company || "?")[0].toUpperCase()}
+          </div>
+        ) : (
+          <img
+            src={company.companyimage}
+            alt={company.company}
+            className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover border border-slate-100 dark:border-slate-600 dark:bg-slate-700"
+            onError={handleImageError}
+          />
+        )}
       </div>
 
       {/* Company Name */}
