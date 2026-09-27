@@ -174,7 +174,7 @@ const BrowseReviews = () => {
                       {review.companyReply.length > 120 ? (
                         <>
                           {review.companyReply.slice(0, 120)}...
-                          <Link to={\`/review/\${review._id}\`} className="text-brand-500 hover:text-brand-700 font-medium ml-1">Read More</Link>
+                          <Link to={`/review/${review._id}`} className="text-brand-500 hover:text-brand-700 font-medium ml-1">Read More</Link>
                         </>
                       ) : review.companyReply}
                     </p>
