@@ -1,0 +1,17 @@
+.subcategory-container {
+  padding: 20px;
+}
+
+.subcategory-list {
+  list-style: none;
+  padding: 0;
+}
+
+.subcategory-list li {
+  padding: 10px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.subcategory-list li:hover {
+  background: #F8FAFC;
+}

@@ -1,0 +1,136 @@
+.Reviewcomments {
+  position: relative;
+  width: 379px;
+  height: 320px;
+  border: 1px solid #E2E8F0;
+  padding: 5px 20px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  background-color: #ffffff;
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.06);
+  overflow: hidden;
+  flex: 0 0 calc((100% / 3) - (16px * 2 / 3));
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 100%;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.Reviewcomments:hover {
+  box-shadow: 0px 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+.Reviewcomments h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+}
+.Reviewcomments h3.review-title {
+  color: #0052CC;
+}
+.Reviewcomments p {
+  font-size: 16px;
+  font-weight: 400;
+  color: #334155;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  max-width: 600px;
+  line-height: 1.4;
+  text-align-last: middle;
+  word-spacing: 0.1em;
+  letter-spacing: 0.02em;
+}
+.Reviewcomments h2 {
+  color: #0052CC;
+  font-weight: bold;
+  text-align: left;
+  font-size: 15px;
+  margin-top: 5px;
+}
+.Reviewcomments .subcategory {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #334155;
+  font-weight: 400;
+  margin-bottom: 5px;
+}
+.subcategory i {
+  color: #64748b;
+}
+.Reviewcomments .category {
+  color: #64748b;
+}
+.Reviewcomments .category {
+  display: flex;
+  align-items: center;
+}
+.Reviewcomments a {
+  color: #64748b;
+  text-decoration: none;
+}
+.star {
+  font-size: 15px;
+  margin: 0;
+}
+
+.Reviewcomments .readmore {
+  background-color: #0052CC;
+  color: #ffffff;
+  padding: 1px 8px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+  margin-left: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.Reviewcomments .readmore:hover {
+  background-color: #0047B3;
+}
+
+@media screen and (max-width: 768px) {
+  .Reviewcomments {
+    flex: 0 0 auto;
+    margin-left: 0;
+    width: 350px;
+  }
+}
+
+.profiledetails img {
+  width: 40px; 
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.profiledetails p {
+  margin-left: 5px;
+}
+.profiledetails {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.companydetails img {
+  width: 50px;
+  margin-top: 5px;
+}
+.companydetails {
+  display: flex;
+  position: absolute;
+  top: 250px;
+  flex-direction: row;
+  align-items: center;
+}
+.companydetails p {
+  margin-left: 10px;
+  color: #64748b;
+}
+.Reviewcomments .bydate {
+  font-size: 1em;
+  font-style: italic;
+  color: #64748b;
+}

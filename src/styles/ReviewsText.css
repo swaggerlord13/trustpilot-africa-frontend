@@ -1,0 +1,36 @@
+.reviews {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0 16px;
+}
+.reviewscomments-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+h2 {
+  text-align: left;
+  font-size: 2em;
+  color: black;
+  margin: 10px 0 0 10px;
+}
+
+@media screen and (max-width: 1024px) {
+  .reviewscomments-row {
+    display: grid;
+    scroll-snap-type: x mandatory;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(2, auto);
+    grid-auto-columns: repeat(100% / 25);
+    gap: 10px;
+    padding: 0;
+    overflow-x: auto;
+    scroll-snap-align: start;
+  }
+}
