@@ -110,10 +110,10 @@ const FullReviewPage = () => {
           <div className="w-16 h-16 mx-auto mb-4 bg-brand-50 rounded-full flex items-center justify-center">
             <i className="bx bx-file-find text-3xl text-brand-500"></i>
           </div>
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">
             Review Not Found
           </h1>
-          <p className="text-slate-600 mb-6">
+          <p className="text-slate-600 dark:text-slate-300 mb-6">
             The review you're looking for doesn't exist or may have been removed.
           </p>
           <Link
@@ -131,22 +131,22 @@ const FullReviewPage = () => {
     <>
       <Header />
       
-      <div className="min-h-screen bg-slate-50 py-8">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8">
         <div className="max-w-4xl mx-auto px-4 lg:px-8">
           
           {/* Breadcrumb */}
           <div className="mb-6">
-            <nav className="text-sm text-slate-500">
+            <nav className="text-sm text-slate-500 dark:text-slate-400">
               <Link to="/" className="hover:text-brand-500 transition-colors">Home</Link>
               <span className="mx-2">/</span>
               <Link to="/browse-reviews" className="hover:text-brand-500 transition-colors">Reviews</Link>
               <span className="mx-2">/</span>
-              <span className="text-slate-700 font-medium">Review Details</span>
+              <span className="text-slate-700 dark:text-slate-200 font-medium">Review Details</span>
             </nav>
           </div>
 
           {/* Main Review Card */}
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden mb-8">
             
             {/* Review Header */}
             <div className="p-8 pb-6">
@@ -155,14 +155,14 @@ const FullReviewPage = () => {
                   <img
                     src={review.userImage}
                     alt={review.user}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-slate-200"
+                    className="w-16 h-16 rounded-full object-cover border-2 border-slate-200 dark:border-slate-600"
                     onError={(e) => {
                       e.target.src = "https://via.placeholder.com/100?text=User";
                     }}
                   />
                   <div>
-                    <h2 className="text-xl font-bold text-slate-800">{review.user}</h2>
-                    <p className="text-slate-500">{review.date}</p>
+                    <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">{review.user}</h2>
+                    <p className="text-slate-500 dark:text-slate-400">{review.date}</p>
                   </div>
                 </div>
                 
@@ -170,7 +170,7 @@ const FullReviewPage = () => {
                 <div className="text-right">
                   <div className="flex items-center gap-2 mb-2">
                     <StarRating rating={review.rating} />
-                    <span className="text-lg font-bold text-slate-800">
+                    <span className="text-lg font-bold text-slate-800 dark:text-slate-100">
                       {review.rating}/5
                     </span>
                   </div>
@@ -187,12 +187,12 @@ const FullReviewPage = () => {
               </div>
 
               {/* Review Title */}
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-6">
+              <h1 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-6">
                 {review.title}
               </h1>
 
               {/* Full Review Content */}
-              <div className="prose prose-lg max-w-none text-slate-700 leading-relaxed">
+              <div className="prose prose-lg max-w-none text-slate-700 dark:text-slate-200 leading-relaxed">
                 <p className="whitespace-pre-line text-base md:text-lg">
                   {review.comment}
                 </p>
@@ -201,7 +201,7 @@ const FullReviewPage = () => {
 
             {/* Company Reply Section */}
             {companyReply && (
-              <div className="px-8 py-6 border-t border-slate-100">
+              <div className="px-8 py-6 border-t border-slate-100 dark:border-slate-700">
                 <div className="bg-brand-50 border border-brand-100 rounded-xl p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center">
@@ -209,38 +209,38 @@ const FullReviewPage = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-brand-700">Response from {review.company}</h4>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
                         {new Date(companyReply.createdAt).toLocaleDateString("en-US", {
                           year: "numeric", month: "long", day: "numeric",
                         })}
                       </p>
                     </div>
                   </div>
-                  <p className="text-slate-700 leading-relaxed whitespace-pre-line">{companyReply.content}</p>
+                  <p className="text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-line">{companyReply.content}</p>
                 </div>
               </div>
             )}
 
             {/* Company Info Section */}
-            <div className="px-8 py-6 bg-slate-50 border-t">
-              <h3 className="text-lg font-semibold text-slate-800 mb-4">About This Company</h3>
+            <div className="px-8 py-6 bg-slate-50 dark:bg-slate-900 border-t">
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">About This Company</h3>
               <Link 
                 to={`/company/${review.companySlug}`}
-                className="flex items-center gap-4 p-4 bg-white rounded-lg hover:bg-slate-50 transition-colors"
+                className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-lg hover:bg-slate-50 transition-colors"
               >
                 <img
                   src={review.companyImage}
                   alt={review.company}
-                  className="w-16 h-16 rounded-lg object-cover border border-slate-200"
+                  className="w-16 h-16 rounded-lg object-cover border border-slate-200 dark:border-slate-600"
                   onError={(e) => {
                     e.target.src = "https://via.placeholder.com/150?text=Logo";
                   }}
                 />
                 <div className="flex-1">
-                  <h4 className="text-xl font-bold text-slate-800 mb-1">
+                  <h4 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-1">
                     {review.company}
                   </h4>
-                  <p className="text-slate-600 mb-2">{review.category}</p>
+                  <p className="text-slate-600 dark:text-slate-300 mb-2">{review.category}</p>
                   {review.companyUrl && (
                     <a
                       href={review.companyUrl.startsWith('http') ? review.companyUrl : `https://${review.companyUrl}`}
@@ -262,8 +262,8 @@ const FullReviewPage = () => {
 
           {/* Related Reviews Section */}
           {relatedReviews.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <h3 className="text-2xl font-bold text-slate-800 mb-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">
                 More Reviews for {review.company}
               </h3>
               
@@ -272,27 +272,27 @@ const FullReviewPage = () => {
                   <Link
                     key={relatedReview._id}
                     to={`/review/${relatedReview._id}`}
-                    className="block p-4 border border-slate-200 rounded-lg hover:shadow-md transition-shadow"
+                    className="block p-4 border border-slate-200 dark:border-slate-600 rounded-lg hover:shadow-md transition-shadow"
                   >
                     <div className="flex items-center gap-2 mb-3">
                       <StarRating rating={relatedReview.rating} />
-                      <span className="text-sm text-slate-600">
+                      <span className="text-sm text-slate-600 dark:text-slate-300">
                         by {relatedReview.user}
                       </span>
                     </div>
                     
-                    <h4 className="font-semibold text-slate-800 mb-2">
+                    <h4 className="font-semibold text-slate-800 dark:text-slate-100 mb-2">
                       {relatedReview.title}
                     </h4>
                     
-                    <p className="text-slate-600 text-sm line-clamp-3">
+                    <p className="text-slate-600 dark:text-slate-300 text-sm line-clamp-3">
                       {relatedReview.comment.length > 100 
                         ? relatedReview.comment.slice(0, 100) + "..." 
                         : relatedReview.comment
                       }
                     </p>
                     
-                    <p className="text-xs text-slate-500 mt-2">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
                       {relatedReview.date}
                     </p>
                   </Link>
@@ -314,7 +314,7 @@ const FullReviewPage = () => {
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <Link
               to="/browse-reviews"
-              className="flex-1 py-3 px-6 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-semibold text-center"
+              className="flex-1 py-3 px-6 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-200 transition-colors font-semibold text-center"
             >
               ← Back to All Reviews
             </Link>

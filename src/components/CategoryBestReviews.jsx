@@ -160,11 +160,11 @@ export default function CategoryBestReviews() {
         <div key={category.slug} className="category-section mb-12">
           {/* Category Header */}
           <div className="category-header mb-8">
-            <h2 className="text-3xl font-bold text-slate-800 mb-2 flex items-center gap-3">
+            <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-3">
               <span className="text-4xl">{category.emoji}</span>
               BEST IN {category.name.toUpperCase()}
             </h2>
-            <p className="text-slate-600">
+            <p className="text-slate-600 dark:text-slate-300">
               Top {reviews.length} highest-rated companies in {category.name} 
               {category.totalCompanies > reviews.length && ` (from ${category.totalCompanies} reviewed companies)`}
             </p>
@@ -220,10 +220,10 @@ export default function CategoryBestReviews() {
           <div className="w-16 h-16 mx-auto mb-4 bg-brand-50 rounded-full flex items-center justify-center">
             <i className="bx bx-trophy text-3xl text-brand-500"></i>
           </div>
-          <h3 className="text-xl font-semibold text-slate-700 mb-2">
+          <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-200 mb-2">
             No featured categories available
           </h3>
-          <p className="text-slate-500">
+          <p className="text-slate-500 dark:text-slate-400">
             We're working on featuring the best companies across different categories.
           </p>
         </div>

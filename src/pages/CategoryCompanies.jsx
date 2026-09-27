@@ -171,32 +171,32 @@ const CategoryCompanies = () => {
     <>
       <Header />
 
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8">
         {/* Breadcrumb */}
         <div className="mb-6">
-          <nav className="text-sm text-slate-600">
+          <nav className="text-sm text-slate-600 dark:text-slate-300">
             <Link to="/" className="hover:text-brand-500 transition-colors">Home</Link>
             <span className="mx-2">/</span>
             <Link to="/categories" className="hover:text-brand-500 transition-colors">Categories</Link>
             <span className="mx-2">/</span>
-            <span className="text-slate-700 font-medium">{category.name}</span>
+            <span className="text-slate-700 dark:text-slate-200 font-medium">{category.name}</span>
           </nav>
         </div>
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">
+          <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2">
             Companies in {category.name}
           </h1>
-          <p className="text-slate-600">
+          <p className="text-slate-600 dark:text-slate-300">
             {pagination.totalCompanies || 0} companies found
             {search && ` for "${search}"`}
           </p>
         </div>
 
         {/* Search & Sort Controls */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-600 p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
             <div className="relative flex-1 max-w-lg w-full">
               <div className="relative">
@@ -206,7 +206,7 @@ const CategoryCompanies = () => {
                   placeholder="Search companies..."
                   value={search}
                   onChange={(e) => handleSearchChange(e.target.value)}
-                  className="w-full pl-12 pr-12 py-3 border-2 border-slate-200 rounded-xl focus:ring-3 focus:ring-brand-100 focus:border-brand-500 transition-all duration-200 text-slate-900 placeholder-slate-500"
+                  className="w-full pl-12 pr-12 py-3 border-2 border-slate-200 dark:border-slate-600 rounded-xl focus:ring-3 focus:ring-brand-100 focus:border-brand-500 transition-all duration-200 text-slate-900 placeholder-slate-500"
                 />
                 <div className="absolute left-4 top-3.5 text-slate-400">
                   {searchLoading ? (
@@ -249,7 +249,7 @@ const CategoryCompanies = () => {
                 className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                   sort === 'name' 
                     ? 'bg-brand-500 text-white shadow-md' 
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 border border-slate-200 dark:border-slate-600'
                 }`}
               >
                 Sort by Name
@@ -259,7 +259,7 @@ const CategoryCompanies = () => {
                 className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                   sort === 'rating' 
                     ? 'bg-brand-500 text-white shadow-md' 
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 border border-slate-200 dark:border-slate-600'
                 }`}
               >
                 Sort by Rating
@@ -270,14 +270,14 @@ const CategoryCompanies = () => {
 
         {/* Companies Grid or Empty State */}
         {companies.length === 0 && !loading ? (
-          <div className="text-center py-16 bg-white rounded-xl shadow-sm">
+          <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
             <div className="w-16 h-16 mx-auto mb-4 bg-brand-50 rounded-full flex items-center justify-center">
               <i className="bx bx-search-alt text-3xl text-brand-500"></i>
             </div>
-            <h3 className="text-xl font-semibold text-slate-700 mb-2">
+            <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-200 mb-2">
               {search ? `No companies found for "${search}"` : 'No companies found'}
             </h3>
-            <p className="text-slate-500 mb-6">
+            <p className="text-slate-500 dark:text-slate-400 mb-6">
               {search 
                 ? "Try adjusting your search terms or add a new company."
                 : "Be the first to add a company in this category!"
@@ -300,7 +300,7 @@ const CategoryCompanies = () => {
               {companies.map((company) => (
                 <div
                   key={company._id}
-                  className="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-lg transition-all duration-300 overflow-hidden group"
+                  className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-600 hover:shadow-lg transition-all duration-300 overflow-hidden group"
                 >
                   {/* Company Header */}
                   <div className="p-6 pb-4">
@@ -319,7 +319,7 @@ const CategoryCompanies = () => {
                           to={`/company/${company.slug}`}
                           className="block group-hover:text-brand-500 transition-colors"
                         >
-                          <h3 className="font-semibold text-slate-800 text-lg leading-tight mb-1 truncate">
+                          <h3 className="font-semibold text-slate-800 dark:text-slate-100 text-lg leading-tight mb-1 truncate">
                             {company.name}
                           </h3>
                         </Link>
@@ -337,7 +337,7 @@ const CategoryCompanies = () => {
                   {/* Description */}
                   {company.description && (
                     <div className="px-6 pb-3">
-                      <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                      <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
                         {company.description}
                       </p>
                     </div>
@@ -350,7 +350,7 @@ const CategoryCompanies = () => {
                       {company.avgRating > 0 ? (
                         <div className="flex items-center gap-2">
                           <StarRating rating={Math.round(company.avgRating)} />
-                          <span className="text-sm font-medium text-slate-700">
+                          <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
                             {company.avgRating}
                           </span>
                         </div>
@@ -361,12 +361,12 @@ const CategoryCompanies = () => {
                               <span key={i} className="text-slate-300">★</span>
                             ))}
                           </div>
-                          <span className="text-sm text-slate-500">No ratings</span>
+                          <span className="text-sm text-slate-500 dark:text-slate-400">No ratings</span>
                         </div>
                       )}
 
                       {/* Review Count */}
-                      <span className="text-sm text-slate-500">
+                      <span className="text-sm text-slate-500 dark:text-slate-400">
                         {company.reviewCount || 0} reviews
                       </span>
                     </div>
@@ -374,7 +374,7 @@ const CategoryCompanies = () => {
 
                   {/* Website Link */}
                   {company.url && (
-                    <div className="px-6 pb-4 border-t border-slate-100 bg-slate-50">
+                    <div className="px-6 pb-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
                       <a
                         href={company.url.startsWith('http') ? company.url : `https://${company.url}`}
                         target="_blank"
@@ -398,7 +398,7 @@ const CategoryCompanies = () => {
                     setCurrentPage(newPage);
                   }}
                   disabled={!pagination.hasPrevPage}
-                  className="px-4 py-2 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
@@ -423,7 +423,7 @@ const CategoryCompanies = () => {
                         className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                           currentPage === pageNumber
                             ? 'bg-brand-500 text-white'
-                            : 'bg-white border border-slate-200 hover:bg-slate-50'
+                            : 'bg-white border border-slate-200 dark:border-slate-600 hover:bg-slate-50'
                         }`}
                       >
                         {pageNumber}
@@ -438,7 +438,7 @@ const CategoryCompanies = () => {
                     setCurrentPage(newPage);
                   }}
                   disabled={!pagination.hasNextPage}
-                  className="px-4 py-2 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
@@ -446,7 +446,7 @@ const CategoryCompanies = () => {
             )}
 
             {/* Pagination Info */}
-            <div className="text-center text-sm text-slate-500 mt-4">
+            <div className="text-center text-sm text-slate-500 dark:text-slate-400 mt-4">
               Showing {companies.length} of {pagination.totalCompanies} companies
               {pagination.totalPages > 1 && (
                 <> • Page {currentPage} of {pagination.totalPages}</>

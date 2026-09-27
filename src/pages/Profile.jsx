@@ -217,10 +217,10 @@ export default function ProfilePage() {
         </div>
       )}
 
-      <div className="min-h-screen bg-slate-50 py-8">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8">
         <div className="max-w-6xl mx-auto px-3 sm:px-4">
           {/* Profile Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 mb-6 sm:mb-8 border border-slate-100">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 sm:p-8 mb-6 sm:mb-8 border border-slate-100 dark:border-slate-700">
             <div className="flex flex-col md:flex-row items-center gap-8">
               {/* Profile Image */}
               <div className="flex flex-col items-center">
@@ -242,10 +242,10 @@ export default function ProfilePage() {
 
               {/* Profile Info */}
               <div className="flex-1 text-center md:text-left">
-                <h1 className="text-3xl font-bold text-slate-800 mb-2">
+                <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2">
                   {user?.name}
                 </h1>
-                <p className="text-slate-500 mb-4">{user?.email}</p>
+                <p className="text-slate-500 dark:text-slate-400 mb-4">{user?.email}</p>
                 
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-6 max-w-md mx-auto md:mx-0">
@@ -253,7 +253,7 @@ export default function ProfilePage() {
                     <div className="text-2xl font-bold text-brand-600">
                       {userReviews.length}
                     </div>
-                    <div className="text-sm text-slate-600">
+                    <div className="text-sm text-slate-600 dark:text-slate-300">
                       Review{userReviews.length !== 1 ? `s` : ''} Written
                     </div>
                   </div>
@@ -261,7 +261,7 @@ export default function ProfilePage() {
                     <div className="text-2xl font-bold text-coral-500">
                       {userReviews.reduce((sum, review) => sum + review.rating, 0)}
                     </div>
-                    <div className="text-sm text-slate-600">Total Stars Given</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-300">Total Stars Given</div>
                   </div>
                 </div>
               </div>
@@ -269,11 +269,11 @@ export default function ProfilePage() {
           </div>
 
           {/* User Reviews Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 border border-slate-100">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-4 sm:p-8 border border-slate-100 dark:border-slate-700">
             {/* My Companies Section */}
             {myCompanies.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center">
                   <i className="bx bx-buildings text-brand-500 mr-2 text-xl"></i>
                   My Companies
                 </h2>
@@ -282,17 +282,17 @@ export default function ProfilePage() {
                     <Link
                       key={comp._id}
                       to={`/company-dashboard/${comp._id}`}
-                      className="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-brand-300 hover:shadow-md transition-all duration-200"
+                      className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-600 hover:border-brand-300 hover:shadow-md transition-all duration-200"
                     >
                       <img
                         src={comp.logo || "https://via.placeholder.com/48?text=Co"}
                         alt={comp.name}
-                        className="w-12 h-12 rounded-lg object-cover border border-slate-200 flex-shrink-0"
+                        className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-600 flex-shrink-0"
                         onError={(e) => { e.target.src = "https://via.placeholder.com/48?text=Co"; }}
                       />
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-slate-800 truncate">{comp.name}</h3>
-                        <p className="text-sm text-slate-500">{comp.category?.name || "General"}</p>
+                        <h3 className="font-semibold text-slate-800 dark:text-slate-100 truncate">{comp.name}</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">{comp.category?.name || "General"}</p>
                       </div>
                       <i className="bx bx-tachometer text-brand-500 text-xl flex-shrink-0"></i>
                     </Link>
@@ -301,17 +301,17 @@ export default function ProfilePage() {
               </div>
             )}
 
-            <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center">
               <i className="bx bxs-edit-alt text-brand-500 mr-3 text-2xl"></i>
               Your Reviews ({userReviews.length})
             </h2>
 
             {userReviews.length === 0 ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className="bx bx-edit text-slate-400 text-3xl"></i>
+                <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="bx bx-edit text-slate-400 dark:text-slate-500 text-3xl"></i>
                 </div>
-                <p className="text-slate-500 text-lg mb-4">
+                <p className="text-slate-500 dark:text-slate-400 text-lg mb-4">
                   You haven't written any reviews yet
                 </p>
                 <a
@@ -349,15 +349,15 @@ export default function ProfilePage() {
         {/* Edit Profile Modal */}
         {showModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4" style={{ zIndex: 200 }}>
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-slate-200">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-slate-600">
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-slate-800 mb-6 text-center">
+                <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6 text-center">
                   Edit Profile
                 </h3>
                 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                       Name
                     </label>
                     <input
@@ -366,13 +366,13 @@ export default function ProfilePage() {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="Your Name"
-                      className="w-full p-3 border-2 border-slate-200 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200"
+                      className="w-full p-3 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200"
                       required
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                       Email
                     </label>
                     <input
@@ -381,14 +381,14 @@ export default function ProfilePage() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="your@email.com"
-                      className="w-full p-3 border-2 border-slate-200 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200"
+                      className="w-full p-3 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200"
                       required
                     />
                   </div>
                   
                   {/* Profile Image Upload */}
                   <div className="space-y-3">
-                    <label className="block text-sm font-medium text-slate-700">
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-200">
                       Profile Image
                     </label>
                     
@@ -398,7 +398,7 @@ export default function ProfilePage() {
                         <img
                           src={profileImagePreview}
                           alt="Profile Preview"
-                          className="w-20 h-20 rounded-full object-cover border-2 border-slate-200"
+                          className="w-20 h-20 rounded-full object-cover border-2 border-slate-200 dark:border-slate-600"
                         />
                       </div>
                     )}
@@ -417,7 +417,7 @@ export default function ProfilePage() {
                       type="button"
                       onClick={() => profileImageInputRef.current?.click()}
                       disabled={profileImageUploading}
-                      className="w-full p-3 border-2 border-dashed border-slate-300 rounded-lg hover:border-brand-400 transition-colors duration-200 flex items-center justify-center gap-2 text-slate-600 hover:text-brand-600 disabled:opacity-50"
+                      className="w-full p-3 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg hover:border-brand-400 transition-colors duration-200 flex items-center justify-center gap-2 text-slate-600 dark:text-slate-300 hover:text-brand-600 disabled:opacity-50"
                     >
                       {profileImageUploading ? (
                         <>
@@ -434,7 +434,7 @@ export default function ProfilePage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                       New Password (Optional)
                     </label>
                     <input
@@ -443,7 +443,7 @@ export default function ProfilePage() {
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="Leave blank to keep current password"
-                      className="w-full p-3 border-2 border-slate-200 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200"
+                      className="w-full p-3 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200"
                     />
                   </div>
 
@@ -451,7 +451,7 @@ export default function ProfilePage() {
                     <button
                       type="button"
                       onClick={() => setShowModal(false)}
-                      className="flex-1 px-4 py-3 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors duration-200 font-semibold"
+                      className="flex-1 px-4 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200 font-semibold"
                     >
                       Cancel
                     </button>

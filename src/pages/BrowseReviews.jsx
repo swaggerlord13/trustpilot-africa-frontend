@@ -55,7 +55,7 @@ const BrowseReviews = () => {
     <>
       <Header />
 
-      <div className="min-h-screen bg-slate-50 py-10">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-10">
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
 
           {/* Header */}
@@ -63,7 +63,7 @@ const BrowseReviews = () => {
             <h1 className="text-3xl md:text-5xl font-bold mb-4 text-slate-900">
               See What People Are Saying
             </h1>
-            <p className="text-lg max-w-3xl mx-auto text-slate-500">
+            <p className="text-lg max-w-3xl mx-auto text-slate-500 dark:text-slate-400">
               Discover authentic reviews from real customers across different companies and industries.
             </p>
             <div className="w-20 h-1 bg-gradient-to-r from-brand-500 to-coral-400 mx-auto mt-6 rounded-full"></div>
@@ -72,7 +72,7 @@ const BrowseReviews = () => {
           {/* Reviews Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {reviews.map((review) => (
-              <div key={review._id} className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-slate-100">
+              <div key={review._id} className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-slate-100 dark:border-slate-700">
 
                 <div className="p-6 pb-4">
                   <div className="flex items-center justify-between mb-4">
@@ -80,29 +80,29 @@ const BrowseReviews = () => {
                       <img
                         src={review.userImage}
                         alt={review.user}
-                        className="w-10 h-10 rounded-full object-cover border border-slate-200"
+                        className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-600"
                         onError={(e) => {
                           e.target.src = "https://via.placeholder.com/100?text=User";
                         }}
                       />
                       <div>
-                        <p className="font-semibold text-slate-800">{review.user}</p>
+                        <p className="font-semibold text-slate-800 dark:text-slate-100">{review.user}</p>
                         <p className="text-sm text-slate-400">{review.date}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <StarRating rating={review.rating} />
-                      <span className="text-sm font-medium text-slate-600">
+                      <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
                         {review.rating}/5
                       </span>
                     </div>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-slate-800 mb-3">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-3">
                     {review.title}
                   </h3>
 
-                  <div className="text-slate-500 leading-relaxed mb-4 text-sm">
+                  <div className="text-slate-500 dark:text-slate-400 leading-relaxed mb-4 text-sm">
                     <p>
                       {truncateText(review.comment)}
                       {needsTruncation(review.comment) && (
@@ -120,7 +120,7 @@ const BrowseReviews = () => {
                   </div>
                 </div>
 
-                <div className="px-6 py-4 bg-slate-50 border-t border-slate-100">
+                <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-700">
                   <Link
                     to={review.url}
                     className="flex items-center gap-3 hover:bg-slate-100 rounded-lg p-2 -m-2 transition-colors"
@@ -128,13 +128,13 @@ const BrowseReviews = () => {
                     <img
                       src={review.companyImage}
                       alt={review.company}
-                      className="w-8 h-8 rounded-lg object-cover border border-slate-200"
+                      className="w-8 h-8 rounded-lg object-cover border border-slate-200 dark:border-slate-600"
                       onError={(e) => {
                         e.target.src = "https://via.placeholder.com/150?text=Logo";
                       }}
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-700 truncate">{review.company}</p>
+                      <p className="font-medium text-slate-700 dark:text-slate-200 truncate">{review.company}</p>
                       <p className="text-sm text-slate-400">{review.category}</p>
                     </div>
                     <i className="bx bx-chevron-right text-xl text-slate-400"></i>
@@ -150,7 +150,7 @@ const BrowseReviews = () => {
               <button
                 onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
                 disabled={!pagination.hasPrevPage}
-                className="px-5 py-2.5 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-sm text-slate-600"
+                className="px-5 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-sm text-slate-600 dark:text-slate-300"
               >
                 Previous
               </button>
@@ -175,7 +175,7 @@ const BrowseReviews = () => {
                       className={`w-10 h-10 rounded-xl font-medium text-sm transition-colors ${
                         currentPage === pageNumber
                           ? 'bg-brand-500 text-white shadow-sm'
-                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                          : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
                       }`}
                     >
                       {pageNumber}
@@ -187,7 +187,7 @@ const BrowseReviews = () => {
               <button
                 onClick={() => setCurrentPage(Math.min(currentPage + 1, pagination.totalPages))}
                 disabled={!pagination.hasNextPage}
-                className="px-5 py-2.5 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-sm text-slate-600"
+                className="px-5 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-sm text-slate-600 dark:text-slate-300"
               >
                 Next
               </button>
@@ -195,11 +195,11 @@ const BrowseReviews = () => {
           )}
 
           {/* CTA Section */}
-          <div className="text-center mt-16 py-10 rounded-2xl shadow-sm bg-gradient-to-br from-brand-50 to-coral-50 border border-slate-100">
-            <h3 className="text-2xl font-bold text-slate-800 mb-2">
+          <div className="text-center mt-16 py-10 rounded-2xl shadow-sm bg-gradient-to-br from-brand-50 to-coral-50 border border-slate-100 dark:border-slate-700">
+            <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">
               {localStorage.getItem("token") ? "Share Your Voice" : "Join Our Community"}
             </h3>
-            <p className="text-slate-500 mb-6">
+            <p className="text-slate-500 dark:text-slate-400 mb-6">
               {pagination.totalReviews} reviews and counting from real customers
             </p>
             <Link

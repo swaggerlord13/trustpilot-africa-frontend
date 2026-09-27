@@ -21,15 +21,15 @@ export default function About() {
       <section className="max-w-5xl mx-auto px-4 py-16">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="text-2xl font-bold text-slate-800 mb-4">
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">
               Our Mission
             </h2>
-            <p className="text-slate-600 leading-relaxed mb-4">
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
               In many African markets, there's no reliable way to know whether a
               company delivers on its promises before you hand over your money.
               TrustPilot Africa exists to change that.
             </p>
-            <p className="text-slate-600 leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               We give everyday consumers a voice — and give businesses a reason
               to earn trust, not just attention. Every review on this platform is
               tied to a real user account, making it harder to fake and easier to
@@ -38,10 +38,10 @@ export default function About() {
           </div>
           <div className="rounded-2xl p-8 text-center bg-brand-50">
             <div className="text-5xl mb-4">🌍</div>
-            <h3 className="text-xl font-semibold text-slate-800 mb-2">
+            <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-2">
               Built for Africa
             </h3>
-            <p className="text-slate-600">
+            <p className="text-slate-600 dark:text-slate-300">
               We understand the unique challenges of doing business across the
               continent — from Lagos to Nairobi, Accra to Johannesburg.
             </p>
@@ -50,44 +50,44 @@ export default function About() {
       </section>
 
       {/* How it works */}
-      <section className="py-16 px-4 bg-slate-50">
+      <section className="py-16 px-4 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-slate-800 text-center mb-12">
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 text-center mb-12">
             How It Works
           </h2>
           <div className="grid sm:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl p-7 shadow-sm text-center border border-slate-100">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-7 shadow-sm text-center border border-slate-100 dark:border-slate-700">
               <div className="w-14 h-14 bg-brand-50 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <i className="bx bx-search text-2xl text-brand-500"></i>
               </div>
-              <h3 className="font-semibold text-slate-800 mb-2">
+              <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-2">
                 Search Companies
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Find any company by name or browse by category. If it's not
                 listed, you can add it yourself.
               </p>
             </div>
-            <div className="bg-white rounded-2xl p-7 shadow-sm text-center border border-slate-100">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-7 shadow-sm text-center border border-slate-100 dark:border-slate-700">
               <div className="w-14 h-14 bg-coral-50 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <i className="bx bx-edit text-2xl text-coral-500"></i>
               </div>
-              <h3 className="font-semibold text-slate-800 mb-2">
+              <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-2">
                 Write a Review
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Share your real experience — rate 1 to 5 stars and tell others
                 what happened. One review per company, so every opinion counts.
               </p>
             </div>
-            <div className="bg-white rounded-2xl p-7 shadow-sm text-center border border-slate-100">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-7 shadow-sm text-center border border-slate-100 dark:border-slate-700">
               <div className="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <i className="bx bx-bar-chart-alt-2 text-2xl text-green-500"></i>
               </div>
-              <h3 className="font-semibold text-slate-800 mb-2">
+              <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-2">
                 See the Ratings
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Company ratings are calculated from all user reviews. The more
                 reviews, the more accurate the picture.
               </p>
@@ -98,7 +98,7 @@ export default function About() {
 
       {/* Values */}
       <section className="max-w-5xl mx-auto px-4 py-16">
-        <h2 className="text-2xl font-bold text-slate-800 text-center mb-12">
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 text-center mb-12">
           What We Stand For
         </h2>
         <div className="grid sm:grid-cols-2 gap-5">
@@ -110,16 +110,16 @@ export default function About() {
           ].map((item) => (
             <div
               key={item.title}
-              className="flex gap-4 p-5 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
+              className="flex gap-4 p-5 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow"
             >
               <div className="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
                 <i className={`${item.icon} text-xl text-brand-500`}></i>
               </div>
               <div>
-                <h3 className="font-semibold text-slate-800 mb-1">
+                <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">
                   {item.title}
                 </h3>
-                <p className="text-sm text-slate-500">{item.desc}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{item.desc}</p>
               </div>
             </div>
           ))}

@@ -51,7 +51,7 @@ export default function AddCompanyModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center" style={{ zIndex: 200 }}>
-      <div className="bg-white rounded-xl shadow-lg p-6 w-96 max-w-full">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 w-96 max-w-full">
         <h2 className="text-xl font-bold mb-4">Add New Company</h2>
         
         <input

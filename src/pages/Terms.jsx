@@ -4,16 +4,16 @@ export default function Terms() {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold text-slate-800 mb-8">
+        <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-8">
           Terms of Service
         </h1>
 
-        <div className="prose prose-gray max-w-none space-y-6 text-slate-600 leading-relaxed">
+        <div className="prose prose-gray max-w-none space-y-6 text-slate-600 dark:text-slate-300 leading-relaxed">
           <p>
             <strong>Last updated:</strong> September 2026
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             1. Acceptance of Terms
           </h2>
           <p>
@@ -22,7 +22,7 @@ export default function Terms() {
             do not use our platform.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             2. User Accounts
           </h2>
           <p>
@@ -32,7 +32,7 @@ export default function Terms() {
             unauthorized access.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             3. Reviews and Content
           </h2>
           <p>
@@ -44,7 +44,7 @@ export default function Terms() {
             platform.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             4. Prohibited Conduct
           </h2>
           <p>
@@ -54,7 +54,7 @@ export default function Terms() {
             applicable laws.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             5. Company Listings
           </h2>
           <p>
@@ -63,7 +63,7 @@ export default function Terms() {
             claim and update their own listings.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             6. Limitation of Liability
           </h2>
           <p>
@@ -72,7 +72,7 @@ export default function Terms() {
             information. We do not endorse any company listed on our platform.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             7. Changes to Terms
           </h2>
           <p>
@@ -80,7 +80,7 @@ export default function Terms() {
             platform after changes constitutes acceptance of the new terms.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             8. Contact
           </h2>
           <p>

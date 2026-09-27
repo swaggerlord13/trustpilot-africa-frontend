@@ -4,16 +4,16 @@ export default function Privacy() {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold text-slate-800 mb-8">
+        <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-8">
           Privacy Policy
         </h1>
 
-        <div className="prose prose-gray max-w-none space-y-6 text-slate-600 leading-relaxed">
+        <div className="prose prose-gray max-w-none space-y-6 text-slate-600 dark:text-slate-300 leading-relaxed">
           <p>
             <strong>Last updated:</strong> September 2026
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             1. Information We Collect
           </h2>
           <p>
@@ -22,7 +22,7 @@ export default function Privacy() {
             reviews, ratings, and comments you post on the platform.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             2. How We Use Your Information
           </h2>
           <p>
@@ -32,7 +32,7 @@ export default function Privacy() {
             patterns to improve user experience.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             3. Information Sharing
           </h2>
           <p>
@@ -43,7 +43,7 @@ export default function Privacy() {
             law.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             4. Data Security
           </h2>
           <p>
@@ -53,7 +53,7 @@ export default function Privacy() {
             secure.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             5. Your Rights
           </h2>
           <p>
@@ -63,7 +63,7 @@ export default function Privacy() {
             out of non-essential communications.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             6. Cookies
           </h2>
           <p>
@@ -71,7 +71,7 @@ export default function Privacy() {
             preferences. We do not use tracking or advertising cookies.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             7. Changes to This Policy
           </h2>
           <p>
@@ -80,7 +80,7 @@ export default function Privacy() {
             platform.
           </p>
 
-          <h2 className="text-xl font-semibold text-slate-800 mt-8">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mt-8">
             8. Contact
           </h2>
           <p>

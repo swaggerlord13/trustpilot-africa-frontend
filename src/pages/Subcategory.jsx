@@ -159,13 +159,13 @@ const Subcategory = () => {
       <Header />
       <div className="max-w-5xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
-        <p className="text-sm text-slate-500 mb-4">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
           <Link to={`/categories/${slug}`} className="text-brand-500 hover:underline">
             {categoryName}
           </Link>
           {subSlug && <span className="mx-2"> / </span>}
           {subSlug && (
-            <span className="text-slate-700 font-medium">{subCategoryName}</span>
+            <span className="text-slate-700 dark:text-slate-200 font-medium">{subCategoryName}</span>
           )}
         </p>
 
@@ -180,12 +180,12 @@ const Subcategory = () => {
             placeholder="Search companies..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border border-slate-200 rounded-lg px-3 py-2 w-full sm:w-64 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none"
+            className="border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 w-full sm:w-64 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none"
           />
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="border border-slate-200 rounded-lg px-3 py-2 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none"
+            className="border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none"
           >
             <option value="name">Sort by Name</option>
             <option value="rating">Sort by Rating</option>
@@ -195,7 +195,7 @@ const Subcategory = () => {
         {/* Company list or add button */}
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center gap-3">
-            <p className="text-slate-500 italic">No companies found.</p>
+            <p className="text-slate-500 dark:text-slate-400 italic">No companies found.</p>
             <button
               className="px-4 py-2 rounded-lg bg-brand-500 text-white hover:bg-brand-600"
               onClick={() => {
@@ -211,7 +211,7 @@ const Subcategory = () => {
             {paginated.map((company) => (
               <li
                 key={company._id}
-                className="bg-white shadow-sm border border-slate-200 rounded-xl p-4 hover:shadow-lg transition duration-200"
+                className="bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-600 rounded-xl p-4 hover:shadow-lg transition duration-200"
               >
                 <div className="flex items-center gap-4 mb-3">
                   <CompanyLogo
@@ -228,7 +228,7 @@ const Subcategory = () => {
                       {company.name}
                     </Link>
                     {company.url && (
-                      <p className="text-sm text-slate-500 truncate max-w-[200px]">
+                      <p className="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[200px]">
                         <a
                           href={company.url}
                           target="_blank"
@@ -249,7 +249,7 @@ const Subcategory = () => {
                 )}
                 {/* Description */}
                 {company.description && (
-                  <p className="text-sm text-slate-500 mb-3" style={{
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-3" style={{
                     display: "-webkit-box",
                     WebkitLineClamp: 2,
                     WebkitBoxOrient: "vertical",
@@ -259,7 +259,7 @@ const Subcategory = () => {
                   </p>
                 )}
                 {/* Reviews & Rating - Now using real-time data */}
-                <div className="flex items-center justify-between text-sm text-slate-600 mt-2">
+                <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300 mt-2">
                   <span>
                     {company.reviewCount || 0}{" "}
                     {company.reviewCount === 1 ? "review" : "reviews"}
@@ -267,7 +267,7 @@ const Subcategory = () => {
                   {company.avgRating > 0 ? (
                     <div className="flex items-center gap-1">
                       <StarRating rating={Math.round(company.avgRating)} />
-                      <span className="text-sm text-slate-600 ml-1">
+                      <span className="text-sm text-slate-600 dark:text-slate-300 ml-1">
                         ({company.avgRating.toFixed(1)})
                       </span>
                     </div>
@@ -278,7 +278,7 @@ const Subcategory = () => {
                           ★
                         </span>
                       ))}
-                      <span className="text-sm text-slate-600 ml-1">
+                      <span className="text-sm text-slate-600 dark:text-slate-300 ml-1">
                         (No ratings)
                       </span>
                     </div>
@@ -295,7 +295,7 @@ const Subcategory = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 rounded-lg border border-slate-200 bg-slate-100 hover:bg-slate-200 disabled:opacity-50"
+              className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 disabled:opacity-50"
             >
               Prev
             </button>
@@ -305,7 +305,7 @@ const Subcategory = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="px-4 py-2 rounded-lg border border-slate-200 bg-slate-100 hover:bg-slate-200 disabled:opacity-50"
+              className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 disabled:opacity-50"
             >
               Next
             </button>

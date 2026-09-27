@@ -7,10 +7,10 @@ export default function NotFound() {
       <div className="min-h-[60vh] flex items-center justify-center px-4">
         <div className="text-center max-w-lg">
           <h1 className="text-8xl font-extrabold text-brand-500 mb-2">404</h1>
-          <h2 className="text-2xl font-bold text-slate-800 mb-4">
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">
             Page Not Found
           </h2>
-          <p className="text-slate-500 mb-8">
+          <p className="text-slate-500 dark:text-slate-400 mb-8">
             The page you're looking for doesn't exist or may have been moved.
             Let's get you back on track.
           </p>
@@ -23,7 +23,7 @@ export default function NotFound() {
             </Link>
             <Link
               to="/categories"
-              className="px-6 py-3 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-semibold"
+              className="px-6 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors font-semibold"
             >
               Browse Categories
             </Link>

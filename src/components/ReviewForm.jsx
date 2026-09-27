@@ -132,10 +132,10 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
           </button>
         ))}
         <div className="ml-3 flex flex-col justify-center">
-          <span className="text-slate-700 font-semibold text-lg">
+          <span className="text-slate-700 dark:text-slate-200 font-semibold text-lg">
             {rating} star{rating !== 1 ? 's' : ''}
           </span>
-          <span className="text-sm text-slate-500">
+          <span className="text-sm text-slate-500 dark:text-slate-400">
             {rating <= 2 && "Poor"}
             {rating === 3 && "Average"}
             {rating >= 4 && "Excellent"}
@@ -146,18 +146,18 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-brand-50 to-coral-50 p-6 rounded-2xl shadow-lg border border-slate-200 mb-8">
+    <div className="bg-gradient-to-br from-brand-50 to-coral-50 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-600 mb-8">
       <div className="text-center mb-6">
         <h3 className="text-2xl font-bold text-brand-700 mb-2">
           <i className="bx bx-edit-alt mr-2"></i>Write a Review for {companyName}
         </h3>
-        <p className="text-slate-600">Share your experience to help others!</p>
+        <p className="text-slate-600 dark:text-slate-300">Share your experience to help others!</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Rating Selection */}
         <div className="text-center">
-          <label className="block text-lg font-semibold text-slate-700 mb-3">
+          <label className="block text-lg font-semibold text-slate-700 dark:text-slate-200 mb-3">
             How would you rate this company?
           </label>
           {renderStars()}
@@ -165,7 +165,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
 
         {/* Review Title */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
             Review Title (Optional)
           </label>
           <input
@@ -174,13 +174,13 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g., Great service and support!"
             maxLength={100}
-            className="w-full p-4 border-2 border-slate-200 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200 text-slate-800"
+            className="w-full p-4 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200 text-slate-800 dark:text-slate-100"
           />
         </div>
 
         {/* Review Comment */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
             Your Review <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -188,10 +188,10 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
             onChange={(e) => setComment(e.target.value)}
             rows="6"
             placeholder="Tell us about your experience with this company. What did you like or dislike? Would you recommend them to others?"
-            className="w-full p-4 border-2 border-slate-200 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none resize-none transition-all duration-200 text-slate-800"
+            className="w-full p-4 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none resize-none transition-all duration-200 text-slate-800 dark:text-slate-100"
             required
           />
-          <div className="text-right text-sm text-slate-500 mt-1">
+          <div className="text-right text-sm text-slate-500 dark:text-slate-400 mt-1">
             {comment.length}/1000 characters
           </div>
         </div>
@@ -221,7 +221,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
 
       {/* Encouragement Message */}
       <div className="mt-6 p-4 bg-white/60 rounded-lg border border-brand-100">
-        <p className="text-sm text-slate-600 text-center">
+        <p className="text-sm text-slate-600 dark:text-slate-300 text-center">
           <i className="bx bx-bulb text-brand-500 mr-1"></i>
           <strong>Tip:</strong> Be specific and honest in your review. 
           Mention what you liked, what could be improved, and whether you\'d recommend this company to others.
