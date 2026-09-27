@@ -12,15 +12,39 @@ export default function Header() {
 
   useEffect(() => {
     try {
+      const token = localStorage.getItem("token");
       const storedUser = localStorage.getItem("user");
-      if (storedUser) {
+      if (token && storedUser) {
         const parsed = JSON.parse(storedUser);
         setUser(parsed);
+      } else {
+        setUser(null);
       }
     } catch (err) {
       console.error("Invalid user data in localStorage:", err);
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
     }
+  }, []);
+
+  // Re-check auth when storage changes (e.g. logout from another tab or 401 response)
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
+      if (token && storedUser) {
+        try { setUser(JSON.parse(storedUser)); } catch (e) { setUser(null); }
+      } else {
+        setUser(null);
+      }
+    };
+    window.addEventListener("storage", checkAuth);
+    // Also listen for custom auth event (fired from within same tab)
+    window.addEventListener("auth-change", checkAuth);
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+      window.removeEventListener("auth-change", checkAuth);
+    };
   }, []);
 
   useEffect(() => {
@@ -35,8 +59,10 @@ export default function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setUser(null);
     setIsMobileMenuOpen(false);
+    window.dispatchEvent(new Event("auth-change"));
     navigate("/login");
   };
 
