@@ -51,6 +51,31 @@ export default function CompanyDashboard() {
     return { Authorization: `Bearer ${token}` };
   };
 
+
+  // Upload company logo to Cloudinary
+  const handleLogoUpload = async (file) => {
+    if (!file) return;
+    setLogoUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("logo", file);
+      const res = await axios.post(`${API_BASE_URL}/upload/company-logo`, formData, {
+        headers: {
+          ...getAuthHeaders(),
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (res.data.success) {
+        setProfileForm((prev) => ({ ...prev, logo: res.data.imageUrl }));
+        showToast("Logo uploaded! Click Save to apply.", "success");
+      }
+    } catch (err) {
+      console.error("Logo upload error:", err);
+      showToast("Failed to upload logo", "error");
+    } finally {
+      setLogoUploading(false);
+    }
+  };
   // Fetch company info, stats, and reviews
   useEffect(() => {
     const fetchAll = async () => {
@@ -409,7 +434,7 @@ export default function CompanyDashboard() {
 
                     {/* Existing Company Reply */}
                     {review.reply && editingReply !== review._id && (
-                      <div className="bg-brand-50 border border-brand-100 dark:border-brand-500/30 rounded-lg p-4 mt-3">
+                      <div className="bg-brand-50 dark:bg-brand-500/10 border border-brand-100 dark:border-brand-500/30 rounded-lg p-4 mt-3">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <i className="bx bx-buildings text-brand-500"></i>
