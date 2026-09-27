@@ -1,7 +1,7 @@
 .Reviewcomments {
   position: relative;
-  width: 379px;
-  height: 320px;
+  width: 100%;
+  min-height: 280px; height: auto;
   border: 1px solid #E2E8F0;
   padding: 5px 20px;
   border-radius: 14px;
@@ -9,6 +9,8 @@
   background-color: #ffffff;
   box-shadow: 0px 2px 8px rgba(0,0,0,0.06);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   flex: 0 0 calc((100% / 3) - (16px * 2 / 3));
   box-sizing: border-box;
   max-width: 100%;
@@ -31,14 +33,14 @@
   font-size: 16px;
   font-weight: 400;
   color: #334155;
-  text-align: justify;
-  text-justify: inter-word;
-  hyphens: auto;
+  text-align: left;
+  
+  
   max-width: 600px;
   line-height: 1.4;
-  text-align-last: middle;
-  word-spacing: 0.1em;
-  letter-spacing: 0.02em;
+  
+  
+  
 }
 .Reviewcomments h2 {
   color: #0052CC;
@@ -95,7 +97,7 @@
   .Reviewcomments {
     flex: 0 0 auto;
     margin-left: 0;
-    width: 350px;
+    width: 100%; max-width: 340px;
   }
 }
 
@@ -120,10 +122,10 @@
 }
 .companydetails {
   display: flex;
-  position: absolute;
-  top: 250px;
   flex-direction: row;
   align-items: center;
+  margin-top: auto;
+  padding-top: 10px;
 }
 .companydetails p {
   margin-left: 10px;

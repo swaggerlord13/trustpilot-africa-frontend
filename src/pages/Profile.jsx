@@ -218,9 +218,9 @@ export default function ProfilePage() {
       )}
 
       <div className="min-h-screen bg-slate-50 py-8">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4">
           {/* Profile Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-slate-100">
+          <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 mb-6 sm:mb-8 border border-slate-100">
             <div className="flex flex-col md:flex-row items-center gap-8">
               {/* Profile Image */}
               <div className="flex flex-col items-center">
@@ -269,41 +269,41 @@ export default function ProfilePage() {
           </div>
 
           {/* User Reviews Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-100">
+          <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-8 border border-slate-100">
+            {/* My Companies Section */}
+            {myCompanies.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                  <i className="bx bx-buildings text-brand-500 mr-2 text-xl"></i>
+                  My Companies
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {myCompanies.map((comp) => (
+                    <Link
+                      key={comp._id}
+                      to={`/company-dashboard/${comp._id}`}
+                      className="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-brand-300 hover:shadow-md transition-all duration-200"
+                    >
+                      <img
+                        src={comp.logo || "https://via.placeholder.com/48?text=Co"}
+                        alt={comp.name}
+                        className="w-12 h-12 rounded-lg object-cover border border-slate-200 flex-shrink-0"
+                        onError={(e) => { e.target.src = "https://via.placeholder.com/48?text=Co"; }}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-slate-800 truncate">{comp.name}</h3>
+                        <p className="text-sm text-slate-500">{comp.category?.name || "General"}</p>
+                      </div>
+                      <i className="bx bx-tachometer text-brand-500 text-xl flex-shrink-0"></i>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
               <i className="bx bxs-edit-alt text-brand-500 mr-3 text-2xl"></i>
-              {/* My Companies Section */}
-              {myCompanies.length > 0 && (
-                <div className="mb-8">
-                  <h2 className="text-xl font-bold text-slate-800 mb-4">
-                    <i className="bx bx-buildings text-brand-500 mr-2"></i>
-                    My Companies
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {myCompanies.map((comp) => (
-                      <Link
-                        key={comp._id}
-                        to={`/company-dashboard/${comp._id}`}
-                        className="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-brand-300 hover:shadow-md transition-all duration-200"
-                      >
-                        <img
-                          src={comp.logo || "https://via.placeholder.com/48?text=Co"}
-                          alt={comp.name}
-                          className="w-12 h-12 rounded-lg object-cover border border-slate-200"
-                          onError={(e) => { e.target.src = "https://via.placeholder.com/48?text=Co"; }}
-                        />
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-slate-800">{comp.name}</h3>
-                          <p className="text-sm text-slate-500">{comp.category?.name || "General"}</p>
-                        </div>
-                        <i className="bx bx-tachometer text-brand-500 text-xl"></i>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-                            Your Reviews ({userReviews.length})
+              Your Reviews ({userReviews.length})
             </h2>
 
             {userReviews.length === 0 ? (

@@ -64,18 +64,18 @@ function Homepage() {
         <div className="absolute bottom-[-80px] left-[-60px] w-[300px] h-[300px] rounded-full bg-coral-100/30 blur-3xl pointer-events-none"></div>
 
         {/* Logo */}
-        <img src="trustpilotafricalogo.png" alt="Logo" className="w-[160px] mb-6 relative z-10" />
+        <img src="trustpilotafricalogo.png" alt="Logo" className="w-[80px] sm:w-[120px] mb-4 relative z-10" />
 
         {/* Heading */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center mb-3 px-2 text-slate-900 relative z-10 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-center mb-2 px-2 text-slate-900 relative z-10 tracking-tight">
           Find Companies You Can Trust
         </h1>
-        <p className="text-lg text-slate-500 text-center mb-10 max-w-xl relative z-10">
+        <p className="text-base sm:text-lg text-slate-500 text-center mb-6 sm:mb-10 max-w-xl relative z-10">
           Real reviews from real people across Africa
         </p>
 
         {/* Searchbar */}
-        <div className="relative w-[720px] max-w-full flex justify-center z-10">
+        <div className="relative w-full max-w-[720px] flex justify-center z-10 px-2">
           <i className="bx bx-search absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-slate-400"></i>
           <input
             type="text"
@@ -120,7 +120,7 @@ function Homepage() {
         </div>
 
         {/* Trust badges */}
-        <div className="flex items-center gap-6 mt-10 text-sm text-slate-400 relative z-10">
+        <div className="flex items-center gap-4 sm:gap-6 mt-6 sm:mt-10 text-xs sm:text-sm text-slate-400 relative z-10">
           <span className="flex items-center gap-1.5">
             <i className="bx bxs-shield-check text-brand-500 text-lg"></i>
             Verified Reviews

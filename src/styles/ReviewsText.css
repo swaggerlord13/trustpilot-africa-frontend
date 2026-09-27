@@ -23,14 +23,30 @@ h2 {
 
 @media screen and (max-width: 1024px) {
   .reviewscomments-row {
-    display: grid;
-    scroll-snap-type: x mandatory;
-    grid-auto-flow: column;
-    grid-template-rows: repeat(2, auto);
-    grid-auto-columns: repeat(100% / 25);
-    gap: 10px;
-    padding: 0;
+    display: flex;
+    flex-wrap: nowrap;
     overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    padding: 0 4px 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .reviewscomments-row::-webkit-scrollbar {
+    display: none;
+  }
+  .reviewscomments-row > * {
     scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 85vw;
+    max-width: 320px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .reviewscomments-row > * {
+    width: 88vw;
+    max-width: 340px;
   }
 }
