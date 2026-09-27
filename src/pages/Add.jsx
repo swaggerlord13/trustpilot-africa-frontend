@@ -299,7 +299,7 @@ export default function Add() {
     try {
       const res = await fetch(`${API_BASE_URL}/companies`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         body: JSON.stringify(companyForm),
       });
       if (!res.ok) throw new Error("Failed to add company");
