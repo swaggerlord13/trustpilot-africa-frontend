@@ -151,7 +151,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-brand-50 to-coral-50 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-600 mb-8">
+    <div className="bg-gradient-to-br from-brand-50 to-coral-50 dark:from-slate-800 dark:to-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-600 mb-8">
       <div className="text-center mb-6">
         <h3 className="text-2xl font-bold text-brand-700 mb-2">
           <i className="bx bx-edit-alt mr-2"></i>Write a Review for {companyName}
@@ -179,7 +179,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g., Great service and support!"
             maxLength={100}
-            className="w-full p-4 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200 text-slate-800 dark:text-slate-100"
+            className="w-full p-4 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700"
           />
         </div>
 
@@ -193,7 +193,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
             onChange={(e) => setComment(e.target.value)}
             rows="6"
             placeholder="Tell us about your experience with this company. What did you like or dislike? Would you recommend them to others?"
-            className="w-full p-4 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none resize-none transition-all duration-200 text-slate-800 dark:text-slate-100"
+            className="w-full p-4 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none resize-none transition-all duration-200 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700"
             required
           />
           <div className="text-right text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -225,7 +225,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
       </form>
 
       {/* Encouragement Message */}
-      <div className="mt-6 p-4 bg-white/60 rounded-lg border border-brand-100">
+      <div className="mt-6 p-4 bg-white/60 dark:bg-slate-700/60 rounded-lg border border-brand-100 dark:border-slate-600">
         <p className="text-sm text-slate-600 dark:text-slate-300 text-center">
           <i className="bx bx-bulb text-brand-500 mr-1"></i>
           <strong>Tip:</strong> Be specific and honest in your review. 
