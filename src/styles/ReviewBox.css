@@ -246,3 +246,10 @@
 [data-theme="dark"] .Reviewcomments a {
   color: #94A3B8;
 }
+
+[data-theme="dark"] .Reviewcomments > a {
+  background: transparent;
+}
+[data-theme="dark"] .companydetails {
+  background: transparent;
+}

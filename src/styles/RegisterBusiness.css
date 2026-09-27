@@ -459,3 +459,39 @@
     width: 50px;
   }
 }
+
+/* ── Dark Mode ── */
+[data-theme="dark"] .biz-register-container {
+  background: linear-gradient(160deg, #0F172A, #1E293B);
+}
+[data-theme="dark"] .biz-register-card {
+  background: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+[data-theme="dark"] .biz-register-card h2 {
+  color: #F1F5F9;
+}
+[data-theme="dark"] .biz-register-card label {
+  color: #CBD5E1;
+}
+[data-theme="dark"] .biz-register-card input,
+[data-theme="dark"] .biz-register-card select {
+  background: #0F172A;
+  border-color: #334155;
+  color: #F1F5F9;
+}
+[data-theme="dark"] .biz-register-card input:focus,
+[data-theme="dark"] .biz-register-card select:focus {
+  border-color: #3B82F6;
+}
+[data-theme="dark"] .biz-register-card input::placeholder {
+  color: #64748B;
+}
+[data-theme="dark"] .biz-register-card p,
+[data-theme="dark"] .biz-register-card span {
+  color: #94A3B8;
+}
+[data-theme="dark"] .biz-register-card a {
+  color: #60A5FA;
+}

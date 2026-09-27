@@ -486,7 +486,8 @@
 }
 
 /* ===== Dark Mode ===== */
-[data-theme="dark"] .login-page {
+[data-theme="dark"] .login-page,
+[data-theme="dark"] .modern-login-container {
   background: linear-gradient(160deg, #0F172A, #1E293B);
 }
 [data-theme="dark"] .login-card {
