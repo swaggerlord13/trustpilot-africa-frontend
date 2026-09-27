@@ -25,10 +25,12 @@ import Privacy from "../pages/Privacy.jsx";
 import ForgotPassword from "../pages/ForgotPassword.jsx";
 import ResetPassword from "../pages/ResetPassword.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
+import RootLayout from "../components/RootLayout.jsx";
 
 import "../styles/index.css";
 
 const router = createBrowserRouter([
+  { element: <RootLayout />, children: [
   { path: "/", element: <App /> },
   { path: "/about", element: <About /> },
   { path: "/login", element: <Login /> },
@@ -56,6 +58,7 @@ const router = createBrowserRouter([
 
   // Catch-all 404
   { path: "*", element: <NotFound /> },
+  ]},
 ]);
 
 createRoot(document.getElementById("root")).render(
