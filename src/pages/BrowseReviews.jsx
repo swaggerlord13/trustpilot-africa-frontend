@@ -18,10 +18,14 @@ const BrowseReviews = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-      setCurrentPage(1);
     }, 400);
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  // Reset to page 1 only when the debounced search value actually changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     const fetchMixedReviews = async () => {
@@ -70,7 +74,7 @@ const BrowseReviews = () => {
 
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-slate-900">
+            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-slate-900 dark:text-white">
               See What People Are Saying
             </h1>
             <p className="text-lg max-w-3xl mx-auto text-slate-500 dark:text-slate-400">
@@ -109,7 +113,7 @@ const BrowseReviews = () => {
             <div className="text-center py-16">
               <i className="bx bx-search-alt text-5xl text-slate-300 dark:text-slate-600 mb-4"></i>
               <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-200 mb-2">No reviews found</h3>
-              <p className="text-slate-500 dark:text-slate-400">No reviews match \"{debouncedSearch}\". Try a different company name.</p>
+              <p className="text-slate-500 dark:text-slate-400">No reviews match "{debouncedSearch}". Try a different company name.</p>
               <button onClick={() => setSearchQuery("")} className="mt-4 text-brand-500 hover:text-brand-700 font-medium">Clear search</button>
             </div>
           ) : (
@@ -257,7 +261,7 @@ const BrowseReviews = () => {
           )}
 
           {/* CTA Section */}
-          <div className="text-center mt-16 py-10 rounded-2xl shadow-sm bg-gradient-to-br from-brand-50 to-coral-50 border border-slate-100 dark:border-slate-700">
+          <div className="text-center mt-16 py-10 rounded-2xl shadow-sm bg-gradient-to-br from-brand-50 to-coral-50 dark:from-slate-800 dark:to-slate-800 border border-slate-100 dark:border-slate-700">
             <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">
               {localStorage.getItem("token") ? "Share Your Voice" : "Join Our Community"}
             </h3>
