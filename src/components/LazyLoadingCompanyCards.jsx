@@ -46,7 +46,7 @@ const CategorySection = ({ category, companies, index }) => {
           {/* Company Cards */}
           <div className="mb-8 mx-1">
             {/* Desktop Grid */}
-            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 pt-3 pl-3">
               {companies.map((company, companyIndex) => (
                 <CompanyCard key={company.companyId} company={company} ranking={companyIndex + 1} />
               ))}
@@ -54,7 +54,7 @@ const CategorySection = ({ category, companies, index }) => {
 
             {/* Mobile Horizontal Scroll */}
             <div className="md:hidden">
-              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory"
+              <div className="flex gap-4 overflow-x-auto pt-3 pl-3 pb-4 scrollbar-hide snap-x snap-mandatory"
                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {companies.map((company, companyIndex) => (
                   <div key={company.companyId} className="flex-shrink-0 snap-center">
@@ -100,7 +100,7 @@ const CompanyCard = ({ company, ranking }) => {
       className="company-card bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-4 md:p-5 relative group hover:-translate-y-1 transform w-[260px] h-[280px] md:w-auto md:h-[300px] flex flex-col"
     >
       {/* Ranking Badge */}
-      <div className="absolute -top-2 -left-2 bg-gradient-to-r from-coral-400 to-coral-500 text-white text-sm md:text-base font-bold rounded-full w-8 h-8 md:w-9 md:h-9 flex items-center justify-center shadow-md z-10">
+      <div className="absolute -top-2.5 -left-2.5 bg-gradient-to-r from-coral-400 to-coral-500 text-white text-sm md:text-base font-bold rounded-full w-8 h-8 md:w-9 md:h-9 flex items-center justify-center shadow-md z-10">
         {ranking || '?'}
       </div>
 
