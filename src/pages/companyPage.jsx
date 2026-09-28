@@ -420,23 +420,12 @@ export default function CompanyPage() {
               </button>
             )}
             {!isLoggedIn && (
-              <div className="flex-1 flex flex-col gap-2">
-                <p className="text-xs text-slate-500 dark:text-slate-400 text-center font-medium">Own this business?</p>
-                <div className="flex gap-2">
-                  <Link
-                    to={`/register-business?claim=${encodeURIComponent(company.name)}&companyId=${company._id}&url=${encodeURIComponent(company.website || "")}`}
-                    className="flex-1 py-2.5 px-4 rounded-xl font-semibold bg-coral-500 text-white hover:bg-coral-600 transition-colors duration-200 text-center text-sm"
-                  >
-                    <i className="bx bxs-business mr-1"></i> Register as Business
-                  </Link>
-                  <Link
-                    to="/login"
-                    className="py-2.5 px-4 rounded-xl font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200 text-center text-sm"
-                  >
-                    Sign In
-                  </Link>
-                </div>
-              </div>
+              <Link
+                to={`/register-business?claim=${encodeURIComponent(company.name)}&companyId=${company._id}&url=${encodeURIComponent(company.website || "")}`}
+                className="flex-1 py-3 px-6 rounded-xl font-semibold bg-coral-500 text-white hover:bg-coral-600 transition-colors duration-200 text-center"
+              >
+                <i className="bx bx-badge-check mr-1"></i> Claim This Business
+              </Link>
             )}
           </div>
 
