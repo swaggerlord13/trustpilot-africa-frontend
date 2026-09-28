@@ -186,7 +186,7 @@ function Homepage() {
         </p>
 
         {/* Searchbar */}
-        <div className="relative w-full max-w-[720px] flex justify-center z-10 px-2">
+        <div className="relative w-full max-w-[720px] flex justify-center z-30 px-2">
           <i className="bx bx-search absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-slate-400"></i>
           <input
             type="text"
@@ -199,7 +199,7 @@ function Homepage() {
 
           {/* Search Results Dropdown */}
           {search.trim() !== "" && (
-            <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 shadow-xl rounded-xl max-h-80 overflow-y-auto z-50 border border-slate-100 dark:border-slate-700">
+            <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 shadow-2xl rounded-xl max-h-80 overflow-y-auto z-50 border border-slate-200 dark:border-slate-700" style={{backdropFilter:"none"}}>
               {isSearching ? (
                 <div className="flex items-center justify-center py-4 text-slate-400">
                   <i className="bx bx-loader-alt bx-spin mr-2"></i> Searching...
@@ -525,7 +525,7 @@ function Homepage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {isLoggedIn ? (
               <Link
-                to="/categories"
+                to="/companies"
                 className="px-8 py-3.5 bg-brand-500 text-white rounded-xl font-bold hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/25 text-sm md:text-base"
               >
                 Browse Companies
