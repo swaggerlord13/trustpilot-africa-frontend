@@ -191,3 +191,59 @@
     padding-left: 1.25rem;
   }
 }
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"] .categorieshead {
+  background: linear-gradient(135deg, #003D99 0%, #002E73 100%);
+}
+
+[data-theme="dark"] .categorieshead .search-input {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+[data-theme="dark"] .categorieshead .search-input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .Explore {
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .category-container {
+  background: transparent;
+}
+
+[data-theme="dark"] .category-card {
+  background: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .category-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .categoryhead {
+  background: linear-gradient(135deg, #003D99 0%, #002E73 100%);
+}
+
+[data-theme="dark"] .subcategory-item {
+  border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .subcategory-link {
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .subcategory-link:hover {
+  background: rgba(0, 82, 204, 0.15);
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .no-results {
+  color: #64748B;
+}

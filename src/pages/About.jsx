@@ -36,7 +36,7 @@ export default function About() {
               trust.
             </p>
           </div>
-          <div className="rounded-2xl p-8 text-center bg-brand-50">
+          <div className="rounded-2xl p-8 text-center bg-brand-50 dark:bg-slate-800">
             <div className="text-5xl mb-4">🌍</div>
             <h3 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-2">
               Built for Africa
@@ -57,7 +57,7 @@ export default function About() {
           </h2>
           <div className="grid sm:grid-cols-3 gap-8">
             <div className="bg-white dark:bg-slate-800 rounded-2xl p-7 shadow-sm text-center border border-slate-100 dark:border-slate-700">
-              <div className="w-14 h-14 bg-brand-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-14 h-14 bg-brand-50 dark:bg-brand-800 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <i className="bx bx-search text-2xl text-brand-500"></i>
               </div>
               <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-2">
@@ -69,7 +69,7 @@ export default function About() {
               </p>
             </div>
             <div className="bg-white dark:bg-slate-800 rounded-2xl p-7 shadow-sm text-center border border-slate-100 dark:border-slate-700">
-              <div className="w-14 h-14 bg-coral-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-14 h-14 bg-coral-50 dark:bg-coral-600/20 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <i className="bx bx-edit text-2xl text-coral-500"></i>
               </div>
               <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-2">
@@ -81,7 +81,7 @@ export default function About() {
               </p>
             </div>
             <div className="bg-white dark:bg-slate-800 rounded-2xl p-7 shadow-sm text-center border border-slate-100 dark:border-slate-700">
-              <div className="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <div className="w-14 h-14 bg-green-50 dark:bg-green-900/30 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <i className="bx bx-bar-chart-alt-2 text-2xl text-green-500"></i>
               </div>
               <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-2">
@@ -104,7 +104,7 @@ export default function About() {
         <div className="grid sm:grid-cols-2 gap-5">
           {[
             { icon: "bx bxs-check-shield", title: "Transparency", desc: "Every review is public and tied to a verified user account." },
-            { icon: "bx bxs-balance", title: "Fairness", desc: "Both positive and negative reviews are shown. No pay-to-play." },
+            { icon: "bx bxs-badge-check", title: "Fairness", desc: "Both positive and negative reviews are shown. No pay-to-play." },
             { icon: "bx bxs-group", title: "Community", desc: "Built by consumers, for consumers. Your experience helps others." },
             { icon: "bx bxs-rocket", title: "Growth", desc: "We help honest businesses stand out and attract the customers they deserve." },
           ].map((item) => (
@@ -112,7 +112,7 @@ export default function About() {
               key={item.title}
               className="flex gap-4 p-5 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow"
             >
-              <div className="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
+              <div className="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-800 flex items-center justify-center flex-shrink-0">
                 <i className={`${item.icon} text-xl text-brand-500`}></i>
               </div>
               <div>
@@ -154,7 +154,7 @@ export default function About() {
             </Link>
           )}
           <Link
-            to={localStorage.getItem("token") ? "/browse-reviews" : "/categories"}
+            to={localStorage.getItem("token") ? "/browse-reviews" : "/companies"}
             className="px-8 py-3 border-2 border-white/40 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors"
           >
             {localStorage.getItem("token") ? "Browse Reviews" : "Browse Companies"}

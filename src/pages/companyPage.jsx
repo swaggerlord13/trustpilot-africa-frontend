@@ -203,11 +203,11 @@ export default function CompanyPage() {
       <>
         <Header />
         <div className="max-w-5xl mx-auto p-6 text-center">
-          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
             <i className="bx bx-buildings text-slate-400 text-3xl"></i>
           </div>
-          <h1 className="text-2xl font-bold text-slate-800 mb-4">Company Not Found</h1>
-          <p className="text-slate-500 mb-6">The company you're looking for doesn't exist or may have been removed.</p>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">Company Not Found</h1>
+          <p className="text-slate-500 dark:text-slate-400 mb-6">The company you're looking for doesn't exist or may have been removed.</p>
           <Link to="/categories" className="inline-block px-6 py-3 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors duration-200 font-semibold">
             <i className="bx bx-search mr-1"></i> Browse All Companies
           </Link>
@@ -219,21 +219,21 @@ export default function CompanyPage() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-slate-50 py-8">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8">
         <div className="max-w-6xl mx-auto px-4">
           {/* Breadcrumb */}
           <div className="mb-6">
-            <nav className="text-sm text-slate-500">
+            <nav className="text-sm text-slate-500 dark:text-slate-400">
               <Link to="/" className="hover:text-brand-500 transition-colors">Home</Link>
               <span className="mx-2">/</span>
               <Link to="/categories" className="hover:text-brand-500 transition-colors">Categories</Link>
               <span className="mx-2">/</span>
-              <span className="text-slate-700 font-medium">{company.name}</span>
+              <span className="text-slate-700 dark:text-slate-200 font-medium">{company.name}</span>
             </nav>
           </div>
 
           {/* Company Header */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-slate-100">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8 border border-slate-100 dark:border-slate-700">
             <div className="flex flex-col md:flex-row items-start gap-6">
               {/* Company Logo */}
               <CompanyLogo
@@ -245,21 +245,21 @@ export default function CompanyPage() {
 
               {/* Company Info */}
               <div className="flex-1">
-                <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">{company.name}</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100 mb-2">{company.name}</h1>
                 
                 <div className="flex flex-wrap items-center gap-4 mb-4">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-brand-50 text-brand-700">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-brand-50 dark:bg-brand-800 text-brand-700 dark:text-brand-200">
                     <i className="bx bx-category mr-1"></i> {company.category?.name || "General"}
                   </span>
                   {company.subcategory && (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-50 text-purple-700">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
                       <i className="bx bx-folder mr-1"></i> {company.subcategory.name}
                     </span>
                   )}
                 </div>
 
                 {company.description && (
-                  <p className="text-slate-600 mb-4 leading-relaxed">{company.description}</p>
+                  <p className="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">{company.description}</p>
                 )}
 
                 {company.url && (
@@ -276,22 +276,22 @@ export default function CompanyPage() {
                 {/* Google Places Info */}
                 {company.source === "google" && (
                   <div className="flex flex-wrap items-center gap-3 mt-4">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                       <img src="https://www.google.com/favicon.ico" alt="" className="w-3 h-3" />
                       Imported from Google
                     </span>
                     {company.address && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
                         <i className="bx bx-map"></i> {company.address}
                       </span>
                     )}
                     {company.phone && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
                         <i className="bx bx-phone"></i> {company.phone}
                       </span>
                     )}
                     {company.country && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-coral-50 text-coral-600 border border-coral-200">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-coral-50 dark:bg-coral-600/20 text-coral-600 dark:text-coral-400 border border-coral-200 dark:border-coral-800">
                         <i className="bx bx-world"></i> {company.country}{company.city ? ', ' + company.city : ''}
                       </span>
                     )}
@@ -308,10 +308,10 @@ export default function CompanyPage() {
                   <div className="mb-2"><StarRating rating={Math.round(parseFloat(avgRating))} /></div>
                 ) : (
                   <div className="flex items-center justify-center gap-1 mb-2">
-                    {[...Array(5)].map((_, i) => (<span key={i} className="text-xl text-slate-300">{"★"}</span>))}
+                    {[...Array(5)].map((_, i) => (<span key={i} className="text-xl text-slate-300 dark:text-slate-600">{"★"}</span>))}
                   </div>
                 )}
-                <div className="text-sm text-slate-500">
+                <div className="text-sm text-slate-500 dark:text-slate-400">
                   Based on {reviews.length} review{reviews.length !== 1 ? 's' : ''}
                 </div>
               </div>
@@ -331,7 +331,7 @@ export default function CompanyPage() {
             
             <Link
               to={`/categories/${company.category?.slug || 'general'}`}
-              className="flex-1 py-3 px-6 rounded-xl font-semibold bg-brand-50 text-brand-700 hover:bg-brand-100 transition-colors duration-200 text-center"
+              className="flex-1 py-3 px-6 rounded-xl font-semibold bg-brand-50 dark:bg-brand-800 text-brand-700 dark:text-brand-200 hover:bg-brand-100 dark:hover:bg-brand-700 transition-colors duration-200 text-center"
             >
               <i className="bx bx-search mr-1"></i> More in {company.category?.name || "Category"}
             </Link>
@@ -346,7 +346,7 @@ export default function CompanyPage() {
               </Link>
             )}
             {isLoggedIn && claimStatus === "pending" && (
-              <div className="flex-1 py-3 px-6 rounded-xl font-semibold bg-amber-50 text-amber-700 border border-amber-200 text-center cursor-default">
+              <div className="flex-1 py-3 px-6 rounded-xl font-semibold bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-center cursor-default">
                 <i className="bx bx-time-five mr-1"></i> Claim Pending
               </div>
             )}
@@ -359,23 +359,12 @@ export default function CompanyPage() {
               </button>
             )}
             {!isLoggedIn && (
-              <div className="flex-1 flex flex-col gap-2">
-                <p className="text-xs text-slate-500 text-center font-medium">Own this business?</p>
-                <div className="flex gap-2">
-                  <Link
-                    to="/register-business"
-                    className="flex-1 py-2.5 px-4 rounded-xl font-semibold bg-coral-500 text-white hover:bg-coral-600 transition-colors duration-200 text-center text-sm"
-                  >
-                    <i className="bx bxs-business mr-1"></i> Register as Business
-                  </Link>
-                  <Link
-                    to="/login"
-                    className="py-2.5 px-4 rounded-xl font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors duration-200 text-center text-sm"
-                  >
-                    Sign In
-                  </Link>
-                </div>
-              </div>
+              <Link
+                to="/login"
+                className="flex-1 py-3 px-6 rounded-xl font-semibold bg-coral-500 text-white hover:bg-coral-600 transition-colors duration-200 text-center"
+              >
+                <i className="bx bx-log-in mr-1"></i> Sign In to Claim
+              </Link>
             )}
           </div>
 
@@ -385,24 +374,24 @@ export default function CompanyPage() {
           )}
 
           {/* Reviews Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-100">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-100 dark:border-slate-700">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-slate-800">
+              <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
                 <i className="bx bx-chat text-brand-500 mr-2"></i>
                 What people say about {company.name}
               </h2>
-              <div className="text-sm text-slate-500">
+              <div className="text-sm text-slate-500 dark:text-slate-400">
                 {reviews.length} review{reviews.length !== 1 ? 's' : ''}
               </div>
             </div>
 
             {reviews.length === 0 ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="bx bx-conversation text-slate-400 text-3xl"></i>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-700 mb-2">No reviews yet</h3>
-                <p className="text-slate-500 mb-6">Be the first to share your experience with {company.name}!</p>
+                <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-200 mb-2">No reviews yet</h3>
+                <p className="text-slate-500 dark:text-slate-400 mb-6">Be the first to share your experience with {company.name}!</p>
                 <button onClick={() => setShowReviewForm(true)} className="px-6 py-3 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors duration-200 font-semibold">
                   Write the First Review
                 </button>
@@ -410,17 +399,17 @@ export default function CompanyPage() {
             ) : (
               <>
                 {/* Review Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 p-6 bg-slate-50 rounded-xl">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 p-6 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
                   {[5, 4, 3, 2, 1].map((stars) => {
                     const count = reviews.filter(r => r.rating === stars).length;
                     const percentage = reviews.length > 0 ? (count / reviews.length * 100).toFixed(0) : 0;
                     return (
                       <div key={stars} className="text-center">
-                        <div className="text-sm text-slate-600 mb-1 flex items-center justify-center">
+                        <div className="text-sm text-slate-600 dark:text-slate-400 mb-1 flex items-center justify-center">
                           {stars} <StarRating rating={stars} />
                         </div>
-                        <div className="text-xl font-bold text-slate-800">{count}</div>
-                        <div className="text-xs text-slate-500">({percentage}%)</div>
+                        <div className="text-xl font-bold text-slate-800 dark:text-slate-100">{count}</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400">({percentage}%)</div>
                       </div>
                     );
                   })}
@@ -572,10 +561,10 @@ export default function CompanyPage() {
 
           {/* Google Reviews Section */}
           {company.googleReviews && company.googleReviews.length > 0 && (
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 mt-8 border border-slate-100">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8 mt-8 border border-slate-100 dark:border-slate-700">
               <div className="flex items-center gap-3 mb-6">
                 <img src="https://www.google.com/favicon.ico" alt="Google" className="w-6 h-6" />
-                <h2 className="text-2xl font-bold text-slate-800">Reviews from Google</h2>
+                <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Reviews from Google</h2>
                 {company.googleRating && (
                   <div className="flex items-center gap-2 ml-auto">
                     <span className="text-2xl font-bold text-amber-500">{company.googleRating}</span>
@@ -584,30 +573,30 @@ export default function CompanyPage() {
                         <span key={i} className={`text-lg ${i < Math.round(company.googleRating) ? 'text-amber-500' : 'text-slate-300'}`}>{"★"}</span>
                       ))}
                     </div>
-                    <span className="text-sm text-slate-500">
+                    <span className="text-sm text-slate-500 dark:text-slate-400">
                       ({company.googleReviewCount?.toLocaleString() || 0} reviews on Google)
                     </span>
                   </div>
                 )}
               </div>
 
-              <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2 mb-6 text-sm text-amber-800">
+              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg px-4 py-2 mb-6 text-sm text-amber-800 dark:text-amber-300">
                 These reviews are sourced from Google and may not reflect the views of TrustPilot.Africa users.
               </div>
 
               <div className="space-y-6">
                 {company.googleReviews.map((review, index) => (
-                  <div key={index} className="border-b border-slate-100 pb-6 last:border-0 last:pb-0">
+                  <div key={index} className="border-b border-slate-100 dark:border-slate-700 pb-6 last:border-0 last:pb-0">
                     <div className="flex items-start gap-4">
                       <img
                         src={review.profilePhotoUrl || 'https://via.placeholder.com/40?text=G'}
                         alt={review.authorName}
-                        className="w-10 h-10 rounded-full object-cover border border-slate-200"
+                        className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-600"
                         onError={(e) => { e.target.src = 'https://via.placeholder.com/40?text=G'; }}
                       />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
-                          <h4 className="font-semibold text-slate-800">{review.authorName}</h4>
+                          <h4 className="font-semibold text-slate-800 dark:text-slate-100">{review.authorName}</h4>
                           <span className="text-xs text-slate-400">{review.relativeTimeDescription}</span>
                         </div>
                         <div className="flex mb-2">
@@ -615,7 +604,7 @@ export default function CompanyPage() {
                             <span key={i} className={`text-sm ${i < review.rating ? 'text-amber-500' : 'text-slate-300'}`}>{"★"}</span>
                           ))}
                         </div>
-                        <p className="text-slate-600 leading-relaxed text-sm">{review.text}</p>
+                        <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">{review.text}</p>
                       </div>
                     </div>
                   </div>
@@ -626,14 +615,14 @@ export default function CompanyPage() {
 
           {/* Related Companies */}
           {company.category && (
-            <div className="mt-8 bg-white rounded-2xl shadow-lg p-8 border border-slate-100">
-              <h3 className="text-xl font-bold text-slate-800 mb-4">
+            <div className="mt-8 bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-100 dark:border-slate-700">
+              <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4">
                 <i className="bx bx-buildings text-brand-500 mr-2"></i>
                 More companies in {company.category.name}
               </h3>
               <Link
                 to={`/categories/${company.category.slug || 'general'}`}
-                className="inline-flex items-center px-4 py-2 bg-brand-50 text-brand-700 rounded-lg hover:bg-brand-100 transition-colors duration-200 font-semibold"
+                className="inline-flex items-center px-4 py-2 bg-brand-50 dark:bg-brand-800 text-brand-700 dark:text-brand-200 rounded-lg hover:bg-brand-100 dark:hover:bg-brand-700 transition-colors duration-200 font-semibold"
               >
                 Browse All <i className="bx bx-right-arrow-alt ml-1"></i>
               </Link>
@@ -645,31 +634,31 @@ export default function CompanyPage() {
       {/* Claim Modal */}
       {showClaimModal && isLoggedIn && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center px-4" style={{ zIndex: 200 }}>
-          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-slate-800">
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">
                 <i className="bx bx-badge-check text-brand-500 mr-2"></i>
                 Claim {company.name}
               </h2>
               <button
                 onClick={() => setShowClaimModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-2xl"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-2xl"
               >
                 &times;
               </button>
             </div>
 
-            <p className="text-sm text-slate-500 mb-4">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
               Claiming this company lets you respond to reviews, see analytics, and update your company profile. An admin will review your claim.
             </p>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Your Role</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Your Role</label>
                 <select
                   value={claimForm.role}
                   onChange={(e) => setClaimForm({ ...claimForm, role: e.target.value })}
-                  className="w-full p-3 border border-slate-200 rounded-lg focus:border-brand-500 outline-none text-slate-800"
+                  className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 outline-none text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700"
                 >
                   <option value="owner">Owner</option>
                   <option value="manager">Manager</option>
@@ -678,18 +667,18 @@ export default function CompanyPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Job Title (optional)</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Job Title (optional)</label>
                 <input
                   type="text"
                   value={claimForm.jobTitle}
                   onChange={(e) => setClaimForm({ ...claimForm, jobTitle: e.target.value })}
                   placeholder="e.g. CEO, Marketing Manager"
-                  className="w-full p-3 border border-slate-200 rounded-lg focus:border-brand-500 outline-none text-slate-800"
+                  className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 outline-none text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Why are you claiming this company? <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -697,7 +686,7 @@ export default function CompanyPage() {
                   onChange={(e) => setClaimForm({ ...claimForm, reason: e.target.value })}
                   rows="3"
                   placeholder="Explain your relationship with this company..."
-                  className="w-full p-3 border border-slate-200 rounded-lg focus:border-brand-500 outline-none resize-none text-slate-800"
+                  className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 outline-none resize-none text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700"
                 />
               </div>
             </div>
@@ -705,7 +694,7 @@ export default function CompanyPage() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={() => setShowClaimModal(false)}
-                className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-semibold"
+                className="flex-1 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 font-semibold"
               >
                 Cancel
               </button>

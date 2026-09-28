@@ -1,3 +1,10 @@
+/* ── Reviews Row Container ── */
+.reviewscomments-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
 /* ── Review Card ── */
 .Reviewcomments {
   position: relative;
@@ -7,7 +14,7 @@
   border: 1px solid #E2E8F0;
   padding: 12px 20px 14px;
   border-radius: 14px;
-  margin-bottom: 12px;
+  margin-bottom: 0;
   background-color: #ffffff;
   box-shadow: 0px 2px 8px rgba(0,0,0,0.06);
   overflow: hidden;
@@ -181,13 +188,20 @@
   text-decoration: none;
 }
 
+/* ── Tablet (2-col) ── */
+@media screen and (max-width: 1024px) {
+  .Reviewcomments {
+    flex: 0 0 calc(50% - 8px);
+  }
+}
+
 /* ── Mobile ── */
 @media screen and (max-width: 768px) {
   .Reviewcomments {
-    flex: 0 0 auto;
+    flex: 0 0 100%;
     margin-left: 0;
     width: 100%;
-    max-width: 340px;
+    max-width: none;
   }
   .company-logo-wrap {
     width: 38px;
