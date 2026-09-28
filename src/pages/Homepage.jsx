@@ -140,8 +140,8 @@ function Homepage() {
     }
   };
 
-  const handleAddCompany = async ({ name, url }) => {
-    const newCompany = { name, url: url || "" };
+  const handleAddCompany = async ({ name, url, city, country }) => {
+    const newCompany = { name, url: url || "", city: city || "", country: country || "" };
     try {
       const response = await fetch(`${API_BASE_URL}/companies`, {
         method: "POST",
@@ -150,10 +150,12 @@ function Homepage() {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to create company");
+        // Re-throw with response data so modal can show duplicate info
+        const err = new Error(errorData.message || "Failed to create company");
+        err.response = { status: response.status, data: errorData };
+        throw err;
       }
       const savedCompany = await response.json();
-      setCompanies(prev => [savedCompany, ...prev]);
       setIsModalOpen(false);
       navigate(`/company/${savedCompany.slug}?openReview=true`);
     } catch (err) {

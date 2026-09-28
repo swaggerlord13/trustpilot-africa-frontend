@@ -141,8 +141,8 @@ const CategoryCompanies = () => {
   };
 
   // Handle add company
-  const handleAddCompany = async ({ name, url }) => {
-    const newCompany = { name, url: url || "" };
+  const handleAddCompany = async ({ name, url, city, country }) => {
+    const newCompany = { name, url: url || "", city: city || "", country: country || "" };
     
     try {
       const response = await axios.post(`${API_BASE_URL}/companies`, newCompany);
@@ -152,7 +152,12 @@ const CategoryCompanies = () => {
       
     } catch (err) {
       console.error("Error creating company:", err);
+      if (err.response && err.response.status === 409) {
+        // Let modal handle duplicate error display
+        throw err;
+      }
       showToast(`Error adding company: ${err.message}`, "error");
+      throw err;
     }
   };
 

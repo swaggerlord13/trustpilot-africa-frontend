@@ -115,10 +115,12 @@ const Subcategory = () => {
   const paginated = filtered.slice(startIndex, startIndex + itemsPerPage);
 
   // Add company handler
-  const handleAddCompany = async ({ name, url }) => {
+  const handleAddCompany = async ({ name, url, city, country }) => {
     const newCompany = { 
       name, 
-      url: url || ""
+      url: url || "",
+      city: city || "",
+      country: country || "",
     };
     
     try {
@@ -130,7 +132,9 @@ const Subcategory = () => {
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to create company");
+        const err = new Error(errorData.message || "Failed to create company");
+        err.response = { status: response.status, data: errorData };
+        throw err;
       }
       
       const savedCompany = await response.json();
