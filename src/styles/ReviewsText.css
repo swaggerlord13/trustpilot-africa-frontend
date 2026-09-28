@@ -14,7 +14,7 @@
   box-sizing: border-box;
 }
 
-h2 {
+.reviews h2 {
   text-align: left;
   font-size: 2em;
   color: black;

@@ -25,7 +25,7 @@ export default function BrowseCompanies() {
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
-  const [locations, setLocations] = useState({ cities: [], countries: [] });
+  const [locations, setLocations] = useState({ cities: [], countries: [], countryToCities: {} });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Debounce search input
@@ -203,11 +203,12 @@ export default function BrowseCompanies() {
                   className="w-full h-11 px-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
                 >
                   <option value="">All cities</option>
-                  {locations.cities
-                    .filter((c) => !country || locations.cities.includes(c))
-                    .map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
+                  {(country && locations.countryToCities[country]
+                    ? locations.countryToCities[country]
+                    : locations.cities
+                  ).map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
                 </select>
               </div>
 
