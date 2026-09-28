@@ -41,6 +41,7 @@ export default function CompanyPage() {
   const [userReplyingTo, setUserReplyingTo] = useState(null);
   const [userReplyContent, setUserReplyContent] = useState("");
   const scrollRef = useRef(null);
+  const reviewFormRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -50,6 +51,7 @@ export default function CompanyPage() {
   useEffect(() => {
     if (location.search.includes('openReview=true')) {
       setShowReviewForm(true);
+      setTimeout(() => reviewFormRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
       window.history.replaceState({}, '', `/company/${slug}`);
     }
   }, [location, slug]);
@@ -382,7 +384,7 @@ export default function CompanyPage() {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
             <button
-              onClick={() => setShowReviewForm(!showReviewForm)}
+              onClick={() => { const willShow = !showReviewForm; setShowReviewForm(willShow); if (willShow) { setTimeout(() => reviewFormRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 100); } }}
               className={`flex-1 py-3 px-6 rounded-xl font-bold text-white transition-all duration-200 ${
                 showReviewForm ? "bg-slate-400 hover:bg-slate-500" : "bg-brand-500 hover:bg-brand-600"
               }`}
@@ -420,29 +422,20 @@ export default function CompanyPage() {
               </button>
             )}
             {!isLoggedIn && (
-              <div className="flex-1 flex flex-col gap-2">
-                <p className="text-xs text-slate-500 dark:text-slate-400 text-center font-medium">Own this business?</p>
-                <div className="flex gap-2">
-                  <Link
-                    to="/register-business"
-                    className="flex-1 py-2.5 px-4 rounded-xl font-semibold bg-coral-500 text-white hover:bg-coral-600 transition-colors duration-200 text-center text-sm"
-                  >
-                    <i className="bx bxs-business mr-1"></i> Register as Business
-                  </Link>
-                  <Link
-                    to="/login"
-                    className="py-2.5 px-4 rounded-xl font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200 text-center text-sm"
-                  >
-                    Sign In
-                  </Link>
-                </div>
-              </div>
+              <Link
+                to={"/register-business?claim=" + encodeURIComponent(company.name) + "&companyId=" + company._id + (company.url ? "&url=" + encodeURIComponent(company.url) : "")}
+                className="flex-1 py-3 px-6 rounded-xl font-semibold bg-coral-500 text-white hover:bg-coral-600 transition-colors duration-200 text-center"
+              >
+                <i className="bx bx-badge-check mr-1"></i> Claim This Business
+              </Link>
             )}
           </div>
 
           {/* Review Form */}
           {showReviewForm && (
+            <div ref={reviewFormRef}>
             <ReviewForm companyId={company._id} companyName={company.name} onReviewAdded={handleReviewAdded} />
+            </div>
           )}
 
           {/* Reviews Section */}
@@ -464,7 +457,7 @@ export default function CompanyPage() {
                 </div>
                 <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-200 mb-2">No reviews yet</h3>
                 <p className="text-slate-500 dark:text-slate-400 mb-6">Be the first to share your experience with {company.name}!</p>
-                <button onClick={() => setShowReviewForm(true)} className="px-6 py-3 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors duration-200 font-semibold">
+                <button onClick={() => { setShowReviewForm(true); setTimeout(() => reviewFormRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 100); }} className="px-6 py-3 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors duration-200 font-semibold">
                   Write the First Review
                 </button>
               </div>

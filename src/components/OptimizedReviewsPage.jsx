@@ -34,6 +34,8 @@ export default function OptimizedReviewsPage({ companyId }) {
   const [loading, setLoading] = useState(true);
   const isDesktop = useIsDesktop(1024);
   const scrollRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -41,7 +43,7 @@ export default function OptimizedReviewsPage({ companyId }) {
         if (companyId) {
           const reviewsRes = await axios.get(`${API_BASE_URL}/reviews/company/${companyId}`);
           const companyRes = await axios.get(`${API_BASE_URL}/companies/slug/${companyId}/with-ratings`);
-          
+
           const mappedReviews = reviewsRes.data.map((review) => ({
             _id: review._id,
             title: review.title || "Review",
@@ -63,7 +65,7 @@ export default function OptimizedReviewsPage({ companyId }) {
                   const cleaned = u.startsWith("http") ? u : "https://" + u;
                   return `https://logo.clearbit.com/${new URL(cleaned).hostname.replace(/^www\./, "")}`;
                 }
-              } catch {}
+              } catch (e) { /* ignore */ }
               return "https://via.placeholder.com/150?text=Company+Logo";
             })(),
             category: companyRes.data.company.category?.name || "General",
@@ -74,7 +76,7 @@ export default function OptimizedReviewsPage({ companyId }) {
           setReviews(mappedReviews);
         } else {
           const response = await axios.get(`${API_BASE_URL}/companies/latest-best-reviews`);
-          
+
           const formattedReviews = response.data.reviews.map(review => ({
             _id: review._id,
             title: review.title,
@@ -90,10 +92,10 @@ export default function OptimizedReviewsPage({ companyId }) {
             category: review.category,
             createdAt: review.createdAt
           }));
-          
+
           setReviews(formattedReviews);
         }
-        
+
         setLoading(false);
       } catch (err) {
         console.error("Error fetching reviews:", err);
@@ -104,7 +106,35 @@ export default function OptimizedReviewsPage({ companyId }) {
     fetchReviews();
   }, [companyId]);
 
-  const visibleReviews = isDesktop ? reviews.slice(0, 6) : reviews.slice(0, 25);
+  // Check scroll position for arrow visibility
+  const checkScrollPosition = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 10);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    checkScrollPosition();
+    el.addEventListener("scroll", checkScrollPosition, { passive: true });
+    // Also check on resize
+    window.addEventListener("resize", checkScrollPosition);
+    return () => {
+      el.removeEventListener("scroll", checkScrollPosition);
+      window.removeEventListener("resize", checkScrollPosition);
+    };
+  }, [checkScrollPosition, reviews]);
+
+  const scrollByAmount = (direction) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cardWidth = el.querySelector(".Reviewcomments")?.offsetWidth || 320;
+    el.scrollBy({ left: direction * (cardWidth + 16), behavior: "smooth" });
+  };
+
+  const visibleReviews = isDesktop ? reviews.slice(0, 12) : reviews.slice(0, 25);
 
   if (loading) {
     return (
@@ -117,14 +147,40 @@ export default function OptimizedReviewsPage({ companyId }) {
   return (
     <>
       <div className="reviews-header mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-100">
-          {companyId ? "Company Reviews" : "Latest Best Reviews"}
-        </h2>
-        {!companyId && (
-          <p className="text-gray-600 dark:text-slate-400 mt-2">
-            {reviews.length} latest reviews from top-rated companies
-          </p>
-        )}
+        <div className="flex items-end justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-100">
+              {companyId ? "Company Reviews" : "Latest Best Reviews"}
+            </h2>
+            {!companyId && (
+              <p className="text-gray-600 dark:text-slate-400 mt-2">
+                {reviews.length} latest reviews from top-rated companies
+              </p>
+            )}
+          </div>
+
+          {/* Desktop slider arrows */}
+          {isDesktop && !companyId && visibleReviews.length > 3 && (
+            <div className="flex gap-2">
+              <button
+                onClick={() => scrollByAmount(-1)}
+                disabled={!canScrollLeft}
+                className="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-slate-600 flex items-center justify-center hover:bg-brand-50 hover:border-brand-300 dark:hover:bg-slate-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Scroll left"
+              >
+                <i className="bx bx-chevron-left text-xl text-slate-600 dark:text-slate-300"></i>
+              </button>
+              <button
+                onClick={() => scrollByAmount(1)}
+                disabled={!canScrollRight}
+                className="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-slate-600 flex items-center justify-center hover:bg-brand-50 hover:border-brand-300 dark:hover:bg-slate-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Scroll right"
+              >
+                <i className="bx bx-chevron-right text-xl text-slate-600 dark:text-slate-300"></i>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {companyId && (
@@ -137,7 +193,7 @@ export default function OptimizedReviewsPage({ companyId }) {
       )}
 
       <div className="reviews">
-        <div className="reviewscomments-row" ref={scrollRef}>
+        <div className={companyId ? "reviewscomments-row" : "reviewscomments-row reviews-slider"} ref={scrollRef}>
           {visibleReviews.map((review, index) => (
             <ReviewBox
               key={review._id || index}
@@ -162,10 +218,10 @@ export default function OptimizedReviewsPage({ companyId }) {
           <ScrollDots scrollRef={scrollRef} itemCount={visibleReviews.length} />
         )}
       </div>
-      
+
       {reviews.length === 0 && !loading && (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">💭</div>
+          <div className="text-6xl mb-4">&#128173;</div>
           <h3 className="text-xl font-semibold text-gray-700 dark:text-slate-200 mb-2">
             No reviews found
           </h3>
