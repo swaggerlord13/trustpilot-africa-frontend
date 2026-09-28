@@ -3,7 +3,7 @@ import Header from "../pages/Header.jsx";
 import { Link } from 'react-router-dom';
 import '../styles/RegisterBusiness.css';
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Footer from "../components/Footer.jsx";
 
 export default function RegisterBusiness() {
@@ -36,6 +36,10 @@ export default function RegisterBusiness() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const claimCompanyName = searchParams.get("claim");
+  const claimCompanyId = searchParams.get("companyId");
+  const claimCompanyUrl = searchParams.get("url");
 
   // If user is already logged in, redirect to homepage
   useEffect(() => {
@@ -45,6 +49,17 @@ export default function RegisterBusiness() {
       navigate("/", { replace: true });
     }
   }, []);
+
+  // Pre-fill company details when claiming an existing company
+  useEffect(() => {
+    if (claimCompanyName) {
+      setCompanyData(prev => ({
+        ...prev,
+        companyName: claimCompanyName,
+        companyUrl: claimCompanyUrl || "",
+      }));
+    }
+  }, [claimCompanyName, claimCompanyUrl]);
 
   // Free email domains that are NOT allowed for business registration
   const blockedDomains = [
@@ -151,6 +166,7 @@ export default function RegisterBusiness() {
           role: companyData.role,
           jobTitle: companyData.jobTitle,
           reason: companyData.reason,
+          ...(claimCompanyId ? { claimCompanyId } : {}),
         }),
       });
 
@@ -255,7 +271,7 @@ export default function RegisterBusiness() {
               <div className="biz-logo-icon">
                 <i className='bx bxs-business'></i>
               </div>
-              <h1>Register Your Business</h1>
+              <h1>{claimCompanyName ? "Claim " + claimCompanyName : "Register Your Business"}</h1>
               <p>Claim your company profile and manage your reviews</p>
             </div>
 
@@ -398,7 +414,8 @@ export default function RegisterBusiness() {
                       value={companyData.companyName}
                       onChange={handleCompanyChange}
                       required
-                      disabled={loading}
+                      disabled={loading || !!claimCompanyName}
+                      readOnly={!!claimCompanyName}
                       className="modern-input"
                     />
                   </div>

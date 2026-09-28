@@ -119,6 +119,7 @@ export default function Register() {
         profileImage: data.profileImage || "",
         isAdmin: data.isAdmin || false,
       }));
+      window.dispatchEvent(new Event("auth-change"));
 
       // Check for pending review from before signup
       const pendingReview = localStorage.getItem("pendingReview");
@@ -150,7 +151,7 @@ export default function Register() {
           localStorage.removeItem("pendingReview");
           showToast("Account created! But we couldn't post your review — please try again.", "warning");
           setTimeout(() => {
-            navigate("/", { replace: true });
+            navigate(review.returnUrl || "/", { replace: true });
             window.location.reload();
           }, 2000);
         }
