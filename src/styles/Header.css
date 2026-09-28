@@ -91,6 +91,29 @@
   box-shadow: 0 4px 12px rgba(0, 82, 204, 0.25);
 }
 
+/* Admin link in header */
+.admin-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm, 8px);
+  background: var(--amber-50, #FFFBEB);
+  color: var(--amber-700, #B45309);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: 1px solid var(--amber-200, #FDE68A);
+}
+.admin-link i {
+  font-size: 16px;
+}
+.admin-link:hover {
+  background: var(--amber-100, #FEF3C7);
+  border-color: var(--amber-300, #FCD34D);
+}
+
 /* ===== Hamburger ===== */
 .hamburger-menu {
   display: none;
@@ -172,6 +195,15 @@
 }
 [data-theme="dark"] .Registerbutton:hover {
   background: #1D4ED8;
+}
+[data-theme="dark"] .admin-link {
+  background: rgba(245, 158, 11, 0.12);
+  color: #FBBF24;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+[data-theme="dark"] .admin-link:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.4);
 }
 [data-theme="dark"] .mobile-overlay.active {
   background: rgba(0, 0, 0, 0.6);

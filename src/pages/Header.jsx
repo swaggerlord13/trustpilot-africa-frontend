@@ -128,6 +128,12 @@ export default function Header() {
                 />
               </Link>
               <span>{user.name || "User"}</span>
+              {user.isAdmin && (
+                <Link to="/admin" className="admin-link" onClick={closeMobileMenu}>
+                  <i className="bx bx-shield-quarter"></i>
+                  <span>Admin</span>
+                </Link>
+              )}
               <button className="Loginbutton" onClick={handleLogout}>
                 Logout
               </button>

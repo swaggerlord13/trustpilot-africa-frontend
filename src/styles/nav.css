@@ -139,6 +139,30 @@
     margin: 0;
   }
 
+  /* Mobile admin link */
+  .mobile-admin-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm, 8px);
+    background: var(--amber-50, #FFFBEB);
+    color: var(--amber-700, #B45309);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--amber-200, #FDE68A);
+    transition: all 0.2s;
+  }
+  .mobile-admin-link i {
+    font-size: 18px;
+  }
+  .mobile-admin-link:hover {
+    background: var(--amber-100, #FEF3C7);
+    color: var(--amber-700, #B45309);
+  }
+
   .profile_info {
     display: flex;
     align-items: center;
@@ -179,5 +203,14 @@
   }
   [data-theme="dark"] .mobile-profile-section .user-name {
     color: #F1F5F9;
+  }
+  [data-theme="dark"] .mobile-admin-link {
+    background: rgba(245, 158, 11, 0.12);
+    color: #FBBF24;
+    border-color: rgba(245, 158, 11, 0.25);
+  }
+  [data-theme="dark"] .mobile-admin-link:hover {
+    background: rgba(245, 158, 11, 0.2);
+    color: #FBBF24;
   }
 }

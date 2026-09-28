@@ -71,6 +71,12 @@ function Nav({ isOpen, onClose, user, onLogout }) {
           </Link>
           <span className="user-name">{user.name || "User"}</span>
           </div>
+          {user.isAdmin && (
+            <Link to="/admin" className="admin-link mobile-admin-link" onClick={handleLinkClick}>
+              <i className="bx bx-shield-quarter"></i>
+              <span>Admin Panel</span>
+            </Link>
+          )}
           <button className="Loginbutton" onClick={() => { onLogout(); handleLinkClick(); }}>
             Logout
           </button>

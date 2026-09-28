@@ -14,7 +14,7 @@ import Categories from "../pages/categories.jsx";
 import CategoryCompanies from "./CategoryCompanies.jsx";
 import Subcategory from "../pages/Subcategory.jsx";
 import ProfilePage from "../pages/Profile.jsx";
-import AdminDashboard from "../pages/Add.jsx";
+import AdminPanel from "../pages/AdminPanel.jsx";
 import CompanyPage from "./companyPage.jsx";
 import CompanyDashboard from "./CompanyDashboard.jsx";
 import BrowseReviews from "../pages/BrowseReviews.jsx";
@@ -31,6 +31,17 @@ import RootLayout from "../components/RootLayout.jsx";
 import "../styles/index.css";
 
 const router = createBrowserRouter([
+  // Admin panel — separate full-page layout (no site header/footer)
+  {
+    path: "/admin",
+    element: (
+      <ProtectedRoute adminOnly>
+        <AdminPanel />
+      </ProtectedRoute>
+    ),
+  },
+
+  // Regular site pages — wrapped in RootLayout (header + footer)
   { element: <RootLayout />, children: [
   { path: "/", element: <App /> },
   { path: "/about", element: <About /> },
@@ -50,7 +61,7 @@ const router = createBrowserRouter([
 
   // User
   { path: "/profile", element: <ProtectedRoute><ProfilePage /></ProtectedRoute> },
-  { path: "/add", element: <ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute> },
+  // Old /add route removed — admin panel is now at /admin (outside RootLayout)
   { path: "/browse-reviews", element: <BrowseReviews /> },
   { path: "/companies", element: <BrowseCompanies /> },
   { path: "/review/:reviewId", element: <FullReviewPage /> },
