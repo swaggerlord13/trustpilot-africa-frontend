@@ -34,7 +34,7 @@ function nameColor(name) {
 }
 
 /**
- * CompanyLogo — tries multiple logo sources before falling back to a letter.
+ * CompanyLogo: tries multiple logo sources before falling back to a letter.
  *
  * Chain: DB logo -> Clearbit -> Google Favicon (high-res) -> letter avatar
  *
@@ -99,7 +99,7 @@ const CompanyLogo = ({ logo, url, name = "?", size = 56, className = "" }) => {
     );
   }
 
-  // 3. Google Favicon API (high-res 128px) — covers almost every website
+  // 3. Google Favicon API (high-res 128px). Covers almost every website
   if (domain && !googleFailed) {
     return (
       <div style={wrapperStyle} className={className}>

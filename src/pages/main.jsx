@@ -31,7 +31,7 @@ import RootLayout from "../components/RootLayout.jsx";
 import "../styles/index.css";
 
 const router = createBrowserRouter([
-  // Admin panel — separate full-page layout (no site header/footer)
+  // Admin panel: separate full-page layout (no site header/footer)
   {
     path: "/admin",
     element: (
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
     ),
   },
 
-  // Regular site pages — wrapped in RootLayout (header + footer)
+  // Regular site pages: wrapped in RootLayout (header + footer)
   { element: <RootLayout />, children: [
   { path: "/", element: <App /> },
   { path: "/about", element: <About /> },
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
 
   // User
   { path: "/profile", element: <ProtectedRoute><ProfilePage /></ProtectedRoute> },
-  // Old /add route removed — admin panel is now at /admin (outside RootLayout)
+  // Old /add route removed. Admin panel is now at /admin (outside RootLayout)
   { path: "/browse-reviews", element: <BrowseReviews /> },
   { path: "/companies", element: <BrowseCompanies /> },
   { path: "/review/:reviewId", element: <FullReviewPage /> },

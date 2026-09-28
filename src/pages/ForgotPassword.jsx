@@ -81,7 +81,7 @@ export default function ForgotPassword() {
                 <i className='bx bxs-lock-open-alt'></i>
               </div>
               <h1>Forgot Password?</h1>
-              <p>No worries — enter your email and we'll send you a link to reset it.</p>
+              <p>No worries! Enter your email and we'll send you a link to reset it.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="login-form">

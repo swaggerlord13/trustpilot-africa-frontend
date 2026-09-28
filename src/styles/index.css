@@ -1,14 +1,14 @@
-/* ===== TrustPilot Africa — Fresh Design System ===== */
+/* ===== TrustPilot Africa: Fresh Design System ===== */
 
 :root {
-  /* Primary — Confident Blue */
+  /* Primary: Confident Blue */
   --brand-500: #0052CC;
   --brand-600: #0047B3;
   --brand-700: #003D99;
   --brand-50: #EEF4FF;
   --brand-100: #D9E5FF;
 
-  /* Accent — Warm Coral */
+  /* Accent: Warm Coral */
   --coral-500: #FF6B4A;
   --coral-600: #E55A3A;
   --coral-50: #FFF1EE;
@@ -258,7 +258,7 @@ body {
   color: #F1F5F9;
 }
 
-/* ===== Dark Mode — Global Catch-all ===== */
+/* ===== Dark Mode: Global Catch-all ===== */
 /* Toast in dark mode */
 [data-theme="dark"] .toast-notification {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);

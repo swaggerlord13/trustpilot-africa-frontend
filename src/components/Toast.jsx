@@ -116,7 +116,7 @@ export function ToastProvider({ children }) {
     <ToastContext.Provider value={showToast}>
       {children}
 
-      {/* Toast stack — fixed top-right */}
+      {/* Toast stack: fixed top-right */}
       {toasts.length > 0 && (
         <div
           style={{

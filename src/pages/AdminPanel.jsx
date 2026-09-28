@@ -34,7 +34,7 @@ function StarDisplay({ rating }) {
 }
 
 function formatDate(d) {
-  if (!d) return "—";
+  if (!d) return "-";
   return new Date(d).toLocaleDateString("en-GB", {
     day: "numeric",
     month: "short",
@@ -711,14 +711,14 @@ export default function AdminPanel() {
                           </td>
                           <td>
                             <span className="admin-badge admin-badge-cat">
-                              {c.category?.name || "—"}
+                              {c.category?.name || "-"}
                             </span>
                           </td>
-                          <td>{c.city && c.country ? `${c.city}, ${c.country}` : c.country || "—"}</td>
+                          <td>{c.city && c.country ? `${c.city}, ${c.country}` : c.country || "-"}</td>
                           <td className="admin-url-cell">
                             {c.url ? (
                               <a href={c.url} target="_blank" rel="noreferrer">{c.url.replace(/^https?:\/\//, "").slice(0, 30)}</a>
-                            ) : "—"}
+                            ) : "-"}
                           </td>
                           <td>{formatDate(c.createdAt)}</td>
                           <td>

@@ -213,7 +213,7 @@ export default function OptimizedReviewsPage({ companyId }) {
           ))}
         </div>
 
-        {/* Dot indicators — mobile only */}
+        {/* Dot indicators: mobile only */}
         {!isDesktop && visibleReviews.length > 1 && (
           <ScrollDots scrollRef={scrollRef} itemCount={visibleReviews.length} />
         )}

@@ -120,14 +120,14 @@ export default function Header() {
 
           {user ? (
             <>
-              <Link to="/profile" onClick={closeMobileMenu}>
+              <Link to="/profile" onClick={closeMobileMenu} className="profile-link">
                 <img
                   className="profileimage"
-                  src={user.profileImage || "https://avatar.iran.liara.run/public"}
+                  src={user.profileImage || "/default-avatar.svg"}
                   alt="Profile"
                 />
+                <span>{user.name || "User"}</span>
               </Link>
-              <span>{user.name || "User"}</span>
               {user.isAdmin && (
                 <Link to="/admin" className="admin-link" onClick={closeMobileMenu}>
                   <i className="bx bx-shield-quarter"></i>

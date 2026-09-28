@@ -103,7 +103,7 @@ const BrowseReviews = () => {
             {debouncedSearch && (
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 text-center">
                 Showing results for "<span className="font-medium text-slate-700 dark:text-slate-200">{debouncedSearch}</span>"
-                {pagination.totalReviews !== undefined && ` — ${pagination.totalReviews} review${pagination.totalReviews !== 1 ? "s" : ""} found`}
+                {pagination.totalReviews !== undefined && ` (${pagination.totalReviews} review${pagination.totalReviews !== 1 ? "s" : ""} found)`}
               </p>
             )}
           </div>

@@ -91,6 +91,23 @@
   box-shadow: 0 4px 12px rgba(0, 82, 204, 0.25);
 }
 
+/* Profile link: wraps image + name together */
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm, 8px);
+  transition: background 0.2s;
+}
+.profile-link:hover {
+  background: var(--slate-50, #F8FAFC);
+}
+[data-theme="dark"] .profile-link:hover {
+  background: rgba(255,255,255,0.06);
+}
+
 /* Admin link in header */
 .admin-link {
   display: flex;

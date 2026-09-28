@@ -62,14 +62,14 @@ function Nav({ isOpen, onClose, user, onLogout }) {
       {user ? (
         <div className="mobile-profile-section">
           <div className="profile_info">
-          <Link to="/profile" onClick={handleLinkClick}>
+          <Link to="/profile" onClick={handleLinkClick} className="profile-link-mobile">
             <img
               className="profileimage"
-              src={user.profileImage || "https://avatar.iran.liara.run/public"}
+              src={user.profileImage || "/default-avatar.svg"}
               alt="Profile"
             />
+            <span className="user-name">{user.name || "User"}</span>
           </Link>
-          <span className="user-name">{user.name || "User"}</span>
           </div>
           {user.isAdmin && (
             <Link to="/admin" className="admin-link mobile-admin-link" onClick={handleLinkClick}>

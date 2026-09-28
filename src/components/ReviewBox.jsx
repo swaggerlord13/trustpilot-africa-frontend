@@ -69,7 +69,7 @@ export default function ReviewBox({ _id, title, comment, rating, user, date, com
         <p><strong>{user}</strong></p>
       </div>
 
-      {/* Review content — flex-grows to fill space */}
+      {/* Review content: flex-grows to fill space */}
       <div className="review-body">
         <h3 className="review-title">{title}</h3>
         <StarRating rating={rating} />
@@ -84,7 +84,7 @@ export default function ReviewBox({ _id, title, comment, rating, user, date, com
         </p>
       </div>
 
-      {/* Company footer — always pinned to bottom */}
+      {/* Company footer: always pinned to bottom */}
       <Link to={url}>
         <div className="companydetails">
           <div className="company-logo-wrap">

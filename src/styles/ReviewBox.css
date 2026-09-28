@@ -96,7 +96,7 @@
   font-size: 14px;
 }
 
-/* ── Company footer — always pinned to bottom ── */
+/* ── Company footer: always pinned to bottom ── */
 .companydetails {
   display: flex;
   flex-direction: row;

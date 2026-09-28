@@ -172,6 +172,19 @@
   .profile_info a {
     flex-shrink: 0;
   }
+  .profile-link-mobile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm, 8px);
+    transition: background 0.2s;
+  }
+  .profile-link-mobile:hover {
+    background: var(--slate-50, #F8FAFC);
+  }
 }
 
 /* ===== Dark Mode ===== */
@@ -212,5 +225,8 @@
   [data-theme="dark"] .mobile-admin-link:hover {
     background: rgba(245, 158, 11, 0.2);
     color: #FBBF24;
+  }
+  [data-theme="dark"] .profile-link-mobile:hover {
+    background: rgba(255,255,255,0.06);
   }
 }

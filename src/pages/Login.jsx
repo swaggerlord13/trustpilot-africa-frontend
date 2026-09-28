@@ -3,10 +3,11 @@ import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+
+const HAS_GOOGLE = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 import Footer from "../components/Footer.jsx";
-import { useToast } from "../components/Toast.jsx";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -17,16 +18,6 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const showToast = useToast();
-
-  // If user is already logged in, redirect to homepage
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-    if (token && user) {
-      navigate("/", { replace: true });
-    }
-  }, []);
 
   // Auto-hide notifications after 5 seconds
   useEffect(() => {
@@ -54,6 +45,7 @@ export default function Login() {
         body: JSON.stringify({ email, password }),
       });
 
+      // Safely parse response: handle non-JSON responses (e.g. rate limiter HTML)
       let data;
       try {
         data = await res.json();
@@ -65,6 +57,7 @@ export default function Login() {
         throw new Error(data.error || "Invalid email or password");
       }
 
+      // Save token and user data
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify({
         _id: data._id,
@@ -74,53 +67,21 @@ export default function Login() {
         isAdmin: data.isAdmin || false
       }));
 
+      // If remember me is checked, save email
       if (rememberMe) {
         localStorage.setItem("rememberedEmail", email);
       } else {
         localStorage.removeItem("rememberedEmail");
       }
 
-      // Check for pending review from before login
-      const pendingReview = localStorage.getItem("pendingReview");
-      if (pendingReview) {
-        try {
-          const review = JSON.parse(pendingReview);
-          showToast("Welcome back! Submitting your review...", "success");
-          
-          const reviewRes = await axios.post(
-            `${API_BASE_URL}/reviews`,
-            {
-              companyId: review.companyId,
-              rating: review.rating,
-              comment: review.comment,
-              title: review.title
-            },
-            { headers: { Authorization: `Bearer ${data.token}` } }
-          );
-          
-          localStorage.removeItem("pendingReview");
-          showToast("Your review has been posted!", "success");
-          
-          setTimeout(() => {
-            navigate(review.returnUrl || "/", { replace: true });
-            window.location.reload();
-          }, 1500);
-        } catch (reviewErr) {
-          console.error("Failed to auto-submit review:", reviewErr);
-          localStorage.removeItem("pendingReview");
-          showToast("Welcome back! But we couldn't post your review — please try again.", "warning");
-          setTimeout(() => {
-            navigate("/", { replace: true });
-            window.location.reload();
-          }, 2000);
-        }
-      } else {
-        setSuccess("Welcome back! Redirecting...");
-        setTimeout(() => {
-          navigate("/", { replace: true });
-          window.location.reload();
-        }, 1500);
-      }
+      // Show success message
+      setSuccess("Welcome back! Redirecting...");
+
+      // Redirect after showing success
+      setTimeout(() => {
+        navigate("/", { replace: true });
+        window.location.reload();
+      }, 1500);
 
     } catch (err) {
       setError(err.message);
@@ -137,6 +98,51 @@ export default function Login() {
       setRememberMe(true);
     }
   }, []);
+
+  // ========================
+  // GOOGLE LOGIN
+  // ========================
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await fetch(`${API_BASE_URL}/auth/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          credential: credentialResponse.credential,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Google login failed");
+
+      // Save token and user (same as normal login)
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify({
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+        profileImage: data.profileImage || "",
+        isAdmin: data.isAdmin || false,
+      }));
+
+      setSuccess("Welcome! Redirecting...");
+      setTimeout(() => {
+        navigate("/", { replace: true });
+        window.location.reload();
+      }, 1500);
+    } catch (err) {
+      setError(err.message || "Google login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setError("Google login failed. Please try again.");
+  };
 
   return (
     <>
@@ -257,33 +263,31 @@ export default function Login() {
               </button>
             </form>
 
-            <div className="divider">
-              <span>Or continue with</span>
-            </div>
+            {HAS_GOOGLE && (
+              <>
+                <div className="divider">
+                  <span>Or continue with</span>
+                </div>
 
-            <div className="social-login-buttons">
-              <button type="button" className="social-btn google" title="Sign in with Google">
-                <i className='bx bxl-google'></i>
-              </button>
-              <button type="button" className="social-btn facebook" title="Sign in with Facebook">
-                <i className='bx bxl-facebook'></i>
-              </button>
-              <button type="button" className="social-btn apple" title="Sign in with Apple">
-                <i className='bx bxl-apple'></i>
-              </button>
-            </div>
+                <div className="social-login-buttons">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleError}
+                    theme="outline"
+                    size="large"
+                    width="100%"
+                    text="continue_with"
+                    shape="rectangular"
+                  />
+                </div>
+              </>
+            )}
 
             <div className="auth-footer">
               <p>
-                Don't have an account?{' '}
-                <Link to="/register" className="switch-link">
+                Don't have an account?
+                <Link to="/Register" className="switch-link">
                   Create Account
-                </Link>
-              </p>
-              <p style={{ marginTop: '0.5rem' }}>
-                Own a business?{' '}
-                <Link to="/register-business" className="switch-link" style={{ color: '#FF6B4A' }}>
-                  Register as a Business
                 </Link>
               </p>
             </div>
@@ -313,7 +317,7 @@ export default function Login() {
         </div>
       </div>
 
-      <Footer />
+          <Footer />
     </>
   );
 }

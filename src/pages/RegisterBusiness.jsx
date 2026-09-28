@@ -7,7 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Footer from "../components/Footer.jsx";
 
 export default function RegisterBusiness() {
-  // Step state — we break the form into 2 steps so it doesn't feel overwhelming
+  // Step state: we break the form into 2 steps so it doesn't feel overwhelming
   const [step, setStep] = useState(1);
 
   // Personal info (Step 1)
@@ -265,7 +265,7 @@ export default function RegisterBusiness() {
 
       <div className="biz-register-container">
         <div className="biz-register-wrapper">
-          {/* Left side — Form */}
+          {/* Left side: Form */}
           <div className="biz-register-card">
             <div className="biz-register-header">
               <div className="biz-logo-icon">
@@ -547,7 +547,7 @@ export default function RegisterBusiness() {
             </div>
           </div>
 
-          {/* Right side — Business Benefits */}
+          {/* Right side: Business Benefits */}
           <div className="biz-benefits-panel">
             <div className="biz-benefits-content">
               <h2>Grow Your Business</h2>
@@ -582,7 +582,7 @@ export default function RegisterBusiness() {
                   </div>
                   <div className="biz-benefit-text">
                     <h3>Manage Your Profile</h3>
-                    <p>Keep your company info up to date — logo, description, and website</p>
+                    <p>Keep your company info up to date. Logo, description, and website</p>
                   </div>
                 </div>
 

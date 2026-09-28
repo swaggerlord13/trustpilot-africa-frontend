@@ -30,7 +30,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
         returnUrl: window.location.pathname
       };
       localStorage.setItem("pendingReview", JSON.stringify(pendingReview));
-      showToast("Create an account to publish your review — we\'ll save your draft!", "info", 5000);
+      showToast("Create an account to publish your review. We\'ll save your draft!", "info", 5000);
       setTimeout(() => {
         navigate("/register");
       }, 1500);
@@ -38,7 +38,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
     }
 
     if (rating === 0) {
-      showToast("Please select a star rating — tap a star to rate this company", "warning");
+      showToast("Please select a star rating. Tap a star to rate this company", "warning");
       return;
     }
 

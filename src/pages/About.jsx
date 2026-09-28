@@ -11,7 +11,7 @@ export default function About() {
             About TrustPilot Africa
           </h1>
           <p className="text-lg md:text-xl text-brand-100 max-w-2xl mx-auto">
-            We're building Africa's most trusted review platform — a place where
+            We're building Africa's most trusted review platform, a place where
             honest customer experiences drive better business.
           </p>
         </div>
@@ -30,7 +30,7 @@ export default function About() {
               TrustPilot Africa exists to change that.
             </p>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-              We give everyday consumers a voice — and give businesses a reason
+              We give everyday consumers a voice and give businesses a reason
               to earn trust, not just attention. Every review on this platform is
               tied to a real user account, making it harder to fake and easier to
               trust.
@@ -43,7 +43,7 @@ export default function About() {
             </h3>
             <p className="text-slate-600 dark:text-slate-300">
               We understand the unique challenges of doing business across the
-              continent — from Lagos to Nairobi, Accra to Johannesburg.
+              continent, from Lagos to Nairobi, Accra to Johannesburg.
             </p>
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function About() {
                 Write a Review
               </h3>
               <p className="text-sm text-slate-500 dark:text-slate-400">
-                Share your real experience — rate 1 to 5 stars and tell others
+                Share your real experience. Rate 1 to 5 stars and tell others
                 what happened. One review per company, so every opinion counts.
               </p>
             </div>
@@ -103,8 +103,8 @@ export default function About() {
         </h2>
         <div className="grid sm:grid-cols-2 gap-5">
           {[
-            { icon: "bx bxs-shield-check", title: "Transparency", desc: "Every review is public and tied to a verified user account." },
-            { icon: "bx bxs-balance", title: "Fairness", desc: "Both positive and negative reviews are shown — no pay-to-play." },
+            { icon: "bx bxs-check-shield", title: "Transparency", desc: "Every review is public and tied to a verified user account." },
+            { icon: "bx bxs-balance", title: "Fairness", desc: "Both positive and negative reviews are shown. No pay-to-play." },
             { icon: "bx bxs-group", title: "Community", desc: "Built by consumers, for consumers. Your experience helps others." },
             { icon: "bx bxs-rocket", title: "Growth", desc: "We help honest businesses stand out and attract the customers they deserve." },
           ].map((item) => (

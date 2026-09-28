@@ -3,10 +3,11 @@ import Header from "../pages/Header.jsx";
 import { Link } from 'react-router-dom';
 import '../styles/Register.css';
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+
+const HAS_GOOGLE = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 import Footer from "../components/Footer.jsx";
-import { useToast } from "../components/Toast.jsx";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -26,17 +27,8 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
-  const showToast = useToast();
 
-  // If user is already logged in, redirect to homepage
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-    if (token && user) {
-      navigate("/", { replace: true });
-    }
-  }, []);
-
+  // Password strength calculator
   const calculatePasswordStrength = (password) => {
     let strength = 0;
     if (password.length >= 8) strength++;
@@ -46,14 +38,21 @@ export default function Register() {
     return strength;
   };
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    // Update password strength when password changes
     if (name === 'password') {
       setPasswordStrength(calculatePasswordStrength(value));
     }
   };
 
+  // Auto-hide notifications
   useEffect(() => {
     if (error || success) {
       const timer = setTimeout(() => {
@@ -64,11 +63,13 @@ export default function Register() {
     }
   }, [error, success]);
 
+  // Submit form (normal email/password registration)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
+    // Validation
     if (!agreedToTerms) {
       setError("Please agree to the Terms & Conditions");
       return;
@@ -89,7 +90,9 @@ export default function Register() {
 
       const res = await fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
@@ -98,6 +101,7 @@ export default function Register() {
         }),
       });
 
+      // Safely parse response: handle non-JSON responses (e.g. rate limiter HTML)
       let data;
       try {
         data = await res.json();
@@ -111,6 +115,7 @@ export default function Register() {
         return;
       }
 
+      // Save token + user info to localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify({
         _id: data._id,
@@ -119,49 +124,15 @@ export default function Register() {
         profileImage: data.profileImage || "",
         isAdmin: data.isAdmin || false,
       }));
-      window.dispatchEvent(new Event("auth-change"));
 
-      // Check for pending review from before signup
-      const pendingReview = localStorage.getItem("pendingReview");
-      if (pendingReview) {
-        try {
-          const review = JSON.parse(pendingReview);
-          showToast("Welcome aboard! Submitting your review...", "success");
-          
-          const reviewRes = await axios.post(
-            `${API_BASE_URL}/reviews`,
-            {
-              companyId: review.companyId,
-              rating: review.rating,
-              comment: review.comment,
-              title: review.title
-            },
-            { headers: { Authorization: `Bearer ${data.token}` } }
-          );
-          
-          localStorage.removeItem("pendingReview");
-          showToast("Account created and your review is live!", "success");
-          
-          setTimeout(() => {
-            navigate(review.returnUrl || "/", { replace: true });
-            window.location.reload();
-          }, 1500);
-        } catch (reviewErr) {
-          console.error("Failed to auto-submit review:", reviewErr);
-          localStorage.removeItem("pendingReview");
-          showToast("Account created! But we couldn't post your review — please try again.", "warning");
-          setTimeout(() => {
-            navigate(review.returnUrl || "/", { replace: true });
-            window.location.reload();
-          }, 2000);
-        }
-      } else {
-        setSuccess("Welcome aboard! Redirecting...");
-        setTimeout(() => {
-          navigate("/", { replace: true });
-          window.location.reload();
-        }, 2000);
-      }
+      // Show success message
+      setSuccess("Welcome aboard! Redirecting...");
+
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        navigate("/", { replace: true });
+        window.location.reload();
+      }, 2000);
 
     } catch (err) {
       console.error("Register error:", err);
@@ -169,6 +140,55 @@ export default function Register() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // ========================
+  // GOOGLE SIGN UP
+  // ========================
+  // Uses GoogleLogin component from @react-oauth/google
+  // It renders Google's own button and handles the popup.
+  // When user picks their Google account, we get a credential (JWT ID token)
+  // and send it to our backend to verify + create/find the user.
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await fetch(`${API_BASE_URL}/auth/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          credential: credentialResponse.credential,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Google sign up failed");
+
+      // Save token and user data
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify({
+        _id: data._id,
+        name: data.name,
+        email: data.email,
+        profileImage: data.profileImage || "",
+        isAdmin: data.isAdmin || false,
+      }));
+
+      setSuccess("Account created! Redirecting...");
+      setTimeout(() => {
+        navigate("/", { replace: true });
+        window.location.reload();
+      }, 1500);
+    } catch (err) {
+      setError(err.message || "Google sign up failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setError("Google sign up failed. Please try again.");
   };
 
   const getPasswordStrengthColor = () => {
@@ -296,18 +316,34 @@ export default function Register() {
                   </button>
                 </div>
 
+                {/* Password Strength Indicator */}
                 {(passwordFocus || formData.password) && (
                   <div className="password-strength">
                     <div className="strength-bars">
-                      {[1, 2, 3, 4].map(level => (
-                        <div
-                          key={level}
-                          className="strength-bar"
-                          style={{
-                            backgroundColor: passwordStrength >= level ? getPasswordStrengthColor() : '#e5e7eb'
-                          }}
-                        ></div>
-                      ))}
+                      <div
+                        className="strength-bar"
+                        style={{
+                          backgroundColor: passwordStrength >= 1 ? getPasswordStrengthColor() : '#e5e7eb'
+                        }}
+                      ></div>
+                      <div
+                        className="strength-bar"
+                        style={{
+                          backgroundColor: passwordStrength >= 2 ? getPasswordStrengthColor() : '#e5e7eb'
+                        }}
+                      ></div>
+                      <div
+                        className="strength-bar"
+                        style={{
+                          backgroundColor: passwordStrength >= 3 ? getPasswordStrengthColor() : '#e5e7eb'
+                        }}
+                      ></div>
+                      <div
+                        className="strength-bar"
+                        style={{
+                          backgroundColor: passwordStrength >= 4 ? getPasswordStrengthColor() : '#e5e7eb'
+                        }}
+                      ></div>
                     </div>
                     <span className="strength-text" style={{ color: getPasswordStrengthColor() }}>
                       {getPasswordStrengthText()}
@@ -374,33 +410,31 @@ export default function Register() {
               </button>
             </form>
 
-            <div className="divider">
-              <span>Or sign up with</span>
-            </div>
+            {HAS_GOOGLE && (
+              <>
+                <div className="divider">
+                  <span>Or sign up with</span>
+                </div>
 
-            <div className="social-login-buttons">
-              <button type="button" className="social-btn google" title="Sign up with Google">
-                <i className='bx bxl-google'></i>
-              </button>
-              <button type="button" className="social-btn facebook" title="Sign up with Facebook">
-                <i className='bx bxl-facebook'></i>
-              </button>
-              <button type="button" className="social-btn apple" title="Sign up with Apple">
-                <i className='bx bxl-apple'></i>
-              </button>
-            </div>
+                <div className="social-login-buttons">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleError}
+                    theme="outline"
+                    size="large"
+                    width="100%"
+                    text="signup_with"
+                    shape="rectangular"
+                  />
+                </div>
+              </>
+            )}
 
             <div className="auth-footer">
               <p>
-                Already have an account?{' '}
-                <Link to="/login" className="switch-link">
+                Already have an account?
+                <Link to="/Login" className="switch-link">
                   Sign In
-                </Link>
-              </p>
-              <p style={{ marginTop: '0.5rem' }}>
-                Own a business?{' '}
-                <Link to="/register-business" className="switch-link" style={{ color: '#FF6B4A' }}>
-                  Register as a Business
                 </Link>
               </p>
             </div>
@@ -471,7 +505,7 @@ export default function Register() {
         </div>
       </div>
 
-      <Footer />
+          <Footer />
     </>
   );
 }

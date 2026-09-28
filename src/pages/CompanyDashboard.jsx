@@ -293,7 +293,7 @@ export default function CompanyDashboard() {
               </div>
               <div className="text-right">
                 <div className={`text-3xl font-bold ${ratingColor(stats?.avgRating || 0)}`}>
-                  {stats?.avgRating || "—"}
+                  {stats?.avgRating || "-"}
                 </div>
                 <div className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500">
                   {stats?.totalReviews || 0} reviews

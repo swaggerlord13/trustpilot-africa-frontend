@@ -93,7 +93,7 @@ function Homepage() {
   const searchTimeout = useRef(null);
 
   useEffect(() => {
-    // Fetch basic stats only — no more loading ALL companies into memory
+    // Fetch basic stats
     fetch(`${API_BASE_URL}/companies/stats`)
       .then(res => res.json())
       .then(data => {
@@ -109,7 +109,7 @@ function Homepage() {
       .catch(e => { /* stats are best-effort */ });
   }, []);
 
-  // Debounced search — calls the backend API instead of filtering locally
+  // Debounced search
   useEffect(() => {
     if (!search.trim()) {
       setSuggestions([]);
@@ -403,7 +403,7 @@ function Homepage() {
           <p className="text-brand-100 text-base md:text-lg max-w-2xl mx-auto mb-8">
             {isLoggedIn
               ? "You're already part of the movement. Every honest review you write helps fellow Africans make better decisions."
-              : "Thousands of Africans are sharing honest experiences. Your next review could save someone from a bad deal — or help a great business get noticed."}
+              : "Thousands of Africans are already sharing honest experiences. Your review could save someone from a bad deal or help a great business get the attention it deserves."}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {isLoggedIn ? (
@@ -447,17 +447,17 @@ function Homepage() {
               Why Choose Us
             </span>
             <h2 className="text-2xl md:text-4xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight text-center">
-              Built Different. Built for Africa.
+              Why People Trust This Platform
             </h2>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
-              We're not another review platform. We're the review platform that Africa actually needs.
+              We built this specifically for African consumers and businesses. Here is what makes it work.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                icon: "bxs-shield-check",
+                icon: "bxs-check-shield",
                 color: "text-brand-500",
                 bg: "bg-brand-50 dark:bg-brand-500/15",
                 title: "100% Verified Accounts",
