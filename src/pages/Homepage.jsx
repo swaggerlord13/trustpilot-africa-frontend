@@ -85,45 +85,60 @@ function Homepage() {
   const navigate = useNavigate();
   const showToast = useToast();
   const [search, setSearch] = useState("");
-  const [companies, setCompanies] = useState([]);
-  const [filtered, setFiltered] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [defaultCompanyName, setDefaultCompanyName] = useState("");
   const [stats, setStats] = useState({ companies: 0, reviews: 0, users: 0, categories: 0 });
+  const searchTimeout = useRef(null);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/companies`)
-      .then(res => res.json())
-      .then(data => {
-        const arr = Array.isArray(data) ? data : [];
-        setCompanies(arr);
-        // Quick stats from the companies list
-        setStats(prev => ({ ...prev, companies: arr.length }));
-      })
-      .catch(err => console.error("Error fetching companies:", err));
-
-    // Fetch basic stats
+    // Fetch basic stats only — no more loading ALL companies into memory
     fetch(`${API_BASE_URL}/companies/stats`)
       .then(res => res.json())
       .then(data => {
         if (data) {
-          setStats(prev => ({
-            companies: data.totalCompanies || prev.companies,
+          setStats({
+            companies: data.totalCompanies || 0,
             reviews: data.totalReviews || 0,
             users: data.totalUsers || 0,
             categories: data.totalCategories || 0,
-          }));
+          });
         }
       })
       .catch(e => { /* stats are best-effort */ });
   }, []);
 
+  // Debounced search — calls the backend API instead of filtering locally
   useEffect(() => {
-    const filteredList = companies.filter(c =>
-      c.name.toLowerCase().includes(search.toLowerCase())
-    );
-    setFiltered(filteredList);
-  }, [search, companies]);
+    if (!search.trim()) {
+      setSuggestions([]);
+      return;
+    }
+    if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    searchTimeout.current = setTimeout(() => {
+      setIsSearching(true);
+      fetch(`${API_BASE_URL}/companies/search?q=${encodeURIComponent(search.trim())}&limit=6`)
+        .then(res => res.json())
+        .then(data => {
+          setSuggestions(data.companies || []);
+          setIsSearching(false);
+        })
+        .catch(e => {
+          console.error("Search error:", e);
+          setSuggestions([]);
+          setIsSearching(false);
+        });
+    }, 300);
+    return () => { if (searchTimeout.current) clearTimeout(searchTimeout.current); };
+  }, [search]);
+
+  // Enter key navigates to the full Browse Companies page with the search query
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter" && search.trim()) {
+      navigate(`/companies?q=${encodeURIComponent(search.trim())}`);
+    }
+  };
 
   const handleAddCompany = async ({ name, url }) => {
     const newCompany = { name, url: url || "" };
@@ -175,40 +190,74 @@ function Homepage() {
           <i className="bx bx-search absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-slate-400"></i>
           <input
             type="text"
-            placeholder="Search for a company..."
+            placeholder="Search companies, categories, or cities..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
             className="w-full h-14 md:h-16 rounded-2xl border-2 border-slate-200 pl-14 pr-5 text-base md:text-lg focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-100 transition-all bg-white dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 shadow-sm"
           />
 
           {/* Search Results Dropdown */}
           {search.trim() !== "" && (
-            <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 shadow-xl rounded-xl max-h-60 overflow-y-auto z-50 border border-slate-100">
-              {filtered.length > 0 ? (
-                filtered.map((company) => (
+            <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 shadow-xl rounded-xl max-h-80 overflow-y-auto z-50 border border-slate-100 dark:border-slate-700">
+              {isSearching ? (
+                <div className="flex items-center justify-center py-4 text-slate-400">
+                  <i className="bx bx-loader-alt bx-spin mr-2"></i> Searching...
+                </div>
+              ) : suggestions.length > 0 ? (
+                <>
+                  {suggestions.map((company) => (
+                    <Link
+                      key={company._id}
+                      to={`/company/${company.slug}`}
+                      className="flex items-center gap-3 py-3 px-5 hover:bg-brand-50 dark:hover:bg-slate-700 transition text-slate-700 dark:text-slate-200"
+                    >
+                      <i className="bx bx-building text-slate-400 text-lg"></i>
+                      <div className="min-w-0 flex-1">
+                        <div className="font-medium truncate">{company.name}</div>
+                        {(company.city || company.country) && (
+                          <div className="text-xs text-slate-400">{[company.city, company.country].filter(Boolean).join(", ")}</div>
+                        )}
+                      </div>
+                      {company.avgRating > 0 && (
+                        <span className="text-xs font-semibold text-amber-500 flex items-center gap-0.5">
+                          <i className="bx bxs-star"></i> {company.avgRating.toFixed(1)}
+                        </span>
+                      )}
+                    </Link>
+                  ))}
+                  {/* See all results link */}
                   <Link
-                    key={company._id}
-                    to={`/company/${company.slug}`}
-                    className="block py-3 px-5 hover:bg-brand-50 transition text-slate-700"
+                    to={`/companies?q=${encodeURIComponent(search.trim())}`}
+                    className="block py-3 px-5 text-center text-sm font-semibold text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-slate-700 transition border-t border-slate-100 dark:border-slate-700"
                   >
-                    {company.name}
+                    See all results for &quot;{search}&quot; <i className="bx bx-right-arrow-alt"></i>
                   </Link>
-                ))
+                </>
               ) : (
                 <div className="flex flex-col items-center gap-3 p-5">
-                  <p className="text-slate-400 italic text-center">
+                  <p className="text-slate-400 dark:text-slate-500 italic text-center">
                     No companies found for &quot;{search}&quot;
                   </p>
-                  <button
-                    className="px-5 py-2.5 rounded-xl text-white bg-brand-500 hover:bg-brand-600 transition font-semibold text-sm"
-                    onClick={() => {
-                      setDefaultCompanyName(search);
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    <i className="bx bx-plus mr-1"></i>
-                    Add This Company
-                  </button>
+                  <div className="flex gap-2">
+                    <Link
+                      to={`/companies?q=${encodeURIComponent(search.trim())}`}
+                      className="px-4 py-2 rounded-xl text-brand-600 border border-brand-200 hover:bg-brand-50 transition font-semibold text-sm"
+                    >
+                      <i className="bx bx-search mr-1"></i>
+                      Full Search
+                    </Link>
+                    <button
+                      className="px-4 py-2 rounded-xl text-white bg-brand-500 hover:bg-brand-600 transition font-semibold text-sm"
+                      onClick={() => {
+                        setDefaultCompanyName(search);
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      <i className="bx bx-plus mr-1"></i>
+                      Add Company
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
