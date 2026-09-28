@@ -12,17 +12,34 @@ import { useToast } from "../components/Toast.jsx";
 function useCountUp(target, duration = 2000, startOnView = true) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
-  const started = useRef(false);
+  const hasBeenVisible = useRef(false);
 
   useEffect(() => {
-    if (!startOnView) return;
+    if (!startOnView || !target) return;
     const el = ref.current;
     if (!el) return;
 
+    // If already visible and target changed (API data arrived), animate immediately
+    if (hasBeenVisible.current) {
+      const start = performance.now();
+      const step = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        if (progress >= 1) {
+          setCount(target);
+          return;
+        }
+        const eased = 1 - Math.pow(2, -10 * progress);
+        setCount(Math.floor(eased * target));
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
+        if (entry.isIntersecting && !hasBeenVisible.current) {
+          hasBeenVisible.current = true;
           const start = performance.now();
           const step = (now) => {
             const progress = Math.min((now - start) / duration, 1);
@@ -258,7 +275,7 @@ function Homepage() {
             <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase bg-brand-50 text-brand-600 dark:bg-brand-500/20 dark:text-brand-300 mb-4">
               Simple &amp; Transparent
             </span>
-            <h2 className="text-2xl md:text-4xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight">
+            <h2 className="text-2xl md:text-4xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight text-center">
               How TrustPilot Africa Works
             </h2>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
@@ -329,7 +346,7 @@ function Homepage() {
             <i className="bx bxs-megaphone"></i>
             Every Review Matters
           </div>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-white mb-4 tracking-tight">
+          <h2 className="text-2xl md:text-4xl font-extrabold text-white mb-4 tracking-tight text-center">
             {isLoggedIn ? "Your Voice Shapes Trust Across Africa" : "Join Africa's Fastest Growing Review Community"}
           </h2>
           <p className="text-brand-100 text-base md:text-lg max-w-2xl mx-auto mb-8">
@@ -378,7 +395,7 @@ function Homepage() {
             <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase bg-coral-50 text-coral-600 dark:bg-coral-500/20 dark:text-coral-300 mb-4">
               Why Choose Us
             </span>
-            <h2 className="text-2xl md:text-4xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight">
+            <h2 className="text-2xl md:text-4xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight text-center">
               Built Different. Built for Africa.
             </h2>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
@@ -448,7 +465,7 @@ function Homepage() {
       <section className="py-16 md:py-20 bg-white dark:bg-slate-900">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <div className="text-5xl mb-5">&#127757;</div>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-white mb-4 tracking-tight">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-white mb-4 tracking-tight text-center">
             {isLoggedIn ? "Ready to Review Your Next Experience?" : "Ready to Make Smarter Choices?"}
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-xl mx-auto">
