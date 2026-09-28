@@ -26,10 +26,14 @@ function useCountUp(target, duration = 2000, startOnView = true) {
           const start = performance.now();
           const step = (now) => {
             const progress = Math.min((now - start) / duration, 1);
+            if (progress >= 1) {
+              setCount(target);
+              return;
+            }
             // easeOutExpo for snappy feel
             const eased = 1 - Math.pow(2, -10 * progress);
             setCount(Math.floor(eased * target));
-            if (progress < 1) requestAnimationFrame(step);
+            requestAnimationFrame(step);
           };
           requestAnimationFrame(step);
         }

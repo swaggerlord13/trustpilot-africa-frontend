@@ -18,6 +18,7 @@ import AdminDashboard from "../pages/Add.jsx";
 import CompanyPage from "./companyPage.jsx";
 import CompanyDashboard from "./CompanyDashboard.jsx";
 import BrowseReviews from "../pages/BrowseReviews.jsx";
+import BrowseCompanies from "../pages/BrowseCompanies.jsx";
 import FullReviewPage from "../pages/FullReviewPage.jsx";
 import NotFound from "../pages/NotFound.jsx";
 import Terms from "../pages/Terms.jsx";
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
   { path: "/profile", element: <ProtectedRoute><ProfilePage /></ProtectedRoute> },
   { path: "/add", element: <ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute> },
   { path: "/browse-reviews", element: <BrowseReviews /> },
+  { path: "/companies", element: <BrowseCompanies /> },
   { path: "/review/:reviewId", element: <FullReviewPage /> },
 
   // Company Dashboard (requires login - access checked by backend)

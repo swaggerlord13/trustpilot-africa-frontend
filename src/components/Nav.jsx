@@ -30,8 +30,17 @@ function Nav({ isOpen, onClose, user, onLogout }) {
           </NavLink>
         </li>
         <li>
-          <NavLink 
-            to="/Browse-Reviews" 
+          <NavLink
+            to="/companies"
+            className={({isActive}) => isActive ? "active": ""}
+            onClick={handleLinkClick}
+          >
+            Companies
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/Browse-Reviews"
             className={({isActive}) => isActive ? "active": ""}
             onClick={handleLinkClick}
           >
