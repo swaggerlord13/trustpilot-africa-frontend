@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "../config.js";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, Link, useLocation} from "react-router-dom";
 import axios from "axios";
 import ReviewBox from "../components/ReviewBox";
@@ -10,6 +10,8 @@ import Header from "../pages/Header";
 import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
 import { useToast } from "../components/Toast.jsx";
+import ScrollDots from "../components/ScrollDots.jsx";
+import "../styles/ReviewsText.css";
 
 export default function CompanyPage() {
   const { slug } = useParams();
@@ -31,6 +33,14 @@ export default function CompanyPage() {
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyContent, setReplyContent] = useState("");
   const [replyLoading, setReplyLoading] = useState(false);
+
+  // User review actions state
+  const [editingReview, setEditingReview] = useState(null);
+  const [editComment, setEditComment] = useState("");
+  const [editRating, setEditRating] = useState(0);
+  const [userReplyingTo, setUserReplyingTo] = useState(null);
+  const [userReplyContent, setUserReplyContent] = useState("");
+  const scrollRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -76,7 +86,9 @@ export default function CompanyPage() {
           })(),
           category: review.company.category?.name || "General",
           createdAt: review.createdAt,
-          companyReply: review.companyReply || null
+          companyReply: review.companyReply || null,
+          userId: review.user?._id || null,
+          userReply: review.userReply || null
         }));
 
         setReviews(mappedReviews);
@@ -176,6 +188,55 @@ export default function CompanyPage() {
     }
   };
 
+  // Current user for review ownership checks
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const handleEditReview = async (reviewId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `${API_BASE_URL}/reviews/${reviewId}`,
+        { comment: editComment, rating: editRating },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setReviews(prev => prev.map(r => r._id === reviewId ? { ...r, comment: editComment, rating: editRating } : r));
+      setEditingReview(null);
+      showToast("Review updated!", "success");
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to update review", "error");
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm("Are you sure you want to delete your review? This cannot be undone.")) return;
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`${API_BASE_URL}/reviews/${reviewId}`, { headers: { Authorization: `Bearer ${token}` } });
+      setReviews(prev => prev.filter(r => r._id !== reviewId));
+      showToast("Review deleted", "success");
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to delete review", "error");
+    }
+  };
+
+  const handleUserReply = async (reviewId) => {
+    if (!userReplyContent.trim()) return;
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(
+        `${API_BASE_URL}/reviews/${reviewId}/user-reply`,
+        { content: userReplyContent },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setReviews(prev => prev.map(r => r._id === reviewId ? { ...r, userReply: res.data } : r));
+      setUserReplyingTo(null);
+      setUserReplyContent("");
+      showToast("Reply posted!", "success");
+    } catch (err) {
+      showToast(err.response?.data?.error || "Failed to post reply", "error");
+    }
+  };
+
   const avgRating = reviews.length > 0 
     ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
     : 0;
@@ -203,7 +264,7 @@ export default function CompanyPage() {
       <>
         <Header />
         <div className="max-w-5xl mx-auto p-6 text-center">
-          <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
             <i className="bx bx-buildings text-slate-400 text-3xl"></i>
           </div>
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4">Company Not Found</h1>
@@ -248,11 +309,11 @@ export default function CompanyPage() {
                 <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100 mb-2">{company.name}</h1>
                 
                 <div className="flex flex-wrap items-center gap-4 mb-4">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-brand-50 dark:bg-brand-800 text-brand-700 dark:text-brand-200">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300">
                     <i className="bx bx-category mr-1"></i> {company.category?.name || "General"}
                   </span>
                   {company.subcategory && (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-50 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300">
                       <i className="bx bx-folder mr-1"></i> {company.subcategory.name}
                     </span>
                   )}
@@ -276,7 +337,7 @@ export default function CompanyPage() {
                 {/* Google Places Info */}
                 {company.source === "google" && (
                   <div className="flex flex-wrap items-center gap-3 mt-4">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30">
                       <img src="https://www.google.com/favicon.ico" alt="" className="w-3 h-3" />
                       Imported from Google
                     </span>
@@ -291,7 +352,7 @@ export default function CompanyPage() {
                       </span>
                     )}
                     {company.country && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-coral-50 dark:bg-coral-600/20 text-coral-600 dark:text-coral-400 border border-coral-200 dark:border-coral-800">
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-coral-50 dark:bg-coral-500/20 text-coral-600 dark:text-coral-300 border border-coral-200 dark:border-coral-500/30">
                         <i className="bx bx-world"></i> {company.country}{company.city ? ', ' + company.city : ''}
                       </span>
                     )}
@@ -302,7 +363,7 @@ export default function CompanyPage() {
               {/* Rating Summary */}
               <div className="text-center md:text-right">
                 <div className={`text-4xl font-bold mb-1 ${getRatingColor(avgRating)}`}>
-                  {avgRating > 0 ? avgRating : "-"}
+                  {avgRating > 0 ? avgRating : "—"}
                 </div>
                 {avgRating > 0 ? (
                   <div className="mb-2"><StarRating rating={Math.round(parseFloat(avgRating))} /></div>
@@ -331,7 +392,7 @@ export default function CompanyPage() {
             
             <Link
               to={`/categories/${company.category?.slug || 'general'}`}
-              className="flex-1 py-3 px-6 rounded-xl font-semibold bg-brand-50 dark:bg-brand-800 text-brand-700 dark:text-brand-200 hover:bg-brand-100 dark:hover:bg-brand-700 transition-colors duration-200 text-center"
+              className="flex-1 py-3 px-6 rounded-xl font-semibold bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-500/30 transition-colors duration-200 text-center"
             >
               <i className="bx bx-search mr-1"></i> More in {company.category?.name || "Category"}
             </Link>
@@ -346,7 +407,7 @@ export default function CompanyPage() {
               </Link>
             )}
             {isLoggedIn && claimStatus === "pending" && (
-              <div className="flex-1 py-3 px-6 rounded-xl font-semibold bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-center cursor-default">
+              <div className="flex-1 py-3 px-6 rounded-xl font-semibold bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30 text-center cursor-default">
                 <i className="bx bx-time-five mr-1"></i> Claim Pending
               </div>
             )}
@@ -359,12 +420,23 @@ export default function CompanyPage() {
               </button>
             )}
             {!isLoggedIn && (
-              <Link
-                to="/login"
-                className="flex-1 py-3 px-6 rounded-xl font-semibold bg-coral-500 text-white hover:bg-coral-600 transition-colors duration-200 text-center"
-              >
-                <i className="bx bx-log-in mr-1"></i> Sign In to Claim
-              </Link>
+              <div className="flex-1 flex flex-col gap-2">
+                <p className="text-xs text-slate-500 dark:text-slate-400 text-center font-medium">Own this business?</p>
+                <div className="flex gap-2">
+                  <Link
+                    to={`/register-business?claim=${encodeURIComponent(company.name)}&companyId=${company._id}&url=${encodeURIComponent(company.website || "")}`}
+                    className="flex-1 py-2.5 px-4 rounded-xl font-semibold bg-coral-500 text-white hover:bg-coral-600 transition-colors duration-200 text-center text-sm"
+                  >
+                    <i className="bx bxs-business mr-1"></i> Register as Business
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="py-2.5 px-4 rounded-xl font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200 text-center text-sm"
+                  >
+                    Sign In
+                  </Link>
+                </div>
+              </div>
             )}
           </div>
 
@@ -399,13 +471,13 @@ export default function CompanyPage() {
             ) : (
               <>
                 {/* Review Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 p-6 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8 p-6 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
                   {[5, 4, 3, 2, 1].map((stars) => {
                     const count = reviews.filter(r => r.rating === stars).length;
                     const percentage = reviews.length > 0 ? (count / reviews.length * 100).toFixed(0) : 0;
                     return (
                       <div key={stars} className="text-center">
-                        <div className="text-sm text-slate-600 dark:text-slate-400 mb-1 flex items-center justify-center">
+                        <div className="text-sm text-slate-600 dark:text-slate-300 mb-1 flex items-center justify-center">
                           {stars} <StarRating rating={stars} />
                         </div>
                         <div className="text-xl font-bold text-slate-800 dark:text-slate-100">{count}</div>
@@ -417,7 +489,7 @@ export default function CompanyPage() {
 
                 {/* Reviews List */}
                 <div className="reviews">
-                  <div className="reviewscomments-row">
+                  <div className="reviewscomments-row" ref={scrollRef}>
                     {reviews.map((review, index) => (
                       <div key={review._id || index}>
                         <ReviewBox
@@ -436,25 +508,19 @@ export default function CompanyPage() {
 
                         {/* Show existing company reply */}
                         {review.companyReply && (
-                          <div style={{
-                            background: "#f0fdf4",
-                            border: "1px solid #bbf7d0",
-                            borderRadius: "12px",
-                            padding: "16px",
-                            margin: "0 0 16px 0",
-                          }}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-                              <i className="bx bx-buildings" style={{ color: "#16a34a", fontSize: "18px" }}></i>
-                              <span style={{ fontWeight: "600", color: "#15803d", fontSize: "14px" }}>
+                          <div className="bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30 rounded-xl p-4 mb-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <i className="bx bx-buildings text-green-600 dark:text-green-400 text-lg"></i>
+                              <span className="font-semibold text-green-700 dark:text-green-400 text-sm">
                                 {company.name} replied
                               </span>
-                              <span style={{ color: "#94a3b8", fontSize: "12px", marginLeft: "auto" }}>
+                              <span className="text-slate-400 dark:text-slate-500 text-xs ml-auto">
                                 {new Date(review.companyReply.createdAt).toLocaleDateString("en-US", {
                                   year: "numeric", month: "short", day: "numeric",
                                 })}
                               </span>
                             </div>
-                            <p style={{ color: "#334155", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
+                            <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed m-0">
                               {review.companyReply.content}
                             </p>
                           </div>
@@ -464,15 +530,9 @@ export default function CompanyPage() {
                         {claimStatus === "approved" && !review.companyReply && (
                           <>
                             {replyingTo === review._id ? (
-                              <div style={{
-                                background: "#ffffff",
-                                border: "1px solid #e2e8f0",
-                                borderRadius: "12px",
-                                padding: "16px",
-                                margin: "0 0 16px 0",
-                              }}>
-                                <p style={{ fontWeight: "600", color: "#334155", fontSize: "14px", marginBottom: "8px" }}>
-                                  <i className="bx bx-reply" style={{ marginRight: "4px" }}></i>
+                              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl p-4 mb-4">
+                                <p className="font-semibold text-slate-700 dark:text-slate-200 text-sm mb-2">
+                                  <i className="bx bx-reply mr-1"></i>
                                   Reply as {company.name}
                                 </p>
                                 <textarea
@@ -481,49 +541,21 @@ export default function CompanyPage() {
                                   rows="3"
                                   maxLength={1000}
                                   placeholder="Write a professional reply to this review..."
-                                  style={{
-                                    width: "100%",
-                                    padding: "12px",
-                                    border: "1px solid #e2e8f0",
-                                    borderRadius: "8px",
-                                    fontSize: "14px",
-                                    resize: "none",
-                                    outline: "none",
-                                    boxSizing: "border-box",
-                                    color: "#334155",
-                                  }}
+                                  className="w-full p-3 border border-slate-200 dark:border-slate-600 dark:bg-slate-700 rounded-lg text-sm resize-none outline-none text-slate-700 dark:text-slate-200 box-border"
                                 />
-                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "8px" }}>
-                                  <span style={{ fontSize: "12px", color: "#94a3b8" }}>{replyContent.length}/1000</span>
-                                  <div style={{ display: "flex", gap: "8px" }}>
+                                <div className="flex items-center justify-between mt-2">
+                                  <span className="text-xs text-slate-400 dark:text-slate-500">{replyContent.length}/1000</span>
+                                  <div className="flex gap-2">
                                     <button
                                       onClick={() => { setReplyingTo(null); setReplyContent(""); }}
-                                      style={{
-                                        padding: "8px 16px",
-                                        fontSize: "14px",
-                                        background: "#f1f5f9",
-                                        color: "#475569",
-                                        border: "none",
-                                        borderRadius: "8px",
-                                        cursor: "pointer",
-                                        fontWeight: "600",
-                                      }}
+                                      className="px-4 py-2 text-sm bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-none rounded-lg cursor-pointer font-semibold hover:bg-slate-200 dark:hover:bg-slate-600"
                                     >
                                       Cancel
                                     </button>
                                     <button
                                       onClick={() => handleReply(review._id)}
                                       disabled={replyLoading || replyContent.length < 5}
-                                      style={{
-                                        padding: "8px 16px",
-                                        fontSize: "14px",
-                                        background: replyLoading || replyContent.length < 5 ? "#94a3b8" : "#16a34a",
-                                        color: "#ffffff",
-                                        border: "none",
-                                        borderRadius: "8px",
-                                        cursor: replyLoading || replyContent.length < 5 ? "not-allowed" : "pointer",
-                                        fontWeight: "600",
-                                      }}
+                                      className={`px-4 py-2 text-sm text-white border-none rounded-lg font-semibold ${replyLoading || replyContent.length < 5 ? 'bg-slate-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 cursor-pointer'}`}
                                     >
                                       {replyLoading ? "Posting..." : "Post Reply"}
                                     </button>
@@ -531,30 +563,94 @@ export default function CompanyPage() {
                                 </div>
                               </div>
                             ) : (
-                              <div style={{ margin: "0 0 16px 0" }}>
+                              <div className="mb-4">
                                 <button
                                   onClick={() => setReplyingTo(review._id)}
-                                  style={{
-                                    background: "none",
-                                    border: "none",
-                                    color: "#16a34a",
-                                    fontWeight: "600",
-                                    fontSize: "14px",
-                                    cursor: "pointer",
-                                    padding: "4px 0",
-                                  }}
+                                  className="bg-transparent border-none text-green-600 dark:text-green-400 font-semibold text-sm cursor-pointer py-1 px-0 hover:text-green-700 dark:hover:text-green-300"
                                 >
-                                  <i className="bx bx-reply" style={{ marginRight: "4px" }}></i>
+                                  <i className="bx bx-reply mr-1"></i>
                                   Reply to this review
                                 </button>
                               </div>
                             )}
                           </>
                         )}
+
+                        {/* Existing user reply to company response */}
+                        {review.userReply && (
+                          <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/30 rounded-xl p-4 mb-4">
+                            <div className="flex items-center gap-2 mb-1">
+                              <i className="bx bx-user text-blue-500"></i>
+                              <span className="font-semibold text-blue-700 dark:text-blue-300 text-sm">Author's Reply</span>
+                            </div>
+                            <p className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed m-0">{review.userReply.content}</p>
+                          </div>
+                        )}
+
+                        {/* User Actions — only for review author */}
+                        {currentUser._id && review.userId === currentUser._id && (
+                          <div className="flex items-center gap-3 mb-4 pt-2">
+                            {editingReview !== review._id && (
+                              <>
+                                <button onClick={() => { setEditingReview(review._id); setEditComment(review.comment); setEditRating(review.rating); }}
+                                  className="text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 flex items-center gap-1 bg-transparent border-none cursor-pointer">
+                                  <i className="bx bx-edit"></i> Edit
+                                </button>
+                                <button onClick={() => handleDeleteReview(review._id)}
+                                  className="text-xs text-slate-500 dark:text-slate-400 hover:text-red-600 flex items-center gap-1 bg-transparent border-none cursor-pointer">
+                                  <i className="bx bx-trash"></i> Delete
+                                </button>
+                                {review.companyReply && !review.userReply && (
+                                  <button onClick={() => { setUserReplyingTo(review._id); setUserReplyContent(""); }}
+                                    className="text-xs text-blue-500 hover:text-blue-700 flex items-center gap-1 bg-transparent border-none cursor-pointer">
+                                    <i className="bx bx-reply"></i> Reply to Company
+                                  </button>
+                                )}
+                              </>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Inline edit form */}
+                        {editingReview === review._id && (
+                          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl p-4 mb-4 space-y-3">
+                            <div className="flex gap-1">
+                              {[1,2,3,4,5].map(star => (
+                                <button key={star} type="button" onClick={() => setEditRating(star)}
+                                  className={"text-2xl bg-transparent border-none cursor-pointer " + (star <= editRating ? "text-yellow-400" : "text-slate-300 dark:text-slate-600")}>&#9733;</button>
+                              ))}
+                            </div>
+                            <textarea value={editComment} onChange={e => setEditComment(e.target.value)}
+                              className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 text-sm resize-none outline-none box-border" rows="4" />
+                            <div className="flex gap-2">
+                              <button onClick={() => handleEditReview(review._id)}
+                                className="px-4 py-2 bg-blue-500 text-white rounded-lg text-xs font-semibold hover:bg-blue-600 border-none cursor-pointer">Save</button>
+                              <button onClick={() => setEditingReview(null)}
+                                className="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 bg-transparent cursor-pointer">Cancel</button>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* User reply form */}
+                        {userReplyingTo === review._id && (
+                          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl p-4 mb-4 space-y-2">
+                            <textarea value={userReplyContent} onChange={e => setUserReplyContent(e.target.value)}
+                              placeholder="Reply to the company's response..." rows="3"
+                              className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 text-sm resize-none outline-none box-border" />
+                            <div className="flex gap-2">
+                              <button onClick={() => handleUserReply(review._id)} disabled={!userReplyContent.trim()}
+                                className="px-4 py-2 bg-blue-500 text-white rounded-lg text-xs font-semibold hover:bg-blue-600 border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">Post Reply</button>
+                              <button onClick={() => setUserReplyingTo(null)}
+                                className="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg text-xs text-slate-600 dark:text-slate-300 bg-transparent cursor-pointer">Cancel</button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
+                {/* Scroll Dots for mobile */}
+                <ScrollDots scrollRef={scrollRef} itemCount={reviews.length} />
               </>
             )}
           </div>
@@ -570,7 +666,7 @@ export default function CompanyPage() {
                     <span className="text-2xl font-bold text-amber-500">{company.googleRating}</span>
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
-                        <span key={i} className={`text-lg ${i < Math.round(company.googleRating) ? 'text-amber-500' : 'text-slate-300'}`}>{"★"}</span>
+                        <span key={i} className={`text-lg ${i < Math.round(company.googleRating) ? 'text-amber-500' : 'text-slate-300 dark:text-slate-600'}`}>{"★"}</span>
                       ))}
                     </div>
                     <span className="text-sm text-slate-500 dark:text-slate-400">
@@ -580,7 +676,7 @@ export default function CompanyPage() {
                 )}
               </div>
 
-              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg px-4 py-2 mb-6 text-sm text-amber-800 dark:text-amber-300">
+              <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-lg px-4 py-2 mb-6 text-sm text-amber-800 dark:text-amber-300">
                 These reviews are sourced from Google and may not reflect the views of TrustPilot.Africa users.
               </div>
 
@@ -597,11 +693,11 @@ export default function CompanyPage() {
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
                           <h4 className="font-semibold text-slate-800 dark:text-slate-100">{review.authorName}</h4>
-                          <span className="text-xs text-slate-400">{review.relativeTimeDescription}</span>
+                          <span className="text-xs text-slate-400 dark:text-slate-500">{review.relativeTimeDescription}</span>
                         </div>
                         <div className="flex mb-2">
                           {[...Array(5)].map((_, i) => (
-                            <span key={i} className={`text-sm ${i < review.rating ? 'text-amber-500' : 'text-slate-300'}`}>{"★"}</span>
+                            <span key={i} className={`text-sm ${i < review.rating ? 'text-amber-500' : 'text-slate-300 dark:text-slate-600'}`}>{"★"}</span>
                           ))}
                         </div>
                         <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">{review.text}</p>
@@ -622,7 +718,7 @@ export default function CompanyPage() {
               </h3>
               <Link
                 to={`/categories/${company.category.slug || 'general'}`}
-                className="inline-flex items-center px-4 py-2 bg-brand-50 dark:bg-brand-800 text-brand-700 dark:text-brand-200 rounded-lg hover:bg-brand-100 dark:hover:bg-brand-700 transition-colors duration-200 font-semibold"
+                className="inline-flex items-center px-4 py-2 bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300 rounded-lg hover:bg-brand-100 dark:hover:bg-brand-500/30 transition-colors duration-200 font-semibold"
               >
                 Browse All <i className="bx bx-right-arrow-alt ml-1"></i>
               </Link>
@@ -642,7 +738,7 @@ export default function CompanyPage() {
               </h2>
               <button
                 onClick={() => setShowClaimModal(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-2xl"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-2xl"
               >
                 &times;
               </button>
@@ -658,7 +754,7 @@ export default function CompanyPage() {
                 <select
                   value={claimForm.role}
                   onChange={(e) => setClaimForm({ ...claimForm, role: e.target.value })}
-                  className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 outline-none text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700"
+                  className="w-full p-3 border border-slate-200 dark:border-slate-600 dark:bg-slate-700 rounded-lg focus:border-brand-500 outline-none text-slate-800 dark:text-slate-100"
                 >
                   <option value="owner">Owner</option>
                   <option value="manager">Manager</option>
@@ -673,7 +769,7 @@ export default function CompanyPage() {
                   value={claimForm.jobTitle}
                   onChange={(e) => setClaimForm({ ...claimForm, jobTitle: e.target.value })}
                   placeholder="e.g. CEO, Marketing Manager"
-                  className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 outline-none text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700"
+                  className="w-full p-3 border border-slate-200 dark:border-slate-600 dark:bg-slate-700 rounded-lg focus:border-brand-500 outline-none text-slate-800 dark:text-slate-100"
                 />
               </div>
 
@@ -686,7 +782,7 @@ export default function CompanyPage() {
                   onChange={(e) => setClaimForm({ ...claimForm, reason: e.target.value })}
                   rows="3"
                   placeholder="Explain your relationship with this company..."
-                  className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 outline-none resize-none text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-700"
+                  className="w-full p-3 border border-slate-200 dark:border-slate-600 dark:bg-slate-700 rounded-lg focus:border-brand-500 outline-none resize-none text-slate-800 dark:text-slate-100"
                 />
               </div>
             </div>

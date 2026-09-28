@@ -263,31 +263,45 @@ export default function Login() {
               </button>
             </form>
 
-            {HAS_GOOGLE && (
-              <>
-                <div className="divider">
-                  <span>Or continue with</span>
-                </div>
+            <div className="divider">
+              <span>Or continue with</span>
+            </div>
 
-                <div className="social-login-buttons">
-                  <GoogleLogin
-                    onSuccess={handleGoogleSuccess}
-                    onError={handleGoogleError}
-                    theme="outline"
-                    size="large"
-                    width="100%"
-                    text="continue_with"
-                    shape="rectangular"
-                  />
-                </div>
-              </>
-            )}
+            <div className="social-login-buttons">
+              {HAS_GOOGLE ? (
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  theme="outline"
+                  size="large"
+                  width="100%"
+                  text="continue_with"
+                  shape="rectangular"
+                />
+              ) : (
+                <button type="button" className="social-btn google" title="Sign in with Google">
+                  <i className='bx bxl-google'></i>
+                </button>
+              )}
+              <button type="button" className="social-btn facebook" title="Sign in with Facebook">
+                <i className='bx bxl-facebook'></i>
+              </button>
+              <button type="button" className="social-btn apple" title="Sign in with Apple">
+                <i className='bx bxl-apple'></i>
+              </button>
+            </div>
 
             <div className="auth-footer">
               <p>
-                Don't have an account?
+                Don't have an account?{' '}
                 <Link to="/Register" className="switch-link">
                   Create Account
+                </Link>
+              </p>
+              <p style={{ marginTop: '0.5rem' }}>
+                Own a business?{' '}
+                <Link to="/register-business" className="switch-link" style={{ color: '#FF6B4A' }}>
+                  Register as a Business
                 </Link>
               </p>
             </div>
