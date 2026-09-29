@@ -347,11 +347,12 @@ export default function AdminPanel() {
   const addCategory = async () => {
     if (!newCategoryName.trim()) return;
     try {
-      await fetch(`${API_BASE_URL}/categories`, {
+      const res = await fetch(`${API_BASE_URL}/categories`, {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify({ name: newCategoryName.trim() }),
       });
+      if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || "Failed to add category"); }
       showToast("Category added", "success");
       setNewCategoryName("");
       fetchCategories();
@@ -363,11 +364,12 @@ export default function AdminPanel() {
   const addSubcategory = async () => {
     if (!newSubcategoryName.trim() || !newSubcategoryParent) return;
     try {
-      await fetch(`${API_BASE_URL}/subcategories`, {
+      const res = await fetch(`${API_BASE_URL}/subcategories`, {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify({ name: newSubcategoryName.trim(), categoryId: newSubcategoryParent }),
       });
+      if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || "Failed to add subcategory"); }
       showToast("Subcategory added", "success");
       setNewSubcategoryName("");
       setNewSubcategoryParent("");
@@ -380,10 +382,11 @@ export default function AdminPanel() {
   const deleteCategory = async (id) => {
     if (!window.confirm("Delete this category, all its subcategories, and all companies under them?")) return;
     try {
-      await fetch(`${API_BASE_URL}/categories/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/categories/${id}`, {
         method: "DELETE",
         headers: getAuthHeaders(),
       });
+      if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || "Failed to delete category"); }
       showToast("Category deleted", "success");
       fetchCategories();
     } catch (err) {
@@ -394,10 +397,11 @@ export default function AdminPanel() {
   const deleteSubcategory = async (id) => {
     if (!window.confirm("Delete this subcategory and all companies in it?")) return;
     try {
-      await fetch(`${API_BASE_URL}/subcategories/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/subcategories/${id}`, {
         method: "DELETE",
         headers: getAuthHeaders(),
       });
+      if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || "Failed to delete subcategory"); }
       showToast("Subcategory deleted", "success");
       fetchCategories();
     } catch (err) {

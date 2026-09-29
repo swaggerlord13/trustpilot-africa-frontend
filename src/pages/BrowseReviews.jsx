@@ -210,7 +210,7 @@ const BrowseReviews = () => {
               <button
                 onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
                 disabled={!pagination.hasPrevPage}
-                className="px-5 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-sm text-slate-600 dark:text-slate-300"
+                className="px-5 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-sm text-slate-600 dark:text-slate-300"
               >
                 Previous
               </button>
@@ -235,7 +235,7 @@ const BrowseReviews = () => {
                       className={`w-10 h-10 rounded-xl font-medium text-sm transition-colors ${
                         currentPage === pageNumber
                           ? 'bg-brand-500 text-white shadow-sm'
-                          : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                          : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
                       }`}
                     >
                       {pageNumber}
@@ -247,7 +247,7 @@ const BrowseReviews = () => {
               <button
                 onClick={() => setCurrentPage(Math.min(currentPage + 1, pagination.totalPages))}
                 disabled={!pagination.hasNextPage}
-                className="px-5 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-sm text-slate-600 dark:text-slate-300"
+                className="px-5 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-sm text-slate-600 dark:text-slate-300"
               >
                 Next
               </button>

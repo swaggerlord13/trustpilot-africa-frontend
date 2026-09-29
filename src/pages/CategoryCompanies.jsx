@@ -402,7 +402,7 @@ const CategoryCompanies = () => {
                     setCurrentPage(newPage);
                   }}
                   disabled={!pagination.hasPrevPage}
-                  className="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
@@ -427,7 +427,7 @@ const CategoryCompanies = () => {
                         className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                           currentPage === pageNumber
                             ? 'bg-brand-500 text-white'
-                            : 'bg-white border border-slate-200 dark:border-slate-600 hover:bg-slate-50'
+                            : 'bg-white border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700'
                         }`}
                       >
                         {pageNumber}
@@ -442,7 +442,7 @@ const CategoryCompanies = () => {
                     setCurrentPage(newPage);
                   }}
                   disabled={!pagination.hasNextPage}
-                  className="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>

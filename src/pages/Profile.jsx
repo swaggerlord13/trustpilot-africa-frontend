@@ -133,9 +133,12 @@ export default function ProfilePage() {
         }
       } catch (err) {
         console.error("Error fetching user data:", err);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.href = "/login";
+        // Only log out on 401 (expired/invalid token), not on server errors or network blips
+        if (err.response?.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          window.location.href = "/login";
+        }
       } finally {
         setLoading(false);
       }

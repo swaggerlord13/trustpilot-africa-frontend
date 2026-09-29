@@ -9,6 +9,18 @@
   <link rel="apple-touch-icon" href="/trustpilotafricalogo.png" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" integrity="sha384-42kyIPf7HDYLkGffmxDhSx/3Z/53wGBs3nD6wEFxsbeDc7rMO6mkYbkAcpRsnMU2" crossorigin="anonymous">
   <title>TrustPilot Africa — Trusted Reviews for African Businesses</title>
+  <script>
+    // Prevent white flash for dark mode users — runs before React mounts
+    (function() {
+      try {
+        var mode = localStorage.getItem('tp-theme') || 'system';
+        var theme = mode === 'system'
+          ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : mode;
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch(e) {}
+    })();
+  </script>
 </head>
 
 <body>

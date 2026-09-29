@@ -1,5 +1,5 @@
 import api, { API_BASE_URL } from "../api.js";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/Toast.jsx";
 
@@ -11,6 +11,23 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
   const [hoveredStar, setHoveredStar] = useState(0);
   const showToast = useToast();
   const navigate = useNavigate();
+
+  // Restore saved draft if it matches this company
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("pendingReview");
+      if (saved) {
+        const draft = JSON.parse(saved);
+        if (draft.companyId === companyId) {
+          setRating(draft.rating || 0);
+          setComment(draft.comment || "");
+          setTitle(draft.title || "");
+          localStorage.removeItem("pendingReview");
+          showToast("Your saved draft has been restored!", "success");
+        }
+      }
+    } catch (e) { /* ignore parse errors */ }
+  }, [companyId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -88,6 +105,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
       setTitle("");
       setRating(5);
       
+      localStorage.removeItem("pendingReview");
       showToast("Review submitted successfully!", "success");
     } catch (err) {
       console.error("Error submitting review:", err);

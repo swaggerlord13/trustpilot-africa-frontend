@@ -57,16 +57,7 @@ export default function OptimizedReviewsPage({ companyId }) {
             }),
             company: companyRes.data.company.name,
             url: `/company/${companyRes.data.company.slug}`,
-            companyimage: companyRes.data.company.logo || (() => {
-              try {
-                const u = companyRes.data.company.url || "";
-                if (u) {
-                  const cleaned = u.startsWith("http") ? u : "https://" + u;
-                  return `https://www.google.com/s2/favicons?domain=${new URL(cleaned).hostname.replace(/^www\\./, "")}&sz=128`;
-                }
-              } catch (e) { /* ignore */ }
-              return "";
-            })(),
+            companyimage: companyRes.data.company.logo || "",
             category: companyRes.data.company.category?.name || "General",
             companyUrl: companyRes.data.company.url || "",
             createdAt: review.createdAt

@@ -5,6 +5,7 @@ import Header from "../pages/Header";
 import Loader from "../components/Loader";
 import StarRating from "../components/StarRatings";
 import Footer from "../components/Footer.jsx";
+import CompanyLogo from "../components/CompanyLogo";
 
 const FullReviewPage = () => {
   const { reviewId } = useParams();
@@ -15,6 +16,8 @@ const FullReviewPage = () => {
 
   useEffect(() => {
     const fetchReviewData = async () => {
+      // Clear previous review's reply so it doesn't bleed into the next one
+      setCompanyReply(null);
       try {
         // Fetch the main review
         const reviewResponse = await api.get(`${API_BASE_URL}/reviews/${reviewId}`);
@@ -46,11 +49,9 @@ const FullReviewPage = () => {
         // Fetch company reply for this review
         try {
           const replyRes = await api.get(`${API_BASE_URL}/reviews/${reviewId}/replies`);
-          if (replyRes.data) {
-            setCompanyReply(replyRes.data);
-          }
+          setCompanyReply(replyRes.data || null);
         } catch (err) {
-          console.log("No company reply for this review");
+          setCompanyReply(null);
         }
 
         // Fetch related reviews from the same company
@@ -225,15 +226,13 @@ const FullReviewPage = () => {
               <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">About This Company</h3>
               <Link 
                 to={`/company/${review.companySlug}`}
-                className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-lg hover:bg-slate-50 transition-colors"
+                className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
               >
-                <img
-                  src={review.companyImage}
-                  alt={review.company}
-                  className="w-16 h-16 rounded-lg object-cover border border-slate-200 dark:border-slate-600"
-                  onError={(e) => {
-                    e.target.src = "";
-                  }}
+                <CompanyLogo
+                  logo={review.companyImage}
+                  url={review.companyUrl}
+                  name={review.company}
+                  size={64}
                 />
                 <div className="flex-1">
                   <h4 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-1">
