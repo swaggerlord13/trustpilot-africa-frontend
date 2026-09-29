@@ -741,10 +741,10 @@ export default function AdminPanel() {
                           <td>
                             <div className="admin-company-cell">
                               <img
-                                src={c.logo || "https://via.placeholder.com/32?text=Co"}
+                                src={c.logo || ""}
                                 alt=""
                                 className="admin-company-logo"
-                                onError={(e) => { e.target.src = "https://via.placeholder.com/32?text=Co"; }}
+                                onError={(e) => { e.target.src = ""; }}
                               />
                               <span>{c.name}</span>
                             </div>
@@ -888,10 +888,10 @@ export default function AdminPanel() {
                           <td>
                             <div className="admin-company-cell">
                               <img
-                                src={r.company?.logo || "https://via.placeholder.com/24?text=Co"}
+                                src={r.company?.logo || ""}
                                 alt=""
                                 className="admin-company-logo-sm"
-                                onError={(e) => { e.target.src = "https://via.placeholder.com/24?text=Co"; }}
+                                onError={(e) => { e.target.src = ""; }}
                               />
                               <span>{r.company?.name || "Deleted"}</span>
                             </div>
@@ -1085,10 +1085,10 @@ export default function AdminPanel() {
                           <td>
                             <div className="admin-company-cell">
                               <img
-                                src={claim.company?.logo || "https://via.placeholder.com/32?text=Co"}
+                                src={claim.company?.logo || ""}
                                 alt=""
                                 className="admin-company-logo"
-                                onError={(e) => { e.target.src = "https://via.placeholder.com/32?text=Co"; }}
+                                onError={(e) => { e.target.src = ""; }}
                               />
                               <span>{claim.company?.name || "Unknown"}</span>
                             </div>

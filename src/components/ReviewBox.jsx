@@ -26,7 +26,7 @@ export default function ReviewBox({ _id, title, comment, rating, user, date, com
 
   const handleImageError = (e) => {
     if (!imageError) {
-      e.target.src = "https://via.placeholder.com/100?text=User";
+      e.target.src = "/default-avatar.svg";
       setImageError(true);
     }
   };

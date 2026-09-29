@@ -107,7 +107,7 @@ export default function ProfilePage() {
           comment: review.comment,
           rating: review.rating,
           user: userRes.data.name,
-          image: userRes.data.profileImage || "https://via.placeholder.com/100",
+          image: userRes.data.profileImage || "/default-avatar.svg",
           date: new Date(review.createdAt).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
@@ -115,7 +115,7 @@ export default function ProfilePage() {
           }),
           company: review.company?.name,
           url: review.company?.url,
-          companyimage: review.company?.logo || "https://via.placeholder.com/150",
+          companyimage: review.company?.logo || "",
           category: review.company?.category?.name || "General",
         }));
 
@@ -284,10 +284,10 @@ export default function ProfilePage() {
                       className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-600 hover:border-brand-300 hover:shadow-md transition-all duration-200"
                     >
                       <img
-                        src={comp.logo || "https://via.placeholder.com/48?text=Co"}
+                        src={comp.logo || ""}
                         alt={comp.name}
                         className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-600 flex-shrink-0"
-                        onError={(e) => { e.target.src = "https://via.placeholder.com/48?text=Co"; }}
+                        onError={(e) => { e.target.src = ""; }}
                       />
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-slate-800 dark:text-slate-100 truncate">{comp.name}</h3>

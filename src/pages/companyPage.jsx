@@ -67,7 +67,7 @@ export default function CompanyPage() {
           comment: review.comment,
           rating: review.rating,
           user: review.user?.name || "Anonymous",
-          image: review.user?.profileImage || "https://via.placeholder.com/100?text=User",
+          image: review.user?.profileImage || "/default-avatar.svg",
           date: new Date(review.createdAt).toLocaleDateString("en-US", {
             year: "numeric", month: "long", day: "numeric",
           }),
@@ -81,7 +81,7 @@ export default function CompanyPage() {
                 return `https://www.google.com/s2/favicons?domain=${new URL(cleaned).hostname.replace(/^www\\./, "")}&sz=128`;
               }
             } catch {}
-            return "https://via.placeholder.com/150?text=Company+Logo";
+            return "";
           })(),
           category: review.company.category?.name || "General",
           createdAt: review.createdAt,
@@ -673,10 +673,10 @@ export default function CompanyPage() {
                   <div key={index} className="border-b border-slate-100 dark:border-slate-700 pb-6 last:border-0 last:pb-0">
                     <div className="flex items-start gap-4">
                       <img
-                        src={review.profilePhotoUrl || 'https://via.placeholder.com/40?text=G'}
+                        src={review.profilePhotoUrl || '/default-avatar.svg'}
                         alt={review.authorName}
                         className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-600"
-                        onError={(e) => { e.target.src = 'https://via.placeholder.com/40?text=G'; }}
+                        onError={(e) => { e.target.src = '/default-avatar.svg'; }}
                       />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">

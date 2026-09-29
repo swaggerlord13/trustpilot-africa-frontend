@@ -183,7 +183,7 @@ export default function RegisterBusiness() {
         return;
       }
 
-      // Save auth data (same as normal register)
+      // Save auth data
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify({
         _id: data._id,
@@ -193,11 +193,11 @@ export default function RegisterBusiness() {
         isAdmin: data.isAdmin || false,
       }));
 
-      setSuccess(`Welcome! Your claim for "${data.businessRegistration?.companyName}" is pending admin review. You'll get dashboard access once approved.`);
+      setSuccess(`Account created! Your claim for "${data.businessRegistration?.companyName}" is pending admin review. Please check your email to verify your account.`);
       
+      // Redirect to login (they need to verify email first)
       setTimeout(() => {
-        navigate("/profile", { replace: true });
-        window.location.reload();
+        navigate("/Login", { replace: true });
       }, 3500);
 
     } catch (err) {

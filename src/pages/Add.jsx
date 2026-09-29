@@ -491,10 +491,10 @@ export default function Add() {
                         {/* Company Info */}
                         <div className="flex items-center gap-3 flex-shrink-0">
                           <img
-                            src={claim.company?.logo || "https://via.placeholder.com/48?text=Co"}
+                            src={claim.company?.logo || ""}
                             alt={claim.company?.name}
                             className="w-12 h-12 rounded-lg object-cover border border-slate-200"
-                            onError={(e) => { e.target.src = "https://via.placeholder.com/48?text=Co"; }}
+                            onError={(e) => { e.target.src = ""; }}
                           />
                           <div>
                             <h3 className="font-bold text-slate-800">{claim.company?.name || "Unknown"}</h3>
@@ -872,7 +872,7 @@ export default function Add() {
                           /* Display Mode */
                           <>
                             <div className="h-32 bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                              <img src={c.logo || "https://via.placeholder.com/150"} alt={c.name} className="h-20 w-20 object-contain rounded-lg shadow-md" onError={(e) => { e.target.src = "https://via.placeholder.com/150"; }} />
+                              <img src={c.logo || ""} alt={c.name} className="h-20 w-20 object-contain rounded-lg shadow-md" onError={(e) => { e.target.src = ""; }} />
                             </div>
                             <div className="p-6">
                               <h3 className="text-xl font-bold text-slate-800 mb-2">{c.name}</h3>

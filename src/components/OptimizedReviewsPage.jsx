@@ -49,7 +49,7 @@ export default function OptimizedReviewsPage({ companyId }) {
             comment: review.comment,
             rating: review.rating,
             user: review.user?.name || "Anonymous",
-            image: review.user?.profileImage || "https://via.placeholder.com/100?text=User",
+            image: review.user?.profileImage || "/default-avatar.svg",
             date: new Date(review.createdAt).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
@@ -65,7 +65,7 @@ export default function OptimizedReviewsPage({ companyId }) {
                   return `https://www.google.com/s2/favicons?domain=${new URL(cleaned).hostname.replace(/^www\\./, "")}&sz=128`;
                 }
               } catch (e) { /* ignore */ }
-              return "https://via.placeholder.com/150?text=Company+Logo";
+              return "";
             })(),
             category: companyRes.data.company.category?.name || "General",
             companyUrl: companyRes.data.company.url || "",

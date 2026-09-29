@@ -27,7 +27,7 @@ const FullReviewPage = () => {
           comment: reviewData.comment,
           rating: reviewData.rating,
           user: reviewData.user?.name || "Anonymous",
-          userImage: reviewData.user?.profileImage || "https://via.placeholder.com/100?text=User",
+          userImage: reviewData.user?.profileImage || "/default-avatar.svg",
           date: new Date(reviewData.createdAt).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
@@ -35,7 +35,7 @@ const FullReviewPage = () => {
           }),
           company: reviewData.company?.name,
           companySlug: reviewData.company?.slug,
-          companyImage: reviewData.company?.logo || reviewData.company?.companyImage || "https://via.placeholder.com/150?text=Company+Logo",
+          companyImage: reviewData.company?.logo || reviewData.company?.companyImage || "",
           category: reviewData.company?.category?.name || "General",
           companyUrl: reviewData.company?.url,
           createdAt: reviewData.createdAt
@@ -156,7 +156,7 @@ const FullReviewPage = () => {
                     alt={review.user}
                     className="w-16 h-16 rounded-full object-cover border-2 border-slate-200 dark:border-slate-600"
                     onError={(e) => {
-                      e.target.src = "https://via.placeholder.com/100?text=User";
+                      e.target.src = "/default-avatar.svg";
                     }}
                   />
                   <div>
@@ -232,7 +232,7 @@ const FullReviewPage = () => {
                   alt={review.company}
                   className="w-16 h-16 rounded-lg object-cover border border-slate-200 dark:border-slate-600"
                   onError={(e) => {
-                    e.target.src = "https://via.placeholder.com/150?text=Logo";
+                    e.target.src = "";
                   }}
                 />
                 <div className="flex-1">

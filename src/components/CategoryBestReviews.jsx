@@ -91,7 +91,7 @@ export default function CategoryBestReviews() {
                 comment: company.bestReview.comment,
                 rating: company.bestReview.rating,
                 user: company.bestReview.user?.name || "Anonymous",
-                image: company.bestReview.user?.profileImage || "https://via.placeholder.com/100?text=User",
+                image: company.bestReview.user?.profileImage || "/default-avatar.svg",
                 date: new Date(company.bestReview.createdAt).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
@@ -99,17 +99,7 @@ export default function CategoryBestReviews() {
                 }),
                 company: company.name,
                 url: `/company/${company.slug || company._id}`,
-                companyimage: company.logo || company.companyImage || (() => {
-                  try {
-                    const url = company.url || company.website || "";
-                    if (url) {
-                      const cleaned = url.startsWith("http") ? url : "https://" + url;
-                      const domain = new URL(cleaned).hostname.replace(/^www\./, "");
-                      return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-                    }
-                  } catch {}
-                  return "https://via.placeholder.com/150?text=Company+Logo";
-                })(),
+                companyimage: company.logo || company.companyImage || "",
                 category: category.name,
                 companyUrl: company.url || company.website || "",
                 avgRating: company.avgRating,

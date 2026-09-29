@@ -128,7 +128,7 @@ const BrowseReviews = () => {
                         alt={review.user}
                         className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-600"
                         onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/100?text=User";
+                          e.target.src = "/default-avatar.svg";
                         }}
                       />
                       <div>
@@ -194,7 +194,7 @@ const BrowseReviews = () => {
                       alt={review.company}
                       className="w-8 h-8 rounded-lg object-cover border border-slate-200 dark:border-slate-600"
                       onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/150?text=Logo";
+                        e.target.src = "";
                       }}
                     />
                     <div className="flex-1 min-w-0">

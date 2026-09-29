@@ -275,10 +275,10 @@ export default function CompanyDashboard() {
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg dark:shadow-slate-900/50 p-6 mb-6 border border-slate-100 dark:border-slate-700">
             <div className="flex flex-col md:flex-row items-start gap-4">
               <img
-                src={company?.logo || "https://via.placeholder.com/80?text=Co"}
+                src={company?.logo || ""}
                 alt={company?.name}
                 className="w-16 h-16 rounded-xl object-cover border border-slate-200 dark:border-slate-600"
-                onError={(e) => { e.target.src = "https://via.placeholder.com/80?text=Co"; }}
+                onError={(e) => { e.target.src = ""; }}
               />
               <div className="flex-1">
                 <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{company?.name}</h1>
@@ -406,10 +406,10 @@ export default function CompanyDashboard() {
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
                         <img
-                          src={review.user?.profileImage || "https://via.placeholder.com/40?text=U"}
+                          src={review.user?.profileImage || "/default-avatar.svg"}
                           alt={review.user?.name}
                           className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-600"
-                          onError={(e) => { e.target.src = "https://via.placeholder.com/40?text=U"; }}
+                          onError={(e) => { e.target.src = "/default-avatar.svg"; }}
                         />
                         <div>
                           <p className="font-semibold text-slate-800 dark:text-slate-100">{review.user?.name || "Anonymous"}</p>
@@ -666,10 +666,10 @@ export default function CompanyDashboard() {
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
                     <img
-                      src={company?.logo || "https://via.placeholder.com/64?text=Co"}
+                      src={company?.logo || ""}
                       alt={company?.name}
                       className="w-16 h-16 rounded-xl object-cover border border-slate-200 dark:border-slate-600"
-                      onError={(e) => { e.target.src = "https://via.placeholder.com/64?text=Co"; }}
+                      onError={(e) => { e.target.src = ""; }}
                     />
                     <div>
                       <h4 className="text-xl font-bold text-slate-800 dark:text-slate-100">{company?.name}</h4>
