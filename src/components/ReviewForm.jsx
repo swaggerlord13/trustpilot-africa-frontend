@@ -1,7 +1,6 @@
-import { API_BASE_URL } from "../config.js";
+import api, { API_BASE_URL } from "../api.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useToast } from "../components/Toast.jsx";
 
 export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
@@ -50,7 +49,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
     setSubmitting(true);
 
     try {
-      const res = await axios.post(
+      const res = await api.post(
         `${API_BASE_URL}/reviews`,
         {
           companyId,

@@ -1,7 +1,6 @@
-import { API_BASE_URL } from "../config.js";
+import api, { API_BASE_URL } from "../api.js";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Header from "../pages/Header";
 import Loader from "../components/Loader";
 import StarRating from "../components/StarRatings";
@@ -31,7 +30,7 @@ const BrowseReviews = () => {
     const fetchMixedReviews = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
+        const response = await api.get(
           `${API_BASE_URL}/reviews/browse-mixed?page=${currentPage}&limit=20${debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ""}`
         );
         setReviews(response.data.reviews || []);

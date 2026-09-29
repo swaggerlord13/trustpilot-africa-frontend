@@ -1,3 +1,34 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  /* Brand blues */
+  --color-brand-50: #EEF4FF;
+  --color-brand-100: #D9E5FF;
+  --color-brand-200: #B3CCFF;
+  --color-brand-300: #80AAEE;
+  --color-brand-400: #3D7BDD;
+  --color-brand-500: #0052CC;
+  --color-brand-600: #0047B3;
+  --color-brand-700: #003D99;
+  --color-brand-800: #002E73;
+
+  /* Coral accents */
+  --color-coral-50: #FFF1EE;
+  --color-coral-100: #FFE0D9;
+  --color-coral-200: #FFC0AF;
+  --color-coral-300: #FF9F86;
+  --color-coral-400: #FF7F5C;
+  --color-coral-500: #FF6B4A;
+  --color-coral-600: #E55A3A;
+
+  /* Semantic */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+}
+
 /* ===== TrustPilot Africa: Fresh Design System ===== */
 
 :root {

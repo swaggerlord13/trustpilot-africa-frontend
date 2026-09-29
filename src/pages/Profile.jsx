@@ -1,6 +1,5 @@
-import { API_BASE_URL } from "../config.js";
+import api, { API_BASE_URL } from "../api.js";
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import Header from "./Header";
 import ReviewBox from "../components/ReviewBox";
@@ -53,7 +52,7 @@ export default function ProfilePage() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(`${API_BASE_URL}/upload/user-profile`, formDataUpload, {
+      const response = await api.post(`${API_BASE_URL}/upload/user-profile`, formDataUpload, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`
@@ -83,7 +82,7 @@ export default function ProfilePage() {
         }
 
         // Get user profile
-        const userRes = await axios.get(`${API_BASE_URL}/auth/me`, {
+        const userRes = await api.get(`${API_BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -97,7 +96,7 @@ export default function ProfilePage() {
         setProfileImagePreview(userRes.data.profileImage || "");
 
         // Get user's reviews
-        const reviewsRes = await axios.get(
+        const reviewsRes = await api.get(
           `${API_BASE_URL}/reviews/user/${userRes.data._id}`
         );
 
@@ -124,7 +123,7 @@ export default function ProfilePage() {
 
         // Fetch claimed companies
         try {
-          const claimsRes = await axios.get(`${API_BASE_URL}/company-claims/my-companies`, {
+          const claimsRes = await api.get(`${API_BASE_URL}/company-claims/my-companies`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           // API returns a plain array, not { companies: [...] }
@@ -155,7 +154,7 @@ export default function ProfilePage() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(
+      const res = await api.put(
         `${API_BASE_URL}/auth/me`,
         formData,
         {

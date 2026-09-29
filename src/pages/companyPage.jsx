@@ -1,7 +1,6 @@
-import { API_BASE_URL } from "../config.js";
+import api, { API_BASE_URL } from "../api.js";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, Link, useLocation} from "react-router-dom";
-import axios from "axios";
 import ReviewBox from "../components/ReviewBox";
 import ReviewForm from "../components/ReviewForm";
 import StarRating from "../components/StarRatings";
@@ -57,10 +56,10 @@ export default function CompanyPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const companyRes = await axios.get(`${API_BASE_URL}/companies/slug/${slug}`);
+        const companyRes = await api.get(`${API_BASE_URL}/companies/slug/${slug}`);
         setCompany(companyRes.data);
 
-        const reviewsRes = await axios.get(`${API_BASE_URL}/reviews/company/${companyRes.data._id}/with-replies`);
+        const reviewsRes = await api.get(`${API_BASE_URL}/reviews/company/${companyRes.data._id}/with-replies`);
 
         const mappedReviews = reviewsRes.data.map((review) => ({
           _id: review._id,
@@ -97,7 +96,7 @@ export default function CompanyPage() {
         const token = localStorage.getItem("token");
         if (token) {
           try {
-            const claimsRes = await axios.get(`${API_BASE_URL}/company-claims/my-claims`, {
+            const claimsRes = await api.get(`${API_BASE_URL}/company-claims/my-claims`, {
               headers: { Authorization: `Bearer ${token}` },
             });
             // API returns a plain array, not { claims: [...] }
@@ -140,7 +139,7 @@ export default function CompanyPage() {
     setClaimLoading(true);
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
+      await api.post(
         `${API_BASE_URL}/company-claims`,
         {
           companyId: company._id,
@@ -167,7 +166,7 @@ export default function CompanyPage() {
     setReplyLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.post(
+      const res = await api.post(
         `${API_BASE_URL}/company-dashboard/${company._id}/reviews/${reviewId}/reply`,
         { content: replyContent },
         { headers: { Authorization: `Bearer ${token}` } }
@@ -194,7 +193,7 @@ export default function CompanyPage() {
   const handleEditReview = async (reviewId) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
+      await api.put(
         `${API_BASE_URL}/reviews/${reviewId}`,
         { comment: editComment, rating: editRating },
         { headers: { Authorization: `Bearer ${token}` } }
@@ -211,7 +210,7 @@ export default function CompanyPage() {
     if (!window.confirm("Are you sure you want to delete your review? This cannot be undone.")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`${API_BASE_URL}/reviews/${reviewId}`, { headers: { Authorization: `Bearer ${token}` } });
+      await api.delete(`${API_BASE_URL}/reviews/${reviewId}`, { headers: { Authorization: `Bearer ${token}` } });
       setReviews(prev => prev.filter(r => r._id !== reviewId));
       showToast("Review deleted", "success");
     } catch (err) {
@@ -223,7 +222,7 @@ export default function CompanyPage() {
     if (!userReplyContent.trim()) return;
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.post(
+      const res = await api.post(
         `${API_BASE_URL}/reviews/${reviewId}/user-reply`,
         { content: userReplyContent },
         { headers: { Authorization: `Bearer ${token}` } }

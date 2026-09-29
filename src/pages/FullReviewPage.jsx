@@ -1,7 +1,6 @@
-import { API_BASE_URL } from "../config.js";
+import api, { API_BASE_URL } from "../api.js";
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import Header from "../pages/Header";
 import Loader from "../components/Loader";
 import StarRating from "../components/StarRatings";
@@ -18,7 +17,7 @@ const FullReviewPage = () => {
     const fetchReviewData = async () => {
       try {
         // Fetch the main review
-        const reviewResponse = await axios.get(`${API_BASE_URL}/reviews/${reviewId}`);
+        const reviewResponse = await api.get(`${API_BASE_URL}/reviews/${reviewId}`);
         const reviewData = reviewResponse.data;
 
         // Format the review data
@@ -46,7 +45,7 @@ const FullReviewPage = () => {
 
         // Fetch company reply for this review
         try {
-          const replyRes = await axios.get(`${API_BASE_URL}/reviews/${reviewId}/replies`);
+          const replyRes = await api.get(`${API_BASE_URL}/reviews/${reviewId}/replies`);
           if (replyRes.data) {
             setCompanyReply(replyRes.data);
           }
@@ -56,7 +55,7 @@ const FullReviewPage = () => {
 
         // Fetch related reviews from the same company
         if (reviewData.company?._id) {
-          const relatedResponse = await axios.get(
+          const relatedResponse = await api.get(
             `${API_BASE_URL}/reviews/company/${reviewData.company._id}`
           );
           

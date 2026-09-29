@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../config.js";
+import { API_BASE_URL } from "../api.js";
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../pages/Header";
@@ -28,37 +28,16 @@ const Subcategory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [defaultCompanyName, setDefaultCompanyName] = useState("");
 
-  // Fetch real-time review data for each company
-  const fetchCompanyReviews = async (companyId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/reviews/company/${companyId}`);
-      if (response.ok) {
-        const reviews = await response.json();
-        const avgRating = reviews.length > 0 
-          ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length)
-          : 0;
-        return {
-          reviews: reviews,
-          avgRating: avgRating,
-          reviewCount: reviews.length
-        };
-      }
-    } catch (error) {
-      console.error("Error fetching reviews for company:", companyId, error);
-    }
-    return { reviews: [], avgRating: 0, reviewCount: 0 };
-  };
-
   useEffect(() => {
-    const fetchCompaniesWithReviews = async () => {
+    const fetchCompanies = async () => {
       const url = subSlug
         ? `${API_BASE_URL}/subcategories/${slug}/${subSlug}`
         : `${API_BASE_URL}/categories/${slug}/companies`;
 
       setLoading(true);
       try {
-        // Fetch companies
         const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to fetch companies");
         const companiesData = await response.json();
         const companiesArray = Array.isArray(companiesData) ? companiesData : [];
 
@@ -66,20 +45,7 @@ const Subcategory = () => {
         if (subSlug)
           setSubCategoryName(subSlug.charAt(0).toUpperCase() + subSlug.slice(1));
 
-        // Fetch reviews for each company to get accurate ratings
-        const companiesWithReviews = await Promise.all(
-          companiesArray.map(async (company) => {
-            const reviewData = await fetchCompanyReviews(company._id);
-            return {
-              ...company,
-              avgRating: reviewData.avgRating,
-              reviews: reviewData.reviews,
-              reviewCount: reviewData.reviewCount
-            };
-          })
-        );
-
-        setCompanies(companiesWithReviews);
+        setCompanies(companiesArray);
         setCurrentPage(1);
       } catch (err) {
         console.error("Error fetching companies:", err);
@@ -90,7 +56,7 @@ const Subcategory = () => {
     };
 
     if (slug) {
-      fetchCompaniesWithReviews();
+      fetchCompanies();
     }
   }, [slug, subSlug]);
 

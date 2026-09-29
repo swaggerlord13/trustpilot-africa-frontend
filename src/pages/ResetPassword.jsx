@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../config.js";
+import { API_BASE_URL } from "../api.js";
 import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link, useParams, useNavigate } from 'react-router-dom';

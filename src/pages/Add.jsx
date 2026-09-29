@@ -1,6 +1,5 @@
-import { API_BASE_URL } from "../config.js";
+import api, { API_BASE_URL } from "../api.js";
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import Footer from "../components/Footer.jsx";
 import { useToast } from "../components/Toast.jsx";
 
@@ -92,7 +91,7 @@ export default function Add() {
   const fetchPendingClaims = async () => {
     setClaimsLoading(true);
     try {
-      const res = await axios.get(`${API_BASE_URL}/company-claims/pending`, {
+      const res = await api.get(`${API_BASE_URL}/company-claims/pending`, {
         headers: getAuthHeaders(),
       });
       setPendingClaims(res.data.claims || []);
@@ -106,7 +105,7 @@ export default function Add() {
   const handleApproveClaim = async (claimId) => {
     setClaimActionLoading(claimId);
     try {
-      await axios.put(
+      await api.put(
         `${API_BASE_URL}/company-claims/${claimId}/approve`,
         {},
         { headers: getAuthHeaders() }
@@ -124,7 +123,7 @@ export default function Add() {
     const notes = prompt("Rejection reason (optional):");
     setClaimActionLoading(claimId);
     try {
-      await axios.put(
+      await api.put(
         `${API_BASE_URL}/company-claims/${claimId}/reject`,
         { adminNotes: notes || "" },
         { headers: getAuthHeaders() }
@@ -220,7 +219,7 @@ export default function Add() {
     const formData = new FormData();
     formData.append("logo", file);
     try {
-      const res = await axios.post(`${API_BASE_URL}/upload/company-logo`, formData, {
+      const res = await api.post(`${API_BASE_URL}/upload/company-logo`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       const imageUrl = res.data.imageUrl;
@@ -242,7 +241,7 @@ export default function Add() {
     const formData = new FormData();
     formData.append("logo", file);
     try {
-      const res = await axios.post(`${API_BASE_URL}/upload/company-logo`, formData, {
+      const res = await api.post(`${API_BASE_URL}/upload/company-logo`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       const imageUrl = res.data.imageUrl;

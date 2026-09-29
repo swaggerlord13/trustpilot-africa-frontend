@@ -1,7 +1,6 @@
-import { API_BASE_URL } from "../config.js";
+import api, { API_BASE_URL } from "../api.js";
 import { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Header from "./Header.jsx";
 import Footer from "../components/Footer.jsx";
 import Loader from "../components/Loader.jsx";
@@ -59,7 +58,7 @@ export default function CompanyDashboard() {
     try {
       const formData = new FormData();
       formData.append("logo", file);
-      const res = await axios.post(`${API_BASE_URL}/upload/company-logo`, formData, {
+      const res = await api.post(`${API_BASE_URL}/upload/company-logo`, formData, {
         headers: {
           ...getAuthHeaders(),
           "Content-Type": "multipart/form-data",
@@ -84,8 +83,8 @@ export default function CompanyDashboard() {
 
         // Fetch stats and reviews in parallel
         const [statsRes, reviewsRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/company-dashboard/${companyId}/stats`, headers),
-          axios.get(`${API_BASE_URL}/company-dashboard/${companyId}/reviews?sort=${reviewSort}&page=${reviewPage}&limit=10`, headers),
+          api.get(`${API_BASE_URL}/company-dashboard/${companyId}/stats`, headers),
+          api.get(`${API_BASE_URL}/company-dashboard/${companyId}/reviews?sort=${reviewSort}&page=${reviewPage}&limit=10`, headers),
         ]);
 
         setStats(statsRes.data);
@@ -96,7 +95,7 @@ export default function CompanyDashboard() {
         if (reviewsRes.data.reviews.length > 0) {
           const firstReview = reviewsRes.data.reviews[0];
           // We need the company object - let's fetch it
-          const companyRes = await axios.get(`${API_BASE_URL}/companies/by-id/${companyId}`);
+          const companyRes = await api.get(`${API_BASE_URL}/companies/by-id/${companyId}`);
           setCompany(companyRes.data);
           setProfileForm({
             description: companyRes.data.description || "",
@@ -105,7 +104,7 @@ export default function CompanyDashboard() {
           });
         } else {
           // No reviews - still get company data
-          const companyRes = await axios.get(`${API_BASE_URL}/companies/by-id/${companyId}`);
+          const companyRes = await api.get(`${API_BASE_URL}/companies/by-id/${companyId}`);
           setCompany(companyRes.data);
           setProfileForm({
             description: companyRes.data.description || "",
@@ -134,7 +133,7 @@ export default function CompanyDashboard() {
     if (!replyContent.trim()) return;
     setReplyLoading(true);
     try {
-      const res = await axios.post(
+      const res = await api.post(
         `${API_BASE_URL}/company-dashboard/${companyId}/reviews/${reviewId}/reply`,
         { content: replyContent },
         { headers: getAuthHeaders() }
@@ -160,7 +159,7 @@ export default function CompanyDashboard() {
     if (!editReplyContent.trim()) return;
     setReplyLoading(true);
     try {
-      const res = await axios.put(
+      const res = await api.put(
         `${API_BASE_URL}/company-dashboard/${companyId}/reviews/${reviewId}/reply`,
         { content: editReplyContent },
         { headers: getAuthHeaders() }
@@ -184,7 +183,7 @@ export default function CompanyDashboard() {
   const handleDeleteReply = async (reviewId) => {
     if (!window.confirm("Are you sure you want to delete this reply?")) return;
     try {
-      await axios.delete(
+      await api.delete(
         `${API_BASE_URL}/company-dashboard/${companyId}/reviews/${reviewId}/reply`,
         { headers: getAuthHeaders() }
       );
@@ -203,7 +202,7 @@ export default function CompanyDashboard() {
   const handleSaveProfile = async () => {
     setProfileSaving(true);
     try {
-      await axios.put(
+      await api.put(
         `${API_BASE_URL}/company-dashboard/${companyId}/profile`,
         profileForm,
         { headers: getAuthHeaders() }

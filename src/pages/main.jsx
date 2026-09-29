@@ -4,6 +4,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorBoundary from "../components/ErrorBoundary.jsx";
 import { ToastProvider } from "../components/Toast.jsx";
 import ThemeProvider from "../components/ThemeProvider.jsx";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 import App from "../pages/App.jsx";
 import About from "../pages/About.jsx";
@@ -78,9 +81,17 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ErrorBoundary>
       <ThemeProvider>
-        <ToastProvider>
-          <RouterProvider router={router} />
-        </ToastProvider>
+        {GOOGLE_CLIENT_ID ? (
+          <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+            <ToastProvider>
+              <RouterProvider router={router} />
+            </ToastProvider>
+          </GoogleOAuthProvider>
+        ) : (
+          <ToastProvider>
+            <RouterProvider router={router} />
+          </ToastProvider>
+        )}
       </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>

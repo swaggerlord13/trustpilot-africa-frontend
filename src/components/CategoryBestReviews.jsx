@@ -1,7 +1,6 @@
-import { API_BASE_URL } from "../config.js";
+import api, { API_BASE_URL } from "../api.js";
 import ReviewBox from "./ReviewBox";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Loader from "./Loader";
 
 export default function CategoryBestReviews() {
@@ -27,7 +26,7 @@ export default function CategoryBestReviews() {
         for (const category of featuredCategories) {
           try {
             // Step 1: Get all companies in this category
-            const companiesRes = await axios.get(
+            const companiesRes = await api.get(
               `${API_BASE_URL}/companies?category=${category.slug}`
             );
             
@@ -40,7 +39,7 @@ export default function CategoryBestReviews() {
             const companiesWithRatings = await Promise.all(
               companiesRes.data.map(async (company) => {
                 try {
-                  const reviewsRes = await axios.get(
+                  const reviewsRes = await api.get(
                     `${API_BASE_URL}/reviews/company/${company._id}`
                   );
                   

@@ -1,7 +1,7 @@
+import api, { API_BASE_URL } from "../api.js";
 // import { useState, useEffect } from "react";
 // import { Link } from "react-router-dom";
-// import axios from "axios";
-// import Loader from "./Loader";
+// // import Loader from "./Loader";
 // import StarRating from "./StarRatings";
 
 // export default function SimpleCompanyCards() {
@@ -12,7 +12,7 @@
 //   useEffect(() => {
 //     const fetchBestCompanies = async () => {
 //       try {
-//         const response = await axios.get('http://localhost:5000/api/companies/best-by-category');
+//         const response = await api.get('http://localhost:5000/api/companies/best-by-category');
 //         setCategoryData(response.data.categories || []);
 //         setLoading(false);
 //       } catch (err) {

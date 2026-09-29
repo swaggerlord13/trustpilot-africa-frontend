@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../config.js";
+import { API_BASE_URL } from "../api.js";
 import { useToast } from "../components/Toast.jsx";
 import "../styles/AdminPanel.css";
 

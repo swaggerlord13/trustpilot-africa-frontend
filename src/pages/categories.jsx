@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../config.js";
+import { API_BASE_URL } from "../api.js";
 import { useState, useEffect } from "react";
 import "../styles/categories.css";
 import Header from "../pages/Header.jsx";

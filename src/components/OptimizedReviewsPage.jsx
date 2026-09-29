@@ -1,10 +1,9 @@
-import { API_BASE_URL } from "../config.js";
+import api, { API_BASE_URL } from "../api.js";
 import ReviewBox from "./ReviewBox.jsx";
 import "../styles/ReviewsText.css";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Loader from "./Loader.jsx";
 import ReviewForm from "./ReviewForm.jsx";
-import axios from "axios";
 import ScrollDots from "./ScrollDots.jsx";
 
 function useIsDesktop(breakpoint = 1024) {
@@ -41,8 +40,8 @@ export default function OptimizedReviewsPage({ companyId }) {
     const fetchReviews = async () => {
       try {
         if (companyId) {
-          const reviewsRes = await axios.get(`${API_BASE_URL}/reviews/company/${companyId}`);
-          const companyRes = await axios.get(`${API_BASE_URL}/companies/slug/${companyId}/with-ratings`);
+          const reviewsRes = await api.get(`${API_BASE_URL}/reviews/company/${companyId}`);
+          const companyRes = await api.get(`${API_BASE_URL}/companies/slug/${companyId}/with-ratings`);
 
           const mappedReviews = reviewsRes.data.map((review) => ({
             _id: review._id,
@@ -75,7 +74,7 @@ export default function OptimizedReviewsPage({ companyId }) {
 
           setReviews(mappedReviews);
         } else {
-          const response = await axios.get(`${API_BASE_URL}/companies/latest-best-reviews`);
+          const response = await api.get(`${API_BASE_URL}/companies/latest-best-reviews`);
 
           const formattedReviews = response.data.reviews.map(review => ({
             _id: review._id,

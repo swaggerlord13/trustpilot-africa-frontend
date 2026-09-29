@@ -1,11 +1,10 @@
-import { API_BASE_URL } from "../config.js";
+import api, { API_BASE_URL } from "../api.js";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, Link, useNavigate} from "react-router-dom";
 import Header from "../pages/Header";
 import Loader from "../components/Loader";
 import StarRating from "../components/StarRatings";
 import AddCompanyModal from "../components/AddCompanyModal";
-import axios from "axios";
 import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
 import { useToast } from "../components/Toast.jsx";
@@ -45,7 +44,7 @@ const CategoryCompanies = () => {
         sort: sortValue
       };
 
-      const response = await axios.get(
+      const response = await api.get(
         `${API_BASE_URL}/categories/${slug}/companies-paginated`,
         { params }
       );
@@ -111,7 +110,7 @@ const CategoryCompanies = () => {
           sort
         };
 
-        const response = await axios.get(
+        const response = await api.get(
           `${API_BASE_URL}/categories/${slug}/companies-paginated`,
           { params }
         );
@@ -145,7 +144,7 @@ const CategoryCompanies = () => {
     const newCompany = { name, url: url || "", city: city || "", country: country || "" };
     
     try {
-      const response = await axios.post(`${API_BASE_URL}/companies`, newCompany);
+      const response = await api.post(`${API_BASE_URL}/companies`, newCompany);
       
       setIsModalOpen(false);
       navigate(`/company/${response.data.slug}?openReview=true`);
