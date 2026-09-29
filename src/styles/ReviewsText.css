@@ -2,7 +2,7 @@
   width: 100%;
   margin-top: 20px;
   margin-bottom: 20px;
-  padding: 0 16px;
+  padding: 0;
 }
 .reviewscomments-row {
   display: flex;
@@ -10,7 +10,7 @@
   gap: 16px;
   align-items: stretch;
   justify-content: flex-start;
-  padding: 0 16px;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -18,7 +18,7 @@
   text-align: left;
   font-size: 2em;
   color: black;
-  margin: 10px 0 0 10px;
+  margin: 10px 0 0 0;
 }
 
 /* ── Desktop horizontal slider (homepage only) ── */
@@ -29,7 +29,7 @@
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 16px;
-    padding: 8px 16px 16px;
+    padding: 8px 0 16px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -54,7 +54,7 @@
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 12px;
-    padding: 0 16px 12px;
+    padding: 0 0 12px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;

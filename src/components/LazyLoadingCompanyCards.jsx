@@ -47,7 +47,7 @@ const CategorySection = ({ category, companies, index }) => {
           {/* Company Cards */}
           <div className="mb-8 mx-1">
             {/* Desktop Grid */}
-            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 pt-3 pl-3">
+            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 pt-3 px-3">
               {companies.map((company, companyIndex) => (
                 <CompanyCard key={company.companyId} company={company} ranking={companyIndex + 1} />
               ))}
@@ -55,7 +55,7 @@ const CategorySection = ({ category, companies, index }) => {
 
             {/* Mobile Horizontal Scroll */}
             <div className="md:hidden">
-              <div className="flex gap-4 overflow-x-auto pt-3 pl-3 pb-4 scrollbar-hide snap-x snap-mandatory" ref={scrollRef}
+              <div className="flex gap-4 overflow-x-auto pt-3 px-3 pb-4 scrollbar-hide snap-x snap-mandatory" ref={scrollRef}
                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {companies.map((company, companyIndex) => (
                   <div key={company.companyId} className="flex-shrink-0 snap-center">

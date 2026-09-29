@@ -7,6 +7,7 @@ import LazyLoadingCompanyCards from "../components/LazyLoadingCompanyCards.jsx";
 import OptimizedReviewsPage from "../components/OptimizedReviewsPage.jsx";
 import Footer from "../components/Footer.jsx";
 import { useToast } from "../components/Toast.jsx";
+import "../styles/Homepage.css";
 
 /* ── Animated counter hook ── */
 function useCountUp(target, duration = 2000, startOnView = true) {
