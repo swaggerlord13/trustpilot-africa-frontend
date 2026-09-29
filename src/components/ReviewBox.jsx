@@ -2,10 +2,10 @@ import '../styles/ReviewBox.css'
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import StarRating from './StarRatings';
+import CompanyLogo from './CompanyLogo';
 
 export default function ReviewBox({ _id, title, comment, rating, user, date, company, url, image, companyimage, companyUrl, category }) {
   const [imageError, setImageError] = useState(false);
-  const [companyImgStage, setCompanyImgStage] = useState(0); // 0=original, 1=google favicon, 2=letter
 
   const charLimits = {
     mobile: 137,
@@ -30,32 +30,6 @@ export default function ReviewBox({ _id, title, comment, rating, user, date, com
       setImageError(true);
     }
   };
-
-  const getDomain = (u) => {
-    if (!u) return null;
-    try {
-      let c = u.trim();
-      if (!c.startsWith("http")) c = "https://" + c;
-      return new URL(c).hostname.replace(/^www\./, "");
-    } catch { return null; }
-  };
-
-  const companyDomain = getDomain(companyUrl);
-
-  const handleCompanyImageError = (e) => {
-    if (companyImgStage === 0 && companyDomain) {
-      // Try Google Favicon (high-res)
-      e.target.src = `https://www.google.com/s2/favicons?domain=${companyDomain}&sz=128`;
-      setCompanyImgStage(1);
-    } else {
-      // Final fallback: hide img and show letter
-      setCompanyImgStage(2);
-    }
-  };
-
-  const companyLetter = (company || "?").charAt(0).toUpperCase();
-  const LOGO_COLORS = ["#1B6B3A","#2563EB","#7C3AED","#DC2626","#D97706","#0891B2","#4F46E5","#059669"];
-  const letterBg = LOGO_COLORS[Math.abs([...(company||"")].reduce((h,c)=>c.charCodeAt(0)+((h<<5)-h),0)) % LOGO_COLORS.length];
 
   return (
     <div className="Reviewcomments">
@@ -87,22 +61,7 @@ export default function ReviewBox({ _id, title, comment, rating, user, date, com
       {/* Company footer: always pinned to bottom */}
       <Link to={url}>
         <div className="companydetails">
-          <div className="company-logo-wrap">
-            {companyImgStage < 2 ? (
-              <img 
-                src={companyimage} 
-                alt={`${company} logo`}
-                onError={handleCompanyImageError}
-              />
-            ) : (
-              <div style={{
-                width: "100%", height: "100%", display: "flex", alignItems: "center",
-                justifyContent: "center", backgroundColor: letterBg, borderRadius: 8
-              }}>
-                <span style={{ color: "#fff", fontWeight: 700, fontSize: 18 }}>{companyLetter}</span>
-              </div>
-            )}
-          </div>
+          <CompanyLogo logo={companyimage} url={companyUrl} name={company || "?"} size={42} />
           <div className="company-info">
             <span className="company-name">{company}</span>
             <span className="company-category">{category}</span>
