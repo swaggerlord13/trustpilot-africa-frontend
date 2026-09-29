@@ -140,10 +140,10 @@ export default function Header() {
             </>
           ) : (
             <>
-              <Link to="/Login" onClick={closeMobileMenu}>
+              <Link to="/login" onClick={closeMobileMenu}>
                 <button className="Loginbutton">Login</button>
               </Link>
-              <Link to="/Register" onClick={closeMobileMenu}>
+              <Link to="/register" onClick={closeMobileMenu}>
                 <button className="Registerbutton">Register</button>
               </Link>
             </>

@@ -122,7 +122,7 @@ export default function ForgotPassword() {
             <div className="auth-footer">
               <p>
                 Remember your password?{" "}
-                <Link to="/Login" className="switch-link">
+                <Link to="/login" className="switch-link">
                   Back to Login
                 </Link>
               </p>

@@ -130,7 +130,7 @@ export default function Register() {
 
       // Redirect to login page (they need to verify first)
       setTimeout(() => {
-        navigate("/Login", { replace: true });
+        navigate("/login", { replace: true });
       }, 3000);
 
     } catch (err) {
@@ -429,18 +429,14 @@ export default function Register() {
                   <i className='bx bxl-google'></i>
                 </button>
               )}
-              <button type="button" className="social-btn facebook" title="Sign up with Facebook">
-                <i className='bx bxl-facebook'></i>
-              </button>
-              <button type="button" className="social-btn apple" title="Sign up with Apple">
-                <i className='bx bxl-apple'></i>
-              </button>
+
+
             </div>
 
             <div className="auth-footer">
               <p>
                 Already have an account?{' '}
-                <Link to="/Login" className="switch-link">
+                <Link to="/login" className="switch-link">
                   Sign In
                 </Link>
               </p>
@@ -483,8 +479,8 @@ export default function Register() {
                     <i className='bx bxs-trophy'></i>
                   </div>
                   <div className="benefit-text">
-                    <h3>Earn Rewards</h3>
-                    <p>Get points for every review you write</p>
+                    <h3>Help Others Decide</h3>
+                    <p>Your reviews help millions make better choices</p>
                   </div>
                 </div>
 
@@ -501,16 +497,16 @@ export default function Register() {
 
               <div className="stats-section">
                 <div className="stat">
-                  <h4>50K+</h4>
-                  <p>Active Users</p>
+                  <i className='bx bxs-check-circle' style={{color: '#22c55e', fontSize: '1.5rem'}}></i>
+                  <p>Free to join</p>
                 </div>
                 <div className="stat">
-                  <h4>10K+</h4>
-                  <p>Companies</p>
+                  <i className='bx bxs-check-circle' style={{color: '#22c55e', fontSize: '1.5rem'}}></i>
+                  <p>Real reviews only</p>
                 </div>
                 <div className="stat">
-                  <h4>100K+</h4>
-                  <p>Reviews</p>
+                  <i className='bx bxs-check-circle' style={{color: '#22c55e', fontSize: '1.5rem'}}></i>
+                  <p>100% African focus</p>
                 </div>
               </div>
             </div>

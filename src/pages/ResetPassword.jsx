@@ -20,8 +20,8 @@ export default function ResetPassword() {
     setError("");
     setSuccess("");
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long.");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
       return;
     }
 
@@ -113,7 +113,7 @@ export default function ResetPassword() {
                     required
                     disabled={loading}
                     className="modern-input with-toggle"
-                    minLength={6}
+                    minLength={8}
                   />
                   <button
                     type="button"
@@ -137,7 +137,7 @@ export default function ResetPassword() {
                     required
                     disabled={loading}
                     className="modern-input"
-                    minLength={6}
+                    minLength={8}
                   />
                 </div>
               </div>
@@ -164,7 +164,7 @@ export default function ResetPassword() {
             <div className="auth-footer">
               <p>
                 Back to{" "}
-                <Link to="/Login" className="switch-link">
+                <Link to="/login" className="switch-link">
                   Login
                 </Link>
               </p>

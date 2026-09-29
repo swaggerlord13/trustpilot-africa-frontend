@@ -246,7 +246,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
         <p className="text-sm text-slate-600 dark:text-slate-300 text-center">
           <i className="bx bx-bulb text-brand-500 mr-1"></i>
           <strong>Tip:</strong> Be specific and honest in your review. 
-          Mention what you liked, what could be improved, and whether you\'d recommend this company to others.
+          Mention what you liked, what could be improved, and whether you'd recommend this company to others.
         </p>
       </div>
     </div>

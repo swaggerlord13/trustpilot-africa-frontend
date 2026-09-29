@@ -90,7 +90,7 @@ export default function VerifyEmail() {
 
             <div className="auth-footer" style={{ marginTop: "24px" }}>
               <p>
-                <Link to="/Login" className="switch-link">
+                <Link to="/login" className="switch-link">
                   Go to Login
                 </Link>
               </p>

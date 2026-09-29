@@ -407,7 +407,7 @@ export default function CompanyPage() {
             )}
             {!isLoggedIn && (
               <Link
-                to={`/register-business?claim=${encodeURIComponent(company.name)}&companyId=${company._id}&url=${encodeURIComponent(company.website || "")}`}
+                to={`/register-business?claim=${encodeURIComponent(company.name)}&companyId=${company._id}&url=${encodeURIComponent(company.url || "")}`}
                 className="flex-1 py-3 px-6 rounded-xl font-semibold bg-coral-500 text-white hover:bg-coral-600 transition-colors duration-200 text-center"
               >
                 <i className="bx bx-badge-check mr-1"></i> Claim This Business

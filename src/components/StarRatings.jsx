@@ -1,11 +1,11 @@
 function StarRating({ rating }) {
   let activeColor;
   if (rating <=2) {
-    activeColor = "red";
+    activeColor = "#EF4444";
   } else if (rating === 3) {
-    activeColor = "gold";
+    activeColor = "#F59E0B";
   }else {
-    activeColor = "green";
+    activeColor = "#22C55E";
   }
   const stars = [];
   for (let i = 0; i < 5; i++) {

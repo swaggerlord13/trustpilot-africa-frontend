@@ -354,18 +354,14 @@ export default function Login() {
                   <i className='bx bxl-google'></i>
                 </button>
               )}
-              <button type="button" className="social-btn facebook" title="Sign in with Facebook">
-                <i className='bx bxl-facebook'></i>
-              </button>
-              <button type="button" className="social-btn apple" title="Sign in with Apple">
-                <i className='bx bxl-apple'></i>
-              </button>
+
+
             </div>
 
             <div className="auth-footer">
               <p>
                 Don't have an account?{' '}
-                <Link to="/Register" className="switch-link">
+                <Link to="/register" className="switch-link">
                   Create Account
                 </Link>
               </p>
