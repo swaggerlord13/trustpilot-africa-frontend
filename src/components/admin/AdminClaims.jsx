@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { adminApi, formatDate } from "./adminHelpers";
+import { adminApi, formatDate } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
 
 export default function AdminClaims() {

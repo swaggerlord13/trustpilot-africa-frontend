@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { adminApi, StarDisplay, formatDate, Pagination, toggleSelect, toggleSelectAll } from "./adminHelpers";
+import { adminApi, StarDisplay, formatDate, Pagination, toggleSelect, toggleSelectAll } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
 
 export default function AdminReviews() {

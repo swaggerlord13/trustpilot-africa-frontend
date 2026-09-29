@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { API_BASE_URL } from "../../api.js";
-import { adminApi, getAuthHeaders } from "./adminHelpers";
+import { adminApi, getAuthHeaders } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
 
 export default function AdminCategories() {
