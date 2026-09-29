@@ -5,6 +5,7 @@ import Header from "../pages/Header";
 import Footer from "../components/Footer.jsx";
 import Loader from "../components/Loader.jsx";
 import StarRating from "../components/StarRatings.jsx";
+import CompanyLogo from "../components/CompanyLogo";
 
 export default function BrowseCompanies() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -106,18 +107,6 @@ export default function BrowseCompanies() {
   };
 
   const hasActiveFilters = city || country || category || minRating || sort !== "relevance";
-
-  // Company logo helper
-  const getCompanyLogo = (company) => {
-    if (company.logo) return company.logo;
-    if (company.url) {
-      try {
-        const cleaned = company.url.startsWith("http") ? company.url : "https://" + company.url;
-        return "https://logo.clearbit.com/" + new URL(cleaned).hostname.replace(/^www\./, "");
-      } catch (e) { /* ignore */ }
-    }
-    return null;
-  };
 
   const activeFilterCount = [city, country, category, minRating].filter(Boolean).length;
 
@@ -308,7 +297,6 @@ export default function BrowseCompanies() {
                 {/* Company cards grid */}
                 <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                   {companies.map((company) => {
-                    const logo = getCompanyLogo(company);
                     return (
                       <Link
                         key={company._id}
@@ -317,21 +305,12 @@ export default function BrowseCompanies() {
                       >
                         {/* Top: logo + name */}
                         <div className="flex items-start gap-3 mb-3">
-                          <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                            {logo ? (
-                              <img
-                                src={logo}
-                                alt={company.name}
-                                className="w-full h-full object-contain p-1"
-                                onError={(e) => {
-                                  e.target.style.display = "none";
-                                  e.target.parentElement.innerHTML = '<i class="bx bx-building text-2xl text-slate-400"></i>';
-                                }}
-                              />
-                            ) : (
-                              <i className="bx bx-building text-2xl text-slate-400"></i>
-                            )}
-                          </div>
+                          <CompanyLogo
+                            logo={company.logo}
+                            url={company.url}
+                            name={company.name}
+                            size={48}
+                          />
                           <div className="min-w-0 flex-1">
                             <h3 className="font-bold text-slate-800 dark:text-white text-base group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors truncate">
                               {company.name}

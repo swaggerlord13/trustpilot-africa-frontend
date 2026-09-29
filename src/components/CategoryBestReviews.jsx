@@ -105,7 +105,7 @@ export default function CategoryBestReviews() {
                     if (url) {
                       const cleaned = url.startsWith("http") ? url : "https://" + url;
                       const domain = new URL(cleaned).hostname.replace(/^www\./, "");
-                      return `https://logo.clearbit.com/${domain}`;
+                      return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
                     }
                   } catch {}
                   return "https://via.placeholder.com/150?text=Company+Logo";

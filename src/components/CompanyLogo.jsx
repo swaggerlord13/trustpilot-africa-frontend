@@ -36,14 +36,13 @@ function nameColor(name) {
 /**
  * CompanyLogo: tries multiple logo sources before falling back to a letter.
  *
- * Chain: DB logo -> Clearbit -> Google Favicon (high-res) -> letter avatar
+ * Chain: DB logo -> Google Favicon (high-res 128px) -> letter avatar
  *
  * Google Favicon covers virtually every website on the internet,
- * so this catches African companies that Clearbit doesn't have.
+ * so this catches African companies reliably.
  */
 const CompanyLogo = ({ logo, url, name = "?", size = 56, className = "" }) => {
   const [imgFailed, setImgFailed] = useState(false);
-  const [clearbitFailed, setClearbitFailed] = useState(false);
   const [googleFailed, setGoogleFailed] = useState(false);
 
   const domain = getDomain(url);
@@ -84,22 +83,7 @@ const CompanyLogo = ({ logo, url, name = "?", size = 56, className = "" }) => {
     );
   }
 
-  // 2. Clearbit Logo API
-  if (domain && !clearbitFailed) {
-    return (
-      <div style={wrapperStyle} className={className}>
-        <img
-          src={`https://logo.clearbit.com/${domain}`}
-          alt={name}
-          style={imgStyle}
-          onError={() => setClearbitFailed(true)}
-          loading="lazy"
-        />
-      </div>
-    );
-  }
-
-  // 3. Google Favicon API (high-res 128px). Covers almost every website
+  // 2. Google Favicon API (high-res 128px). Covers almost every website
   if (domain && !googleFailed) {
     return (
       <div style={wrapperStyle} className={className}>
@@ -114,7 +98,7 @@ const CompanyLogo = ({ logo, url, name = "?", size = 56, className = "" }) => {
     );
   }
 
-  // 4. Colorful letter avatar fallback
+  // 3. Colorful letter avatar fallback
   return (
     <div
       style={{

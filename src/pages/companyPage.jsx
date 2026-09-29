@@ -78,7 +78,7 @@ export default function CompanyPage() {
               const u = review.company.url || "";
               if (u) {
                 const cleaned = u.startsWith("http") ? u : "https://" + u;
-                return `https://logo.clearbit.com/${new URL(cleaned).hostname.replace(/^www\./, "")}`;
+                return `https://www.google.com/s2/favicons?domain=${new URL(cleaned).hostname.replace(/^www\\./, "")}&sz=128`;
               }
             } catch {}
             return "https://via.placeholder.com/150?text=Company+Logo";
