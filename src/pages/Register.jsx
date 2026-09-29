@@ -29,10 +29,6 @@ export default function Register() {
   const navigate = useNavigate();
   const showToast = useToast();
 
-  // Already logged in? Send to homepage
-  const token = localStorage.getItem("token");
-  if (token) return <Navigate to="/" replace />;
-
   // Password strength calculator
   const calculatePasswordStrength = (password) => {
     let strength = 0;
@@ -66,6 +62,10 @@ export default function Register() {
       return () => clearTimeout(timer);
     }
   }, [error]);
+
+  // Already logged in? Send to homepage
+  const token = localStorage.getItem("token");
+  if (token) return <Navigate to="/" replace />;
 
   // Submit form (normal email/password registration)
   const handleSubmit = async (e) => {

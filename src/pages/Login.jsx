@@ -24,10 +24,6 @@ export default function Login() {
   const navigate = useNavigate();
   const showToast = useToast();
 
-  // Already logged in? Send to homepage
-  const token = localStorage.getItem("token");
-  if (token) return <Navigate to="/" replace />;
-
   // Auto-hide notifications after 5 seconds
   useEffect(() => {
     if (error) {
@@ -112,6 +108,10 @@ export default function Login() {
       setRememberMe(true);
     }
   }, []);
+
+  // Already logged in? Send to homepage
+  const token = localStorage.getItem("token");
+  if (token) return <Navigate to="/" replace />;
 
   // Resend verification email
   const handleResendVerification = async () => {
