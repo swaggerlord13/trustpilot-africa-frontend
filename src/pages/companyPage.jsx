@@ -12,6 +12,7 @@ import CompanyClaimModal from "../components/company/CompanyClaimModal.jsx";
 import CompanyReviewsList from "../components/company/CompanyReviewsList.jsx";
 import CompanyGoogleReviews from "../components/company/CompanyGoogleReviews.jsx";
 import "../styles/ReviewsText.css";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 export default function CompanyPage() {
   const { slug } = useParams();
@@ -25,12 +26,7 @@ export default function CompanyPage() {
   // Claim state
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [claimStatus, setClaimStatus] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
+  const { isLoggedIn, token } = useAuth();
 
   useEffect(() => {
     if (location.search.includes('openReview=true')) {
@@ -45,7 +41,6 @@ export default function CompanyPage() {
         const companyRes = await api.get(`${API_BASE_URL}/companies/slug/${slug}`);
         setCompany(companyRes.data);
 
-        const token = localStorage.getItem("token");
         const [reviewsRes, claimsRes] = await Promise.all([
           api.get(`${API_BASE_URL}/reviews/company/${companyRes.data._id}/with-replies`),
           token

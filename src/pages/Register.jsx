@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { useToast } from "../components/Toast.jsx";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 const HAS_GOOGLE = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 import Footer from "../components/Footer.jsx";
@@ -28,6 +29,7 @@ export default function Register() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const showToast = useToast();
+  const { login, isLoggedIn } = useAuth();
 
   // Password strength calculator
   const calculatePasswordStrength = (password) => {
@@ -64,8 +66,7 @@ export default function Register() {
   }, [error]);
 
   // Already logged in? Send to homepage
-  const token = localStorage.getItem("token");
-  if (token) return <Navigate to="/" replace />;
+  if (isLoggedIn) return <Navigate to="/" replace />;
 
   // Submit form (normal email/password registration)
   const handleSubmit = async (e) => {
@@ -118,15 +119,14 @@ export default function Register() {
         return;
       }
 
-      // Save token + user info to localStorage
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify({
+      // Save via AuthProvider
+      login({
         _id: data._id,
         name: data.name,
         email: data.email,
         profileImage: data.profileImage || "",
         isAdmin: data.isAdmin || false,
-      }));
+      }, data.token);
 
       // Show verification message
       showToast("Account created! Please check your email to verify your account.", "success", 6000);
@@ -167,20 +167,18 @@ export default function Register() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Google sign up failed");
 
-      // Save token and user data
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify({
+      // Save via AuthProvider
+      login({
         _id: data._id,
         name: data.name,
         email: data.email,
         profileImage: data.profileImage || "",
         isAdmin: data.isAdmin || false,
-      }));
+      }, data.token);
 
       showToast("Account created! Redirecting...", "success");
       setTimeout(() => {
         navigate("/", { replace: true });
-        window.location.reload();
       }, 1500);
     } catch (err) {
       setError(err.message || "Google sign up failed. Please try again.");

@@ -3,49 +3,13 @@ import Nav from "../components/Nav.jsx";
 import "../styles/Header.css";
 import { useState, useEffect } from "react";
 import { useTheme } from "../components/ThemeProvider.jsx";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 export default function Header() {
-  const [user, setUser] = useState(null);
+  const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { resolved, toggle } = useTheme();
-
-  useEffect(() => {
-    try {
-      const token = localStorage.getItem("token");
-      const storedUser = localStorage.getItem("user");
-      if (token && storedUser) {
-        const parsed = JSON.parse(storedUser);
-        setUser(parsed);
-      } else {
-        setUser(null);
-      }
-    } catch (err) {
-      console.error("Invalid user data in localStorage:", err);
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-    }
-  }, []);
-
-  // Re-check auth when storage changes (e.g. logout from another tab or 401 response)
-  useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem("token");
-      const storedUser = localStorage.getItem("user");
-      if (token && storedUser) {
-        try { setUser(JSON.parse(storedUser)); } catch (e) { setUser(null); }
-      } else {
-        setUser(null);
-      }
-    };
-    window.addEventListener("storage", checkAuth);
-    // Also listen for custom auth event (fired from within same tab)
-    window.addEventListener("auth-change", checkAuth);
-    return () => {
-      window.removeEventListener("storage", checkAuth);
-      window.removeEventListener("auth-change", checkAuth);
-    };
-  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -58,11 +22,8 @@ export default function Header() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    setUser(null);
+    logout();
     setIsMobileMenuOpen(false);
-    window.dispatchEvent(new Event("auth-change"));
     navigate("/login");
   };
 

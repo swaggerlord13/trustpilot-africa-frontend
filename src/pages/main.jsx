@@ -5,6 +5,7 @@ import ErrorBoundary from "../components/ErrorBoundary.jsx";
 import { ToastProvider } from "../components/Toast.jsx";
 import ThemeProvider from "../components/ThemeProvider.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { AuthProvider } from "../components/AuthProvider.jsx";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -89,6 +90,7 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ErrorBoundary>
       <ThemeProvider>
+        <AuthProvider>
         {GOOGLE_CLIENT_ID ? (
           <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             <ToastProvider>
@@ -104,6 +106,7 @@ createRoot(document.getElementById("root")).render(
             </Suspense>
           </ToastProvider>
         )}
+        </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>

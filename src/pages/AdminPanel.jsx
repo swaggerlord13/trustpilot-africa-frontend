@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/Toast.jsx";
 import "../styles/AdminPanel.css";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 // ─── Section sub-components ─────────────────────────────
 import AdminOverview from "../components/admin/AdminOverview.jsx";
@@ -15,6 +16,7 @@ import { adminApi } from "../components/admin/adminHelpers.jsx";
 // ─── Main Component (shell only) ────────────────────────
 export default function AdminPanel() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const showToast = useToast();
 
   const [activeSection, setActiveSection] = useState("overview");
@@ -47,9 +49,7 @@ export default function AdminPanel() {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    window.dispatchEvent(new Event("auth-change"));
+    logout();
     navigate("/login");
   };
 

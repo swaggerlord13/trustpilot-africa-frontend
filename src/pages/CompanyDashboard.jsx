@@ -7,6 +7,7 @@ import Loader from "../components/Loader.jsx";
 import DashboardOverview from "../components/dashboard/DashboardOverview.jsx";
 import DashboardReviews from "../components/dashboard/DashboardReviews.jsx";
 import DashboardProfile from "../components/dashboard/DashboardProfile.jsx";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 export default function CompanyDashboard() {
   const { companyId } = useParams();
@@ -26,10 +27,8 @@ export default function CompanyDashboard() {
   const [reviewPage, setReviewPage] = useState(1);
   const [totalReviewPages, setTotalReviewPages] = useState(1);
 
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem("token");
-    return { Authorization: `Bearer ${token}` };
-  };
+  const { token } = useAuth();
+  const getAuthHeaders = () => ({ Authorization: `Bearer ${token}` });
 
   // Fetch company info, stats, and reviews
   useEffect(() => {

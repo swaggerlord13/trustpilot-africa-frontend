@@ -1,7 +1,10 @@
 import Layout from "../components/Layout.jsx";
 import { Link } from "react-router-dom";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 export default function About() {
+  const { isLoggedIn } = useAuth();
+
   return (
     <Layout>
       {/* Hero */}
@@ -129,15 +132,15 @@ export default function About() {
       {/* CTA */}
       <section className="bg-gradient-to-br from-brand-500 to-brand-800 text-white py-14 px-4 text-center">
         <h2 className="text-2xl font-bold mb-4">
-          {localStorage.getItem("token") ? "Make your voice heard" : "Ready to share your voice?"}
+          {isLoggedIn ? "Make your voice heard" : "Ready to share your voice?"}
         </h2>
         <p className="text-brand-100 mb-8 max-w-lg mx-auto">
-          {localStorage.getItem("token")
+          {isLoggedIn
             ? "Your honest reviews help fellow Africans make smarter choices every day."
             : "Join thousands of Africans who are helping each other make smarter choices."}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          {!localStorage.getItem("token") && (
+          {!isLoggedIn && (
             <Link
               to="/register"
               className="px-8 py-3 bg-coral-500 text-white rounded-xl font-semibold hover:bg-coral-600 transition-colors"
@@ -145,7 +148,7 @@ export default function About() {
               Create Free Account
             </Link>
           )}
-          {localStorage.getItem("token") && (
+          {isLoggedIn && (
             <Link
               to="/categories"
               className="px-8 py-3 bg-coral-500 text-white rounded-xl font-semibold hover:bg-coral-600 transition-colors"
@@ -154,10 +157,10 @@ export default function About() {
             </Link>
           )}
           <Link
-            to={localStorage.getItem("token") ? "/browse-reviews" : "/companies"}
+            to={isLoggedIn ? "/browse-reviews" : "/companies"}
             className="px-8 py-3 border-2 border-white/40 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors"
           >
-            {localStorage.getItem("token") ? "Browse Reviews" : "Browse Companies"}
+            {isLoggedIn ? "Browse Reviews" : "Browse Companies"}
           </Link>
         </div>
       </section>

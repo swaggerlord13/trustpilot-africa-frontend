@@ -2,6 +2,7 @@ import api, { API_BASE_URL } from "../api.js";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/Toast.jsx";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
   const [rating, setRating] = useState(0);
@@ -10,6 +11,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
   const [submitting, setSubmitting] = useState(false);
   const [hoveredStar, setHoveredStar] = useState(0);
   const showToast = useToast();
+  const { token, user: authUser, isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
 
   // Restore saved draft if it matches this company
@@ -32,11 +34,8 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    
     // If not logged in, save draft and redirect to register
-    if (!token || !user._id) {
+    if (!isLoggedIn || !authUser?._id) {
       const pendingReview = {
         companyId,
         companyName,
@@ -111,8 +110,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
       console.error("Error submitting review:", err);
       if (err.response?.status === 401) {
         showToast("Your session has expired. Please log in again.", "warning");
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        logout();
         setTimeout(() => { navigate("/login"); }, 1500);
       } else {
         showToast(err.response?.data?.error || "Failed to submit review. Please try again.", "error");

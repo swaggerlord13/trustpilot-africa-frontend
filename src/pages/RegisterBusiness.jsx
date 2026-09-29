@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Footer from "../components/Footer.jsx";
 import { useToast } from "../components/Toast.jsx";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 export default function RegisterBusiness() {
   // Step state: we break the form into 2 steps so it doesn't feel overwhelming
@@ -37,6 +38,7 @@ export default function RegisterBusiness() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const showToast = useToast();
+  const { isLoggedIn, login } = useAuth();
   const [searchParams] = useSearchParams();
   const claimCompanyName = searchParams.get("claim");
   const claimCompanyId = searchParams.get("companyId");
@@ -44,12 +46,10 @@ export default function RegisterBusiness() {
 
   // If user is already logged in, redirect to homepage
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-    if (token && user) {
+    if (isLoggedIn) {
       navigate("/", { replace: true });
     }
-  }, []);
+  }, [isLoggedIn]);
 
   // Pre-fill company details when claiming an existing company
   useEffect(() => {
@@ -182,15 +182,14 @@ export default function RegisterBusiness() {
         return;
       }
 
-      // Save auth data
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify({
+      // Save auth data via AuthProvider
+      login({
         _id: data._id,
         name: data.name,
         email: data.email,
         profileImage: data.profileImage || "",
         isAdmin: data.isAdmin || false,
-      }));
+      }, data.token);
 
       showToast(`Account created! Your claim for "${data.businessRegistration?.companyName}" is pending admin review. Please check your email to verify your account.`, "success", 8000);
       

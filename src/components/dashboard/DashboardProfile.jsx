@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import api, { API_BASE_URL } from "../../api.js";
+import { useAuth } from "../AuthProvider.jsx";
 import { useToast } from "../Toast.jsx";
 
 export default function DashboardProfile({ company, setCompany, companyId }) {
@@ -14,10 +15,8 @@ export default function DashboardProfile({ company, setCompany, companyId }) {
   const [logoUploading, setLogoUploading] = useState(false);
   const logoInputRef = useRef(null);
 
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem("token");
-    return { Authorization: `Bearer ${token}` };
-  };
+  const { token } = useAuth();
+  const getAuthHeaders = () => ({ Authorization: `Bearer ${token}` });
 
   const handleLogoUpload = async (file) => {
     if (!file) return;

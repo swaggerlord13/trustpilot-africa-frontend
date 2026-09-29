@@ -5,8 +5,10 @@ import Header from "./Header";
 import ReviewBox from "../components/ReviewBox";
 import Footer from "../components/Footer.jsx";
 import { useToast } from "../components/Toast.jsx";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 export default function ProfilePage() {
+  const { token, logout, updateUser } = useAuth();
   const [user, setUser] = useState(null);
   const [userReviews, setUserReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +41,6 @@ export default function ProfilePage() {
     formDataUpload.append('profileImage', file);
 
     try {
-      const token = localStorage.getItem("token");
       const response = await api.post(`${API_BASE_URL}/upload/user-profile`, formDataUpload, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -63,7 +64,6 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("token");
         if (!token) {
           window.location.href = "/login";
           return;
@@ -123,8 +123,7 @@ export default function ProfilePage() {
         console.error("Error fetching user data:", err);
         // Only log out on 401 (expired/invalid token), not on server errors or network blips
         if (err.response?.status === 401) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
+          logout();
           window.location.href = "/login";
         }
       } finally {
@@ -144,7 +143,6 @@ export default function ProfilePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
       const res = await api.put(
         `${API_BASE_URL}/auth/me`,
         formData,
@@ -154,13 +152,13 @@ export default function ProfilePage() {
       );
 
       setUser(res.data);
-      localStorage.setItem("user", JSON.stringify({
+      updateUser({
         _id: res.data._id,
         name: res.data.name,
         email: res.data.email,
         profileImage: res.data.profileImage || "",
         isAdmin: res.data.isAdmin || false
-      }));
+      });
       
       setShowModal(false);
       showToast("Profile updated successfully!", "success");

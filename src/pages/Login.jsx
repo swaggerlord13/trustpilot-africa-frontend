@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { useToast } from "../components/Toast.jsx";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 const HAS_GOOGLE = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 import Footer from "../components/Footer.jsx";
@@ -23,6 +24,7 @@ export default function Login() {
   const [resendSuccess, setResendSuccess] = useState("");
   const navigate = useNavigate();
   const showToast = useToast();
+  const { login, isLoggedIn } = useAuth();
 
   // Auto-hide notifications after 5 seconds
   useEffect(() => {
@@ -67,15 +69,14 @@ export default function Login() {
         throw new Error(data.error || "Invalid email or password");
       }
 
-      // Save token and user data
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify({
+      // Save token and user data via AuthProvider
+      login({
         _id: data._id,
         name: data.name,
         email: data.email,
         profileImage: data.profileImage || "",
         isAdmin: data.isAdmin || false
-      }));
+      }, data.token);
 
       // If remember me is checked, save email
       if (rememberMe) {
@@ -84,13 +85,10 @@ export default function Login() {
         localStorage.removeItem("rememberedEmail");
       }
 
-      // Show success message
+      // Show success message and redirect
       showToast("Welcome back! Redirecting...", "success");
-
-      // Redirect after showing success
       setTimeout(() => {
         navigate("/", { replace: true });
-        window.location.reload();
       }, 1500);
 
     } catch (err) {
@@ -110,8 +108,7 @@ export default function Login() {
   }, []);
 
   // Already logged in? Send to homepage
-  const token = localStorage.getItem("token");
-  if (token) return <Navigate to="/" replace />;
+  if (isLoggedIn) return <Navigate to="/" replace />;
 
   // Resend verification email
   const handleResendVerification = async () => {
@@ -151,20 +148,18 @@ export default function Login() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Google login failed");
 
-      // Save token and user (same as normal login)
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify({
+      // Save token and user via AuthProvider
+      login({
         _id: data._id,
         name: data.name,
         email: data.email,
         profileImage: data.profileImage || "",
         isAdmin: data.isAdmin || false,
-      }));
+      }, data.token);
 
       showToast("Welcome! Redirecting...", "success");
       setTimeout(() => {
         navigate("/", { replace: true });
-        window.location.reload();
       }, 1500);
     } catch (err) {
       setError(err.message || "Google login failed. Please try again.");

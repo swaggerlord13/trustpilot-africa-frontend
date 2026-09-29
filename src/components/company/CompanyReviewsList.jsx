@@ -4,6 +4,7 @@ import ReviewBox from "../ReviewBox";
 import StarRating from "../StarRatings";
 import ScrollDots from "../ScrollDots.jsx";
 import { useToast } from "../Toast.jsx";
+import { useAuth } from "../AuthProvider.jsx";
 
 export default function CompanyReviewsList({ company, reviews, setReviews, claimStatus }) {
   const showToast = useToast();
@@ -21,13 +22,13 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
   const [userReplyingTo, setUserReplyingTo] = useState(null);
   const [userReplyContent, setUserReplyContent] = useState("");
 
-  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const { user: currentUser, token } = useAuth();
 
   const handleReply = async (reviewId) => {
     if (!replyContent.trim() || replyContent.length < 5) return;
     setReplyLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      // token from useAuth
       const res = await api.post(
         `${API_BASE_URL}/company-dashboard/${company._id}/reviews/${reviewId}/reply`,
         { content: replyContent },
@@ -48,7 +49,7 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
 
   const handleEditReview = async (reviewId) => {
     try {
-      const token = localStorage.getItem("token");
+      // token from useAuth
       await api.put(
         `${API_BASE_URL}/reviews/${reviewId}`,
         { comment: editComment, rating: editRating },
@@ -65,7 +66,7 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
   const handleDeleteReview = async (reviewId) => {
     if (!window.confirm("Are you sure you want to delete your review? This cannot be undone.")) return;
     try {
-      const token = localStorage.getItem("token");
+      // token from useAuth
       await api.delete(`${API_BASE_URL}/reviews/${reviewId}`, { headers: { Authorization: `Bearer ${token}` } });
       setReviews(prev => prev.filter(r => r._id !== reviewId));
       showToast("Review deleted", "success");
@@ -77,7 +78,7 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
   const handleUserReply = async (reviewId) => {
     if (!userReplyContent.trim()) return;
     try {
-      const token = localStorage.getItem("token");
+      // token from useAuth
       const res = await api.post(
         `${API_BASE_URL}/reviews/${reviewId}/user-reply`,
         { content: userReplyContent },

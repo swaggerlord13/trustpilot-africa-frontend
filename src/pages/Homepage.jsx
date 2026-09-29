@@ -8,6 +8,7 @@ import OptimizedReviewsPage from "../components/OptimizedReviewsPage.jsx";
 import Footer from "../components/Footer.jsx";
 import { useToast } from "../components/Toast.jsx";
 import "../styles/Homepage.css";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 /* ── Animated counter hook ── */
 function useCountUp(target, duration = 2000, startOnView = true) {
@@ -165,7 +166,7 @@ function Homepage() {
     }
   };
 
-  const isLoggedIn = !!localStorage.getItem("token");
+  const { isLoggedIn } = useAuth();
 
   return (
     <>

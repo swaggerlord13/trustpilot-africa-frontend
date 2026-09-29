@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api, { API_BASE_URL } from "../../api.js";
+import { useAuth } from "../AuthProvider.jsx";
 import StarRating from "../StarRatings.jsx";
 import { useToast } from "../Toast.jsx";
 
@@ -13,10 +14,8 @@ export default function DashboardReviews({ companyId, stats, reviews, setReviews
   const [editingReply, setEditingReply] = useState(null);
   const [editReplyContent, setEditReplyContent] = useState("");
 
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem("token");
-    return { Authorization: `Bearer ${token}` };
-  };
+  const { token } = useAuth();
+  const getAuthHeaders = () => ({ Authorization: `Bearer ${token}` });
 
   const handleReply = async (reviewId) => {
     if (!replyContent.trim()) return;

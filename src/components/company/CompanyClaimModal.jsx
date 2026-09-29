@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api, { API_BASE_URL } from "../../api.js";
+import { useAuth } from "../AuthProvider.jsx";
 import { useToast } from "../Toast.jsx";
 
 export default function CompanyClaimModal({ company, onClose, onClaimSubmitted }) {
@@ -14,7 +15,6 @@ export default function CompanyClaimModal({ company, onClose, onClaimSubmitted }
     }
     setClaimLoading(true);
     try {
-      const token = localStorage.getItem("token");
       await api.post(
         `${API_BASE_URL}/company-claims`,
         {
@@ -22,8 +22,7 @@ export default function CompanyClaimModal({ company, onClose, onClaimSubmitted }
           role: claimForm.role,
           reason: claimForm.reason,
           jobTitle: claimForm.jobTitle,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
+        }
       );
       onClaimSubmitted("pending");
       onClose();

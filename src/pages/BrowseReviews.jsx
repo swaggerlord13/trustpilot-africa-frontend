@@ -5,8 +5,10 @@ import Header from "../pages/Header";
 import Loader from "../components/Loader";
 import StarRating from "../components/StarRatings";
 import Footer from "../components/Footer.jsx";
+import { useAuth } from "../components/AuthProvider.jsx";
 
 const BrowseReviews = () => {
+  const { isLoggedIn } = useAuth();
   const [reviews, setReviews] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(true);
@@ -257,16 +259,16 @@ const BrowseReviews = () => {
           {/* CTA Section */}
           <div className="text-center mt-16 py-10 rounded-2xl shadow-sm bg-gradient-to-br from-brand-50 to-coral-50 dark:from-slate-800 dark:to-slate-800 border border-slate-100 dark:border-slate-700">
             <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">
-              {localStorage.getItem("token") ? "Share Your Voice" : "Join Our Community"}
+              {isLoggedIn ? "Share Your Voice" : "Join Our Community"}
             </h3>
             <p className="text-slate-500 dark:text-slate-400 mb-6">
               {pagination.totalReviews} reviews and counting from real customers
             </p>
             <Link
-              to={localStorage.getItem("token") ? "/categories" : "/register"}
+              to={isLoggedIn ? "/categories" : "/register"}
               className="inline-flex items-center px-7 py-3 bg-brand-500 text-white rounded-xl hover:bg-brand-600 transition-colors font-semibold text-sm"
             >
-              {localStorage.getItem("token") ? "Find a Company to Review" : "Share Your Experience"}
+              {isLoggedIn ? "Find a Company to Review" : "Share Your Experience"}
               <i className="bx bx-right-arrow-alt ml-1 text-lg"></i>
             </Link>
           </div>
