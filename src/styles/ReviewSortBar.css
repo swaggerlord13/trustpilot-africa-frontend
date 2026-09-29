@@ -1,0 +1,151 @@
+/* ── Review Sort Bar ── */
+.review-sort-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.review-sort-count {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+/* Dropdown wrapper */
+.review-sort-dropdown {
+  position: relative;
+}
+
+/* Trigger button */
+.review-sort-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.review-sort-trigger:hover {
+  border-color: #0052CC;
+  color: #0052CC;
+  background: #EEF4FF;
+}
+
+.review-sort-chevron {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+.review-sort-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu */
+.review-sort-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 190px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 6px;
+  margin: 0;
+  list-style: none;
+  z-index: 50;
+  animation: sortMenuFadeIn 0.15s ease;
+}
+
+@keyframes sortMenuFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Menu items */
+.review-sort-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #334155;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.review-sort-option:hover {
+  background: #f1f5f9;
+}
+.review-sort-option.active {
+  color: #0052CC;
+  font-weight: 600;
+  background: #EEF4FF;
+}
+.review-sort-option .bx-check {
+  margin-left: auto;
+  font-size: 18px;
+}
+
+/* ── Dark mode ── */
+[data-theme="dark"] .review-sort-count {
+  color: #94a3b8;
+}
+[data-theme="dark"] .review-sort-trigger {
+  color: #e2e8f0;
+  background: #1e293b;
+  border-color: #334155;
+}
+[data-theme="dark"] .review-sort-trigger:hover {
+  border-color: #3D7BDD;
+  color: #80AAEE;
+  background: #1a2744;
+}
+[data-theme="dark"] .review-sort-menu {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+[data-theme="dark"] .review-sort-option {
+  color: #cbd5e1;
+}
+[data-theme="dark"] .review-sort-option:hover {
+  background: #334155;
+}
+[data-theme="dark"] .review-sort-option.active {
+  color: #80AAEE;
+  background: #1a2744;
+}
+
+/* ── Mobile ── */
+@media (max-width: 576px) {
+  .review-sort-trigger {
+    padding: 7px 10px;
+    font-size: 13px;
+    gap: 6px;
+  }
+  .review-sort-trigger span {
+    display: none;
+  }
+  .review-sort-trigger .bx:first-child {
+    font-size: 18px;
+  }
+  .review-sort-chevron {
+    font-size: 16px;
+  }
+  .review-sort-count {
+    font-size: 13px;
+  }
+  .review-sort-menu {
+    right: 0;
+    min-width: 170px;
+  }
+}

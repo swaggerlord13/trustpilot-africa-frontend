@@ -31,70 +31,121 @@ function useIsDesktop(breakpoint = 1024) {
 export default function OptimizedReviewsPage({ companyId }) {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [sortBy, setSortBy] = useState("newest");
+  const [pagination, setPagination] = useState(null);
   const isDesktop = useIsDesktop(1024);
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        if (companyId) {
-          const reviewsRes = await api.get(`${API_BASE_URL}/reviews/company/${companyId}`);
-          const companyRes = await api.get(`${API_BASE_URL}/companies/slug/${companyId}/with-ratings`);
+  // Shared company info (fetched once, reused across pages)
+  const companyInfoRef = useRef(null);
 
-          const mappedReviews = reviewsRes.data.map((review) => ({
-            _id: review._id,
-            title: review.title || "Review",
-            comment: review.comment,
-            rating: review.rating,
-            user: review.user?.name || "Anonymous",
-            image: review.user?.profileImage || "/default-avatar.svg",
-            date: new Date(review.createdAt).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            }),
-            company: companyRes.data.company.name,
-            url: `/company/${companyRes.data.company.slug}`,
-            companyimage: companyRes.data.company.logo || "",
-            category: companyRes.data.company.category?.name || "General",
-            companyUrl: companyRes.data.company.url || "",
-            createdAt: review.createdAt
-          }));
+  const fetchCompanyReviews = useCallback(async (sort, page, append = false) => {
+    try {
+      if (!append) setLoading(true);
+      else setLoadingMore(true);
 
-          setReviews(mappedReviews);
-        } else {
-          const response = await api.get(`${API_BASE_URL}/companies/latest-best-reviews`);
-
-          const formattedReviews = response.data.reviews.map(review => ({
-            _id: review._id,
-            title: review.title,
-            comment: review.comment,
-            rating: review.rating,
-            user: review.user || "Anonymous",
-            image: review.image,
-            date: review.date,
-            company: review.company,
-            url: review.url,
-            companyimage: review.companyimage,
-            companyUrl: review.companyUrl || "",
-            category: review.category,
-            createdAt: review.createdAt
-          }));
-
-          setReviews(formattedReviews);
-        }
-
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching reviews:", err);
-        setLoading(false);
+      // Fetch company info only once
+      if (!companyInfoRef.current) {
+        const companyRes = await api.get(`${API_BASE_URL}/companies/slug/${companyId}/with-ratings`);
+        companyInfoRef.current = companyRes.data.company;
       }
-    };
+      const company = companyInfoRef.current;
 
-    fetchReviews();
+      const reviewsRes = await api.get(
+        `${API_BASE_URL}/reviews/company/${companyId}?sort=${sort}&page=${page}&limit=20`
+      );
+
+      const { reviews: rawReviews, pagination: pag } = reviewsRes.data;
+
+      const mappedReviews = rawReviews.map((review) => ({
+        _id: review._id,
+        title: review.title || "Review",
+        comment: review.comment,
+        rating: review.rating,
+        user: review.user?.name || "Anonymous",
+        image: review.user?.profileImage || "/default-avatar.svg",
+        date: new Date(review.createdAt).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+        company: company.name,
+        url: `/company/${company.slug}`,
+        companyimage: company.logo || "",
+        category: company.category?.name || "General",
+        companyUrl: company.url || "",
+        createdAt: review.createdAt,
+      }));
+
+      if (append) {
+        setReviews((prev) => [...prev, ...mappedReviews]);
+      } else {
+        setReviews(mappedReviews);
+      }
+      setPagination(pag);
+    } catch (err) {
+      console.error("Error fetching company reviews:", err);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
   }, [companyId]);
+
+  const fetchHomepageReviews = useCallback(async () => {
+    try {
+      const response = await api.get(`${API_BASE_URL}/companies/latest-best-reviews`);
+
+      const formattedReviews = response.data.reviews.map((review) => ({
+        _id: review._id,
+        title: review.title,
+        comment: review.comment,
+        rating: review.rating,
+        user: review.user || "Anonymous",
+        image: review.image,
+        date: review.date,
+        company: review.company,
+        url: review.url,
+        companyimage: review.companyimage,
+        companyUrl: review.companyUrl || "",
+        category: review.category,
+        createdAt: review.createdAt,
+      }));
+
+      setReviews(formattedReviews);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+      setLoading(false);
+    }
+  }, []);
+
+  // Initial fetch (sort changes are handled by handleSortChange, not this effect)
+  useEffect(() => {
+    if (companyId) {
+      fetchCompanyReviews("newest", 1);
+    } else {
+      fetchHomepageReviews();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [companyId]);
+
+  // Handle sort change — reset to page 1
+  const handleSortChange = (newSort) => {
+    setSortBy(newSort);
+    setReviews([]);
+    setPagination(null);
+    fetchCompanyReviews(newSort, 1);
+  };
+
+  // Handle load more
+  const handleLoadMore = () => {
+    if (pagination && pagination.hasMore) {
+      fetchCompanyReviews(sortBy, pagination.page + 1, true);
+    }
+  };
 
   // Check scroll position for arrow visibility
   const checkScrollPosition = useCallback(() => {
@@ -109,7 +160,6 @@ export default function OptimizedReviewsPage({ companyId }) {
     if (!el) return;
     checkScrollPosition();
     el.addEventListener("scroll", checkScrollPosition, { passive: true });
-    // Also check on resize
     window.addEventListener("resize", checkScrollPosition);
     return () => {
       el.removeEventListener("scroll", checkScrollPosition);
@@ -124,7 +174,11 @@ export default function OptimizedReviewsPage({ companyId }) {
     el.scrollBy({ left: direction * (cardWidth + 16), behavior: "smooth" });
   };
 
-  const visibleReviews = isDesktop ? reviews.slice(0, 12) : reviews.slice(0, 25);
+  const visibleReviews = companyId
+    ? reviews
+    : isDesktop
+      ? reviews.slice(0, 12)
+      : reviews.slice(0, 25);
 
   if (loading) {
     return (
@@ -149,7 +203,7 @@ export default function OptimizedReviewsPage({ companyId }) {
             )}
           </div>
 
-          {/* Desktop slider arrows */}
+          {/* Desktop slider arrows (homepage only) */}
           {isDesktop && !companyId && visibleReviews.length > 3 && (
             <div className="flex gap-2">
               <button
@@ -182,6 +236,15 @@ export default function OptimizedReviewsPage({ companyId }) {
         />
       )}
 
+      {/* Sort bar — company page only */}
+      {companyId && reviews.length > 0 && (
+        <ReviewSortBar
+          currentSort={sortBy}
+          onSortChange={handleSortChange}
+          totalReviews={pagination?.total}
+        />
+      )}
+
       <div className="reviews">
         <div className={companyId ? "reviewscomments-row" : "reviewscomments-row reviews-slider"} ref={scrollRef}>
           {visibleReviews.map((review, index) => (
@@ -203,11 +266,30 @@ export default function OptimizedReviewsPage({ companyId }) {
           ))}
         </div>
 
-        {/* Dot indicators: mobile only */}
-        {!isDesktop && visibleReviews.length > 1 && (
+        {/* Dot indicators: mobile only, homepage only */}
+        {!isDesktop && !companyId && visibleReviews.length > 1 && (
           <ScrollDots scrollRef={scrollRef} itemCount={visibleReviews.length} />
         )}
       </div>
+
+      {/* Load More button — company page only */}
+      {companyId && pagination?.hasMore && (
+        <div className="flex justify-center mt-8 mb-4">
+          <button
+            onClick={handleLoadMore}
+            disabled={loadingMore}
+            className="px-6 py-3 rounded-xl font-semibold text-sm transition-all border-2 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:border-brand-400 hover:text-brand-600 dark:hover:border-brand-400 dark:hover:text-brand-300 disabled:opacity-50"
+          >
+            {loadingMore ? (
+              <span className="flex items-center gap-2">
+                <i className="bx bx-loader-alt bx-spin"></i> Loading...
+              </span>
+            ) : (
+              `Show More Reviews (${reviews.length} of ${pagination.total})`
+            )}
+          </button>
+        </div>
+      )}
 
       {reviews.length === 0 && !loading && (
         <div className="text-center py-12">

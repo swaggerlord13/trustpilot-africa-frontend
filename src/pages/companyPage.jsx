@@ -1,5 +1,5 @@
 import api, { API_BASE_URL } from "../api.js";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import ReviewForm from "../components/ReviewForm";
 import StarRating from "../components/StarRatings";
@@ -21,7 +21,10 @@ export default function CompanyPage() {
   const [company, setCompany] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(location.search.includes('openReview=true'));
+  const [sortBy, setSortBy] = useState("newest");
+  const [pagination, setPagination] = useState(null);
 
   // Claim state
   const [showClaimModal, setShowClaimModal] = useState(false);
@@ -35,42 +38,66 @@ export default function CompanyPage() {
     }
   }, [location, slug]);
 
+  const mapReviews = (rawReviews) =>
+    rawReviews.map((review) => ({
+      _id: review._id,
+      title: review.title || "Review",
+      comment: review.comment,
+      rating: review.rating,
+      user: review.user?.name || "Anonymous",
+      image: review.user?.profileImage || "/default-avatar.svg",
+      date: new Date(review.createdAt).toLocaleDateString("en-US", {
+        year: "numeric", month: "long", day: "numeric",
+      }),
+      company: review.company.name,
+      url: `/company/${review.company.slug}`,
+      companyimage: review.company.logo || "",
+      category: review.company.category?.name || "General",
+      createdAt: review.createdAt,
+      companyReply: review.companyReply || null,
+      userId: review.user?._id || null,
+      userReply: review.userReply || null
+    }));
+
+  const fetchReviews = useCallback(async (companyData, sort, page, append = false) => {
+    try {
+      if (!append) setLoading(true);
+      else setLoadingMore(true);
+
+      const reviewsRes = await api.get(
+        `${API_BASE_URL}/reviews/company/${companyData._id}/with-replies?sort=${sort}&page=${page}&limit=20`
+      );
+
+      const mapped = mapReviews(reviewsRes.data.reviews);
+
+      if (append) {
+        setReviews((prev) => [...prev, ...mapped]);
+      } else {
+        setReviews(mapped);
+      }
+      setPagination(reviewsRes.data.pagination);
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const companyRes = await api.get(`${API_BASE_URL}/companies/slug/${slug}`);
         setCompany(companyRes.data);
 
-        const [reviewsRes, claimsRes] = await Promise.all([
-          api.get(`${API_BASE_URL}/reviews/company/${companyRes.data._id}/with-replies`),
+        const [_, claimsRes] = await Promise.all([
+          fetchReviews(companyRes.data, "newest", 1),
           token
             ? api.get(`${API_BASE_URL}/company-claims/my-claims`, {
                 headers: { Authorization: `Bearer ${token}` },
               }).catch(() => null)
             : Promise.resolve(null)
         ]);
-
-        const mappedReviews = reviewsRes.data.map((review) => ({
-          _id: review._id,
-          title: review.title || "Review",
-          comment: review.comment,
-          rating: review.rating,
-          user: review.user?.name || "Anonymous",
-          image: review.user?.profileImage || "/default-avatar.svg",
-          date: new Date(review.createdAt).toLocaleDateString("en-US", {
-            year: "numeric", month: "long", day: "numeric",
-          }),
-          company: review.company.name,
-          url: `/company/${review.company.slug}`,
-          companyimage: review.company.logo || "",
-          category: review.company.category?.name || "General",
-          createdAt: review.createdAt,
-          companyReply: review.companyReply || null,
-          userId: review.user?._id || null,
-          userReply: review.userReply || null
-        }));
-
-        setReviews(mappedReviews);
 
         if (claimsRes) {
           const claimsArray = Array.isArray(claimsRes.data) ? claimsRes.data : [];
@@ -88,7 +115,18 @@ export default function CompanyPage() {
     };
 
     if (slug) fetchData();
-  }, [slug]);
+  }, [slug, fetchReviews]);
+
+  const handleSortChange = (newSort) => {
+    setSortBy(newSort);
+    if (company) fetchReviews(company, newSort, 1);
+  };
+
+  const handleLoadMore = () => {
+    if (company && pagination?.hasMore) {
+      fetchReviews(company, sortBy, pagination.page + 1, true);
+    }
+  };
 
   const handleReviewAdded = (newReview) => {
     setReviews([newReview, ...reviews]);
@@ -219,7 +257,7 @@ export default function CompanyPage() {
                   </div>
                 )}
                 <div className="text-sm text-slate-500 dark:text-slate-400">
-                  Based on {reviews.length} review{reviews.length !== 1 ? 's' : ''}
+                  Based on {pagination?.total ?? reviews.length} review{(pagination?.total ?? reviews.length) !== 1 ? 's' : ''}
                 </div>
               </div>
             </div>
@@ -279,6 +317,11 @@ export default function CompanyPage() {
             reviews={reviews}
             setReviews={setReviews}
             claimStatus={claimStatus}
+            sortBy={sortBy}
+            onSortChange={handleSortChange}
+            pagination={pagination}
+            onLoadMore={handleLoadMore}
+            loadingMore={loadingMore}
           />
 
           {/* Google Reviews Section */}

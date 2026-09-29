@@ -5,8 +5,10 @@ import StarRating from "../StarRatings";
 import ScrollDots from "../ScrollDots.jsx";
 import { useToast } from "../Toast.jsx";
 import { useAuth } from "../AuthProvider.jsx";
+import ReviewSortBar from "../ReviewSortBar.jsx";
+import "../../styles/ReviewSortBar.css";
 
-export default function CompanyReviewsList({ company, reviews, setReviews, claimStatus }) {
+export default function CompanyReviewsList({ company, reviews, setReviews, claimStatus, sortBy, onSortChange, pagination, onLoadMore, loadingMore }) {
   const showToast = useToast();
   const scrollRef = useRef(null);
 
@@ -105,7 +107,7 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
           What people say about {company.name}
         </h2>
         <div className="text-sm text-slate-500 dark:text-slate-400">
-          {reviews.length} review{reviews.length !== 1 ? 's' : ''}
+          {pagination?.total ?? reviews.length} review{(pagination?.total ?? reviews.length) !== 1 ? 's' : ''}
         </div>
       </div>
 
@@ -135,6 +137,13 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
               );
             })}
           </div>
+
+          {/* Sort Bar */}
+          <ReviewSortBar
+            currentSort={sortBy}
+            onSortChange={onSortChange}
+            totalReviews={pagination?.total}
+          />
 
           {/* Reviews List */}
           <div className="reviews">
@@ -299,6 +308,25 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
             </div>
           </div>
           <ScrollDots scrollRef={scrollRef} itemCount={reviews.length} />
+
+          {/* Load More */}
+          {pagination?.hasMore && (
+            <div className="flex justify-center mt-8 mb-2">
+              <button
+                onClick={onLoadMore}
+                disabled={loadingMore}
+                className="px-6 py-3 rounded-xl font-semibold text-sm transition-all border-2 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:border-brand-400 hover:text-brand-600 dark:hover:border-brand-400 dark:hover:text-brand-300 disabled:opacity-50 bg-transparent cursor-pointer"
+              >
+                {loadingMore ? (
+                  <span className="flex items-center gap-2">
+                    <i className="bx bx-loader-alt bx-spin"></i> Loading...
+                  </span>
+                ) : (
+                  `Show More Reviews (${reviews.length} of ${pagination.total})`
+                )}
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>
