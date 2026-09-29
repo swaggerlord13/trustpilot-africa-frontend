@@ -17,6 +17,10 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [verificationEmail, setVerificationEmail] = useState("");
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState("");
   const navigate = useNavigate();
 
   // Auto-hide notifications after 5 seconds
@@ -54,6 +58,13 @@ export default function Login() {
       }
 
       if (!res.ok) {
+        if (data.needsVerification) {
+          setNeedsVerification(true);
+          setVerificationEmail(data.email);
+          setError("Please verify your email before logging in. Check your inbox for the verification link.");
+          setLoading(false);
+          return;
+        }
         throw new Error(data.error || "Invalid email or password");
       }
 
@@ -98,6 +109,25 @@ export default function Login() {
       setRememberMe(true);
     }
   }, []);
+
+  // Resend verification email
+  const handleResendVerification = async () => {
+    setResendLoading(true);
+    setResendSuccess("");
+    try {
+      await fetch(`${API_BASE_URL}/auth/resend-verification`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: verificationEmail }),
+      });
+      setResendSuccess("Verification email sent! Check your inbox.");
+      setError("");
+    } catch (err) {
+      setError("Could not resend verification email. Try again later.");
+    } finally {
+      setResendLoading(false);
+    }
+  };
 
   // ========================
   // GOOGLE LOGIN
@@ -189,6 +219,47 @@ export default function Login() {
               <h1>Welcome Back</h1>
               <p>Sign in to continue to TrustPilot Africa</p>
             </div>
+
+            {needsVerification && (
+              <div style={{
+                backgroundColor: "#fef3c7",
+                border: "1px solid #f59e0b",
+                borderRadius: "8px",
+                padding: "16px",
+                marginBottom: "16px",
+                textAlign: "center"
+              }}>
+                <p style={{ margin: "0 0 8px 0", fontSize: "14px", color: "#92400e", fontWeight: "600" }}>
+                  Email not verified
+                </p>
+                <p style={{ margin: "0 0 12px 0", fontSize: "13px", color: "#92400e" }}>
+                  Check your inbox for the verification link, or request a new one.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleResendVerification}
+                  disabled={resendLoading}
+                  style={{
+                    padding: "8px 20px",
+                    backgroundColor: "#f59e0b",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "6px",
+                    fontSize: "13px",
+                    fontWeight: "600",
+                    cursor: resendLoading ? "not-allowed" : "pointer",
+                    opacity: resendLoading ? 0.7 : 1,
+                  }}
+                >
+                  {resendLoading ? "Sending..." : "Resend Verification Email"}
+                </button>
+                {resendSuccess && (
+                  <p style={{ margin: "8px 0 0 0", fontSize: "13px", color: "#16a34a", fontWeight: "500" }}>
+                    {resendSuccess}
+                  </p>
+                )}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="login-form">
               <div className="form-group">

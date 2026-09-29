@@ -28,6 +28,7 @@ import Terms from "../pages/Terms.jsx";
 import Privacy from "../pages/Privacy.jsx";
 import ForgotPassword from "../pages/ForgotPassword.jsx";
 import ResetPassword from "../pages/ResetPassword.jsx";
+import VerifyEmail from "../pages/VerifyEmail.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import RootLayout from "../components/RootLayout.jsx";
 
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
   { path: "/register-business", element: <RegisterBusiness /> },
   { path: "/forgot-password", element: <ForgotPassword /> },
   { path: "/reset-password/:token", element: <ResetPassword /> },
+  { path: "/verify-email/:token", element: <VerifyEmail /> },
   { path: "/terms", element: <Terms /> },
   { path: "/privacy", element: <Privacy /> },
 

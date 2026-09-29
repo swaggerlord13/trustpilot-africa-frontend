@@ -125,14 +125,13 @@ export default function Register() {
         isAdmin: data.isAdmin || false,
       }));
 
-      // Show success message
-      setSuccess("Welcome aboard! Redirecting...");
+      // Show verification message
+      setSuccess("Account created! Please check your email to verify your account before logging in.");
 
-      // Redirect after 2 seconds
+      // Redirect to login page (they need to verify first)
       setTimeout(() => {
-        navigate("/", { replace: true });
-        window.location.reload();
-      }, 2000);
+        navigate("/Login", { replace: true });
+      }, 3000);
 
     } catch (err) {
       console.error("Register error:", err);
