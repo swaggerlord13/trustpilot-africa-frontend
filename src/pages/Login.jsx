@@ -3,7 +3,7 @@ import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 
 const HAS_GOOGLE = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -22,6 +22,10 @@ export default function Login() {
   const [resendLoading, setResendLoading] = useState(false);
   const [resendSuccess, setResendSuccess] = useState("");
   const navigate = useNavigate();
+
+  // Already logged in? Send to homepage
+  const token = localStorage.getItem("token");
+  if (token) return <Navigate to="/" replace />;
 
   // Auto-hide notifications after 5 seconds
   useEffect(() => {

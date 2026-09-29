@@ -3,7 +3,7 @@ import Header from "../pages/Header.jsx";
 import { Link } from 'react-router-dom';
 import '../styles/Register.css';
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 
 const HAS_GOOGLE = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -27,6 +27,10 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+
+  // Already logged in? Send to homepage
+  const token = localStorage.getItem("token");
+  if (token) return <Navigate to="/" replace />;
 
   // Password strength calculator
   const calculatePasswordStrength = (password) => {
