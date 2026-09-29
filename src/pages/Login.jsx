@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
+import { useToast } from "../components/Toast.jsx";
 
 const HAS_GOOGLE = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 import Footer from "../components/Footer.jsx";
@@ -13,7 +14,6 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -22,6 +22,7 @@ export default function Login() {
   const [resendLoading, setResendLoading] = useState(false);
   const [resendSuccess, setResendSuccess] = useState("");
   const navigate = useNavigate();
+  const showToast = useToast();
 
   // Already logged in? Send to homepage
   const token = localStorage.getItem("token");
@@ -29,14 +30,13 @@ export default function Login() {
 
   // Auto-hide notifications after 5 seconds
   useEffect(() => {
-    if (error || success) {
+    if (error) {
       const timer = setTimeout(() => {
         setError("");
-        setSuccess("");
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [error, success]);
+  }, [error]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,7 +90,7 @@ export default function Login() {
       }
 
       // Show success message
-      setSuccess("Welcome back! Redirecting...");
+      showToast("Welcome back! Redirecting...", "success");
 
       // Redirect after showing success
       setTimeout(() => {
@@ -162,7 +162,7 @@ export default function Login() {
         isAdmin: data.isAdmin || false,
       }));
 
-      setSuccess("Welcome! Redirecting...");
+      showToast("Welcome! Redirecting...", "success");
       setTimeout(() => {
         navigate("/", { replace: true });
         window.location.reload();
@@ -183,32 +183,12 @@ export default function Login() {
       <Header />
 
       {/* Toast Notifications */}
-      {success && (
-        <div className="toast-notification success">
-          <div className="toast-icon">
-            <i className='bx bxs-check-circle'></i>
-          </div>
-          <div className="toast-content">
-            <h4>Success!</h4>
-            <p>{success}</p>
-          </div>
-          <button className="toast-close" onClick={() => setSuccess("")}>
-            <i className='bx bx-x'></i>
-          </button>
-        </div>
-      )}
-
       {error && (
-        <div className="toast-notification error">
-          <div className="toast-icon">
-            <i className='bx bxs-error-circle'></i>
-          </div>
-          <div className="toast-content">
-            <h4>Error!</h4>
-            <p>{error}</p>
-          </div>
-          <button className="toast-close" onClick={() => setError("")}>
-            <i className='bx bx-x'></i>
+        <div className="mx-auto max-w-md mb-4 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
+          <i className='bx bxs-error-circle text-lg'></i>
+          <span className="flex-1">{error}</span>
+          <button onClick={() => setError("")} className="text-red-400 hover:text-red-600 dark:hover:text-red-200">
+            <i className='bx bx-x text-lg'></i>
           </button>
         </div>
       )}

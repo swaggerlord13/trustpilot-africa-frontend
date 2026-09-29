@@ -3,22 +3,22 @@ import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useState } from "react";
+import { useToast } from "../components/Toast.jsx";
 import Footer from "../components/Footer.jsx";
 
 export default function ResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
+  const showToast = useToast();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
 
     if (password.length < 8) {
       setError("Password must be at least 8 characters long.");
@@ -45,7 +45,7 @@ export default function ResetPassword() {
         throw new Error(data.error || "Reset failed. The link may have expired.");
       }
 
-      setSuccess("Password reset successful! Redirecting to login...");
+      showToast("Password reset successful! Redirecting to login...", "success");
       setTimeout(() => {
         navigate("/Login", { replace: true });
       }, 2500);
@@ -60,32 +60,12 @@ export default function ResetPassword() {
     <>
       <Header />
 
-      {success && (
-        <div className="toast-notification success">
-          <div className="toast-icon">
-            <i className='bx bxs-check-circle'></i>
-          </div>
-          <div className="toast-content">
-            <h4>Success!</h4>
-            <p>{success}</p>
-          </div>
-          <button className="toast-close" onClick={() => setSuccess("")}>
-            <i className='bx bx-x'></i>
-          </button>
-        </div>
-      )}
-
       {error && (
-        <div className="toast-notification error">
-          <div className="toast-icon">
-            <i className='bx bxs-error-circle'></i>
-          </div>
-          <div className="toast-content">
-            <h4>Error!</h4>
-            <p>{error}</p>
-          </div>
-          <button className="toast-close" onClick={() => setError("")}>
-            <i className='bx bx-x'></i>
+        <div className="mx-auto max-w-md mb-4 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
+          <i className='bx bxs-error-circle text-lg'></i>
+          <span className="flex-1">{error}</span>
+          <button onClick={() => setError("")} className="text-red-400 hover:text-red-600 dark:hover:text-red-200">
+            <i className='bx bx-x text-lg'></i>
           </button>
         </div>
       )}

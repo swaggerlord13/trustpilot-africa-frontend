@@ -5,6 +5,7 @@ import '../styles/RegisterBusiness.css';
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Footer from "../components/Footer.jsx";
+import { useToast } from "../components/Toast.jsx";
 
 export default function RegisterBusiness() {
   // Step state: we break the form into 2 steps so it doesn't feel overwhelming
@@ -29,13 +30,13 @@ export default function RegisterBusiness() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordFocus, setPasswordFocus] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const showToast = useToast();
   const [searchParams] = useSearchParams();
   const claimCompanyName = searchParams.get("claim");
   const claimCompanyId = searchParams.get("companyId");
@@ -102,7 +103,6 @@ export default function RegisterBusiness() {
     if (error || success) {
       const timer = setTimeout(() => {
         setError("");
-        setSuccess("");
       }, 6000);
       return () => clearTimeout(timer);
     }
@@ -139,7 +139,6 @@ export default function RegisterBusiness() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
 
     if (!agreedToTerms) {
       setError("Please agree to the Terms & Conditions");
@@ -193,7 +192,7 @@ export default function RegisterBusiness() {
         isAdmin: data.isAdmin || false,
       }));
 
-      setSuccess(`Account created! Your claim for "${data.businessRegistration?.companyName}" is pending admin review. Please check your email to verify your account.`);
+      showToast(`Account created! Your claim for "${data.businessRegistration?.companyName}" is pending admin review. Please check your email to verify your account.`, "success", 8000);
       
       // Redirect to login (they need to verify email first)
       setTimeout(() => {
@@ -232,33 +231,12 @@ export default function RegisterBusiness() {
     <>
       <Header />
 
-      {/* Toast Notifications */}
-      {success && (
-        <div className="toast-notification success">
-          <div className="toast-icon">
-            <i className='bx bxs-check-circle'></i>
-          </div>
-          <div className="toast-content">
-            <h4>Success!</h4>
-            <p>{success}</p>
-          </div>
-          <button className="toast-close" onClick={() => setSuccess("")}>
-            <i className='bx bx-x'></i>
-          </button>
-        </div>
-      )}
-
       {error && (
-        <div className="toast-notification error">
-          <div className="toast-icon">
-            <i className='bx bxs-error-circle'></i>
-          </div>
-          <div className="toast-content">
-            <h4>Oops!</h4>
-            <p>{error}</p>
-          </div>
-          <button className="toast-close" onClick={() => setError("")}>
-            <i className='bx bx-x'></i>
+        <div className="mx-auto max-w-md mb-4 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
+          <i className='bx bxs-error-circle text-lg'></i>
+          <span className="flex-1">{error}</span>
+          <button onClick={() => setError("")} className="text-red-400 hover:text-red-600 dark:hover:text-red-200">
+            <i className='bx bx-x text-lg'></i>
           </button>
         </div>
       )}

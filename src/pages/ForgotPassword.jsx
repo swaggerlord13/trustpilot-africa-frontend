@@ -3,12 +3,13 @@ import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link } from 'react-router-dom';
 import { useState } from "react";
+import { useToast } from "../components/Toast.jsx";
 import Footer from "../components/Footer.jsx";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const showToast = useToast();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -30,7 +31,7 @@ export default function ForgotPassword() {
         throw new Error(data.error || "Something went wrong");
       }
 
-      setSuccess(data.message || "If that email is registered, you'll receive a reset link shortly.");
+      showToast(data.message || "If that email is registered, you'll receive a reset link shortly.", "success", 6000);
       setEmail("");
     } catch (err) {
       setError(err.message);
@@ -43,32 +44,12 @@ export default function ForgotPassword() {
     <>
       <Header />
 
-      {success && (
-        <div className="toast-notification success">
-          <div className="toast-icon">
-            <i className='bx bxs-check-circle'></i>
-          </div>
-          <div className="toast-content">
-            <h4>Success!</h4>
-            <p>{success}</p>
-          </div>
-          <button className="toast-close" onClick={() => setSuccess("")}>
-            <i className='bx bx-x'></i>
-          </button>
-        </div>
-      )}
-
       {error && (
-        <div className="toast-notification error">
-          <div className="toast-icon">
-            <i className='bx bxs-error-circle'></i>
-          </div>
-          <div className="toast-content">
-            <h4>Error!</h4>
-            <p>{error}</p>
-          </div>
-          <button className="toast-close" onClick={() => setError("")}>
-            <i className='bx bx-x'></i>
+        <div className="mx-auto max-w-md mb-4 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
+          <i className='bx bxs-error-circle text-lg'></i>
+          <span className="flex-1">{error}</span>
+          <button onClick={() => setError("")} className="text-red-400 hover:text-red-600 dark:hover:text-red-200">
+            <i className='bx bx-x text-lg'></i>
           </button>
         </div>
       )}

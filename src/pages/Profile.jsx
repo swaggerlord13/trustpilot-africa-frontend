@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Header from "./Header";
 import ReviewBox from "../components/ReviewBox";
 import Footer from "../components/Footer.jsx";
+import { useToast } from "../components/Toast.jsx";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -22,25 +23,12 @@ export default function ProfilePage() {
   const [profileImagePreview, setProfileImagePreview] = useState("");
   const profileImageInputRef = useRef(null);
 
-  // Toast notification state
-  const [toast, setToast] = useState({ show: false, type: "", message: "" });
+  const showToast = useToast();
 
   // My claimed companies
   const [myCompanies, setMyCompanies] = useState([]);
 
-  // Auto-hide toast after 4 seconds
-  useEffect(() => {
-    if (toast.show) {
-      const timer = setTimeout(() => {
-        setToast({ show: false, type: "", message: "" });
-      }, 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [toast]);
 
-  const showToast = (type, message) => {
-    setToast({ show: true, type, message });
-  };
 
   // Handle profile image upload
   const handleProfileImageUpload = async (file) => {
@@ -62,10 +50,10 @@ export default function ProfilePage() {
       const imageUrl = response.data.imageUrl;
       setFormData(prev => ({ ...prev, profileImage: imageUrl }));
       setProfileImagePreview(imageUrl);
-      showToast('success', 'Profile image uploaded successfully!');
+      showToast('Profile image uploaded successfully!', 'success');
     } catch (error) {
       console.error('Error uploading profile image:', error);
-      showToast('error', 'Failed to upload profile image. Please try again.');
+      showToast('Failed to upload profile image. Please try again.', 'error');
     } finally {
       setProfileImageUploading(false);
     }
@@ -175,9 +163,9 @@ export default function ProfilePage() {
       }));
       
       setShowModal(false);
-      showToast("success", "Profile updated successfully!");
+      showToast("Profile updated successfully!", "success");
     } catch (err) {
-      showToast("error", err.response?.data?.error || "Something went wrong");
+      showToast(err.response?.data?.error || "Something went wrong", "error");
     }
   };
 
@@ -196,28 +184,7 @@ export default function ProfilePage() {
     <>
       <Header />
 
-      {/* Toast Notification */}
-      {toast.show && (
-        <div className={`fixed top-6 right-6 z-[9999] flex items-center gap-3 px-5 py-4 rounded-xl shadow-lg text-white transition-all duration-300 ${
-          toast.type === "success" ? "bg-emerald-500" : "bg-red-500"
-        }`}>
-          <span className="text-xl">
-            <i className={toast.type === "success" ? "bx bxs-check-circle" : "bx bxs-error-circle"}></i>
-          </span>
-          <div>
-            <p className="font-semibold text-sm">
-              {toast.type === "success" ? "Success!" : "Error!"}
-            </p>
-            <p className="text-sm opacity-90">{toast.message}</p>
-          </div>
-          <button
-            onClick={() => setToast({ show: false, type: "", message: "" })}
-            className="ml-3 text-white/80 hover:text-white text-lg font-bold"
-          >
-            <i className="bx bx-x"></i>
-          </button>
-        </div>
-      )}
+
 
       <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8">
         <div className="max-w-6xl mx-auto px-3 sm:px-4">

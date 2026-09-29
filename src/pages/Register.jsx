@@ -5,6 +5,7 @@ import '../styles/Register.css';
 import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
+import { useToast } from "../components/Toast.jsx";
 
 const HAS_GOOGLE = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 import Footer from "../components/Footer.jsx";
@@ -20,13 +21,13 @@ export default function Register() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordFocus, setPasswordFocus] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const showToast = useToast();
 
   // Already logged in? Send to homepage
   const token = localStorage.getItem("token");
@@ -58,14 +59,13 @@ export default function Register() {
 
   // Auto-hide notifications
   useEffect(() => {
-    if (error || success) {
+    if (error) {
       const timer = setTimeout(() => {
         setError("");
-        setSuccess("");
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [error, success]);
+  }, [error]);
 
   // Submit form (normal email/password registration)
   const handleSubmit = async (e) => {
@@ -130,7 +130,7 @@ export default function Register() {
       }));
 
       // Show verification message
-      setSuccess("Account created! Please check your email to verify your account before logging in.");
+      showToast("Account created! Please check your email to verify your account.", "success", 6000);
 
       // Redirect to login page (they need to verify first)
       setTimeout(() => {
@@ -178,7 +178,7 @@ export default function Register() {
         isAdmin: data.isAdmin || false,
       }));
 
-      setSuccess("Account created! Redirecting...");
+      showToast("Account created! Redirecting...", "success");
       setTimeout(() => {
         navigate("/", { replace: true });
         window.location.reload();
@@ -218,33 +218,12 @@ export default function Register() {
     <>
       <Header />
 
-      {/* Toast Notifications */}
-      {success && (
-        <div className="toast-notification success">
-          <div className="toast-icon">
-            <i className='bx bxs-check-circle'></i>
-          </div>
-          <div className="toast-content">
-            <h4>Success!</h4>
-            <p>{success}</p>
-          </div>
-          <button className="toast-close" onClick={() => setSuccess("")}>
-            <i className='bx bx-x'></i>
-          </button>
-        </div>
-      )}
-
       {error && (
-        <div className="toast-notification error">
-          <div className="toast-icon">
-            <i className='bx bxs-error-circle'></i>
-          </div>
-          <div className="toast-content">
-            <h4>Oops!</h4>
-            <p>{error}</p>
-          </div>
-          <button className="toast-close" onClick={() => setError("")}>
-            <i className='bx bx-x'></i>
+        <div className="mx-auto max-w-md mb-4 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
+          <i className='bx bxs-error-circle text-lg'></i>
+          <span className="flex-1">{error}</span>
+          <button onClick={() => setError("")} className="text-red-400 hover:text-red-600 dark:hover:text-red-200">
+            <i className='bx bx-x text-lg'></i>
           </button>
         </div>
       )}
