@@ -71,7 +71,6 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
 
     // Validation
     if (!agreedToTerms) {
