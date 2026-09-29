@@ -237,7 +237,7 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
                   )}
 
                   {/* User Actions — only for review author */}
-                  {currentUser._id && review.userId === currentUser._id && (
+                  {currentUser?._id && review.userId === currentUser._id && (
                     <div className="flex items-center gap-3 mb-4 pt-2">
                       {editingReview !== review._id && (
                         <>
