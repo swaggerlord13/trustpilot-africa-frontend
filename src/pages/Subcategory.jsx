@@ -60,7 +60,7 @@ const Subcategory = () => {
     }
   }, [slug, subSlug]);
 
-  if (loading) return <Loader message="Loading companies..." />;
+  // loading state is handled inline below so search/sort stay visible
 
   const bestInName = subSlug ? subCategoryName : categoryName;
 
@@ -163,7 +163,11 @@ const Subcategory = () => {
         </div>
 
         {/* Company list or add button */}
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader message="Loading companies..." />
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center gap-3">
             <p className="text-slate-500 dark:text-slate-400 italic">No companies found.</p>
             <button

@@ -53,16 +53,7 @@ const BrowseReviews = () => {
     return text.length > limit;
   };
 
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <div className="flex justify-center items-center py-20">
-          <Loader message="Loading reviews..." />
-        </div>
-      </>
-    );
-  }
+  // loading state is handled inline below so search bar stays visible
 
   return (
     <>
@@ -108,7 +99,11 @@ const BrowseReviews = () => {
           </div>
 
           {/* Reviews Grid */}
-          {reviews.length === 0 && debouncedSearch ? (
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <Loader message="Loading reviews..." />
+            </div>
+          ) : reviews.length === 0 && debouncedSearch ? (
             <div className="text-center py-16">
               <i className="bx bx-search-alt text-5xl text-slate-300 dark:text-slate-600 mb-4"></i>
               <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-200 mb-2">No reviews found</h3>

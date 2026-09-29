@@ -59,7 +59,16 @@ export default function CompanyPage() {
         const companyRes = await api.get(`${API_BASE_URL}/companies/slug/${slug}`);
         setCompany(companyRes.data);
 
-        const reviewsRes = await api.get(`${API_BASE_URL}/reviews/company/${companyRes.data._id}/with-replies`);
+        // Fetch reviews and claims in parallel (both depend on company ID, not each other)
+        const token = localStorage.getItem("token");
+        const [reviewsRes, claimsRes] = await Promise.all([
+          api.get(`${API_BASE_URL}/reviews/company/${companyRes.data._id}/with-replies`),
+          token
+            ? api.get(`${API_BASE_URL}/company-claims/my-claims`, {
+                headers: { Authorization: `Bearer ${token}` },
+              }).catch(() => null)
+            : Promise.resolve(null)
+        ]);
 
         const mappedReviews = reviewsRes.data.map((review) => ({
           _id: review._id,
@@ -73,16 +82,7 @@ export default function CompanyPage() {
           }),
           company: review.company.name,
           url: `/company/${review.company.slug}`,
-          companyimage: review.company.logo || (() => {
-            try {
-              const u = review.company.url || "";
-              if (u) {
-                const cleaned = u.startsWith("http") ? u : "https://" + u;
-                return `https://www.google.com/s2/favicons?domain=${new URL(cleaned).hostname.replace(/^www\\./, "")}&sz=128`;
-              }
-            } catch {}
-            return "";
-          })(),
+          companyimage: review.company.logo || "",
           category: review.company.category?.name || "General",
           createdAt: review.createdAt,
           companyReply: review.companyReply || null,
@@ -92,26 +92,13 @@ export default function CompanyPage() {
 
         setReviews(mappedReviews);
 
-        // Check if logged-in user has a claim on this company
-        const token = localStorage.getItem("token");
-        if (token) {
-          try {
-            const claimsRes = await api.get(`${API_BASE_URL}/company-claims/my-claims`, {
-              headers: { Authorization: `Bearer ${token}` },
-            });
-            // API returns a plain array, not { claims: [...] }
-            const claimsArray = Array.isArray(claimsRes.data) ? claimsRes.data : [];
-            const companyClaim = claimsArray.find(
-              (c) => c.company?._id === companyRes.data._id || c.company === companyRes.data._id
-            );
-            if (companyClaim) {
-              setClaimStatus(companyClaim.status);
-            } else {
-              setClaimStatus("none");
-            }
-          } catch {
-            setClaimStatus("none");
-          }
+        // Process claims result
+        if (claimsRes) {
+          const claimsArray = Array.isArray(claimsRes.data) ? claimsRes.data : [];
+          const companyClaim = claimsArray.find(
+            (c) => c.company?._id === companyRes.data._id || c.company === companyRes.data._id
+          );
+          setClaimStatus(companyClaim ? companyClaim.status : "none");
         }
 
         setLoading(false);

@@ -8,29 +8,35 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
+import { lazy, Suspense } from "react";
+import Loader from "../components/Loader.jsx";
+
+// Eagerly loaded — needed on first paint
 import App from "../pages/App.jsx";
-import About from "../pages/About.jsx";
 import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
-import RegisterBusiness from "../pages/RegisterBusiness.jsx";
-import Categories from "../pages/categories.jsx";
-import CategoryCompanies from "./CategoryCompanies.jsx";
-import Subcategory from "../pages/Subcategory.jsx";
-import ProfilePage from "../pages/Profile.jsx";
-import AdminPanel from "../pages/AdminPanel.jsx";
-import CompanyPage from "./companyPage.jsx";
-import CompanyDashboard from "./CompanyDashboard.jsx";
-import BrowseReviews from "../pages/BrowseReviews.jsx";
-import BrowseCompanies from "../pages/BrowseCompanies.jsx";
-import FullReviewPage from "../pages/FullReviewPage.jsx";
-import NotFound from "../pages/NotFound.jsx";
-import Terms from "../pages/Terms.jsx";
-import Privacy from "../pages/Privacy.jsx";
-import ForgotPassword from "../pages/ForgotPassword.jsx";
-import ResetPassword from "../pages/ResetPassword.jsx";
-import VerifyEmail from "../pages/VerifyEmail.jsx";
 import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import RootLayout from "../components/RootLayout.jsx";
+
+// Lazy loaded — not needed until the user navigates there
+const About = lazy(() => import("../pages/About.jsx"));
+const RegisterBusiness = lazy(() => import("../pages/RegisterBusiness.jsx"));
+const Categories = lazy(() => import("../pages/categories.jsx"));
+const CategoryCompanies = lazy(() => import("./CategoryCompanies.jsx"));
+const Subcategory = lazy(() => import("../pages/Subcategory.jsx"));
+const ProfilePage = lazy(() => import("../pages/Profile.jsx"));
+const AdminPanel = lazy(() => import("../pages/AdminPanel.jsx"));
+const CompanyPage = lazy(() => import("./companyPage.jsx"));
+const CompanyDashboard = lazy(() => import("./CompanyDashboard.jsx"));
+const BrowseReviews = lazy(() => import("../pages/BrowseReviews.jsx"));
+const BrowseCompanies = lazy(() => import("../pages/BrowseCompanies.jsx"));
+const FullReviewPage = lazy(() => import("../pages/FullReviewPage.jsx"));
+const NotFound = lazy(() => import("../pages/NotFound.jsx"));
+const Terms = lazy(() => import("../pages/Terms.jsx"));
+const Privacy = lazy(() => import("../pages/Privacy.jsx"));
+const ForgotPassword = lazy(() => import("../pages/ForgotPassword.jsx"));
+const ResetPassword = lazy(() => import("../pages/ResetPassword.jsx"));
+const VerifyEmail = lazy(() => import("../pages/VerifyEmail.jsx"));
 
 import "../styles/index.css";
 
@@ -86,12 +92,16 @@ createRoot(document.getElementById("root")).render(
         {GOOGLE_CLIENT_ID ? (
           <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             <ToastProvider>
-              <RouterProvider router={router} />
+              <Suspense fallback={<Loader message="Loading..." />}>
+                <RouterProvider router={router} />
+              </Suspense>
             </ToastProvider>
           </GoogleOAuthProvider>
         ) : (
           <ToastProvider>
-            <RouterProvider router={router} />
+            <Suspense fallback={<Loader message="Loading..." />}>
+              <RouterProvider router={router} />
+            </Suspense>
           </ToastProvider>
         )}
       </ThemeProvider>

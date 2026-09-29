@@ -130,7 +130,7 @@ const CategoryCompanies = () => {
     if (slug) {
       fetchInitialCompanies();
     }
-  }, [slug, currentPage, itemsPerPage, sort, search]); 
+  }, [slug, currentPage, itemsPerPage]); // sort and search handled by their own handlers to avoid double-fetch
 
   // Handle sort change
   const handleSortChange = (newSort) => {

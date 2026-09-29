@@ -114,7 +114,7 @@ export default function ProfilePage() {
             day: "numeric",
           }),
           company: review.company?.name,
-          url: review.company?.url,
+          url: `/company/${review.company?.slug}`,
           companyimage: review.company?.logo || "",
           category: review.company?.category?.name || "General",
         }));
