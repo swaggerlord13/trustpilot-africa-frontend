@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -20,12 +20,7 @@ export default function VerifyEmail() {
 
     const verifyEmail = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/auth/verify-email/${token}`);
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || "Verification failed.");
-        }
+        const { data } = await api.get(`/auth/verify-email/${token}`);
 
         setStatus("success");
         setMessage(data.message || "Email verified successfully!");
@@ -36,7 +31,7 @@ export default function VerifyEmail() {
         }, 3000);
       } catch (err) {
         setStatus("error");
-        setMessage(err.message);
+        setMessage(err.response?.data?.error || err.message || "Verification failed.");
       }
     };
 

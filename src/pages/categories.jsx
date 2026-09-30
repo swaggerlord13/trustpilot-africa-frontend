@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import { useState, useEffect } from "react";
 import "../styles/categories.css";
 import Header from "../pages/Header.jsx";
@@ -13,10 +13,9 @@ export default function Categories() {
   const [expandedCategory, setExpandedCategory] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/categories`)
-      .then((response) => response.json())
-      .then((data) => {
-        setCategories(data);
+    api.get("/categories")
+      .then((res) => {
+        setCategories(res.data);
         setLoading(false);
       })
       .catch((error) => {

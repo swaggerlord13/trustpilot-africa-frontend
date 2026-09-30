@@ -1,21 +1,17 @@
-import { API_BASE_URL } from "../../api.js";
-
-export function getAuthHeaders() {
-  const token = localStorage.getItem("token");
-  return {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
-}
+import api from "../../api.js";
 
 export async function adminApi(path, opts = {}) {
-  const res = await fetch(`${API_BASE_URL}${path}`, {
-    headers: getAuthHeaders(),
-    ...opts,
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || "Request failed");
-  return data;
+  const { method = "GET", body } = opts;
+  try {
+    const config = {};
+    if (body) {
+      config.data = typeof body === "string" ? JSON.parse(body) : body;
+    }
+    const res = await api({ url: path, method, ...config });
+    return res.data;
+  } catch (err) {
+    throw new Error(err.response?.data?.error || err.message || "Request failed");
+  }
 }
 
 export function StarDisplay({ rating }) {

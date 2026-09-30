@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link } from 'react-router-dom';
@@ -19,22 +19,12 @@ export default function ForgotPassword() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Something went wrong");
-      }
+      const { data } = await api.post("/auth/forgot-password", { email });
 
       showToast(data.message || "If that email is registered, you'll receive a reset link shortly.", "success", 6000);
       setEmail("");
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

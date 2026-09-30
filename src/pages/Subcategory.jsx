@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Header from "../pages/Header";
@@ -30,15 +30,14 @@ const Subcategory = () => {
 
   useEffect(() => {
     const fetchCompanies = async () => {
-      const url = subSlug
-        ? `${API_BASE_URL}/subcategories/${slug}/${subSlug}`
-        : `${API_BASE_URL}/categories/${slug}/companies`;
+      const path = subSlug
+        ? `/subcategories/${slug}/${subSlug}`
+        : `/categories/${slug}/companies`;
 
       setLoading(true);
       try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("Failed to fetch companies");
-        const companiesData = await response.json();
+        const response = await api.get(path);
+        const companiesData = response.data;
         const companiesArray = Array.isArray(companiesData) ? companiesData : [];
 
         setCategoryName(slug.charAt(0).toUpperCase() + slug.slice(1));
@@ -90,20 +89,7 @@ const Subcategory = () => {
     };
     
     try {
-      const response = await fetch(`${API_BASE_URL}/companies`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newCompany),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        const err = new Error(errorData.message || "Failed to create company");
-        err.response = { status: response.status, data: errorData };
-        throw err;
-      }
-      
-      const savedCompany = await response.json();
+      const { data: savedCompany } = await api.post("/companies", newCompany);
       
       // Add the new company with empty reviews
       const newCompanyWithReviews = {
@@ -120,7 +106,7 @@ const Subcategory = () => {
       
     } catch (err) {
       console.error("Error creating company:", err);
-      showToast(`Error adding company: ${err.message}`, "error");
+      showToast(`Error adding company: ${err.response?.data?.message || err.message}`, "error");
     }
   };
 

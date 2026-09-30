@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import Header from "../pages/Header.jsx";
 import { Link } from 'react-router-dom';
 import '../styles/Register.css';
@@ -92,32 +92,12 @@ export default function Register() {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          profileImage: formData.profileImage,
-        }),
+      const { data } = await api.post("/auth/register", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        profileImage: formData.profileImage,
       });
-
-      // Safely parse response: handle non-JSON responses (e.g. rate limiter HTML)
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        throw new Error("Server error. Please try again later.");
-      }
-
-      if (!res.ok) {
-        setError(data.error || "Registration failed");
-        setLoading(false);
-        return;
-      }
 
       // Save via AuthProvider
       login({
@@ -138,7 +118,7 @@ export default function Register() {
 
     } catch (err) {
       console.error("Register error:", err);
-      setError(err.message || "Server error. Please try again later.");
+      setError(err.response?.data?.error || err.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -156,16 +136,9 @@ export default function Register() {
       setLoading(true);
       setError("");
 
-      const res = await fetch(`${API_BASE_URL}/auth/google`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          credential: credentialResponse.credential,
-        }),
+      const { data } = await api.post("/auth/google", {
+        credential: credentialResponse.credential,
       });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Google sign up failed");
 
       // Save via AuthProvider
       login({
@@ -181,7 +154,7 @@ export default function Register() {
         navigate("/", { replace: true });
       }, 1500);
     } catch (err) {
-      setError(err.message || "Google sign up failed. Please try again.");
+      setError(err.response?.data?.error || err.message || "Google sign up failed. Please try again.");
     } finally {
       setLoading(false);
     }

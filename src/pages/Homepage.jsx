@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../pages/Header.jsx";
@@ -96,9 +96,9 @@ function Homepage() {
 
   useEffect(() => {
     // Fetch basic stats
-    fetch(`${API_BASE_URL}/companies/stats`)
-      .then(res => res.json())
-      .then(data => {
+    api.get("/companies/stats")
+      .then(res => {
+        const data = res.data;
         if (data) {
           setStats({
             companies: data.totalCompanies || 0,
@@ -120,10 +120,9 @@ function Homepage() {
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
     searchTimeout.current = setTimeout(() => {
       setIsSearching(true);
-      fetch(`${API_BASE_URL}/companies/search?q=${encodeURIComponent(search.trim())}&limit=6`)
-        .then(res => res.json())
-        .then(data => {
-          setSuggestions(data.companies || []);
+      api.get(`/companies/search?q=${encodeURIComponent(search.trim())}&limit=6`)
+        .then(res => {
+          setSuggestions(res.data.companies || []);
           setIsSearching(false);
         })
         .catch(e => {
@@ -145,24 +144,12 @@ function Homepage() {
   const handleAddCompany = async ({ name, url, city, country }) => {
     const newCompany = { name, url: url || "", city: city || "", country: country || "" };
     try {
-      const response = await fetch(`${API_BASE_URL}/companies`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newCompany),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        // Re-throw with response data so modal can show duplicate info
-        const err = new Error(errorData.message || "Failed to create company");
-        err.response = { status: response.status, data: errorData };
-        throw err;
-      }
-      const savedCompany = await response.json();
+      const { data: savedCompany } = await api.post("/companies", newCompany);
       setIsModalOpen(false);
       navigate(`/company/${savedCompany.slug}?openReview=true`);
     } catch (err) {
       console.error("Error creating company:", err);
-      showToast(`Error adding company: ${err.message}`, "error");
+      showToast(`Error adding company: ${err.response?.data?.message || err.message}`, "error");
     }
   };
 

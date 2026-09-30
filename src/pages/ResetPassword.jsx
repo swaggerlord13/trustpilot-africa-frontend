@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -33,24 +33,14 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/reset-password/${token}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Reset failed. The link may have expired.");
-      }
+      const { data } = await api.put(`/auth/reset-password/${token}`, { password });
 
       showToast("Password reset successful! Redirecting to login...", "success");
       setTimeout(() => {
         navigate("/Login", { replace: true });
       }, 2500);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

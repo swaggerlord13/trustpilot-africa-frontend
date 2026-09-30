@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import Header from "../pages/Header.jsx";
 import { Link } from 'react-router-dom';
 import '../styles/RegisterBusiness.css';
@@ -153,34 +153,17 @@ export default function RegisterBusiness() {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API_BASE_URL}/auth/register-business`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          companyName: companyData.companyName,
-          companyUrl: companyData.companyUrl,
-          role: companyData.role,
-          jobTitle: companyData.jobTitle,
-          reason: companyData.reason,
-          ...(claimCompanyId ? { claimCompanyId } : {}),
-        }),
+      const { data } = await api.post("/auth/register-business", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        companyName: companyData.companyName,
+        companyUrl: companyData.companyUrl,
+        role: companyData.role,
+        jobTitle: companyData.jobTitle,
+        reason: companyData.reason,
+        ...(claimCompanyId ? { claimCompanyId } : {}),
       });
-
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        throw new Error("Server error. Please try again later.");
-      }
-
-      if (!res.ok) {
-        setError(data.error || "Registration failed");
-        setLoading(false);
-        return;
-      }
 
       // Save auth data via AuthProvider
       login({
@@ -200,7 +183,7 @@ export default function RegisterBusiness() {
 
     } catch (err) {
       console.error("Business register error:", err);
-      setError(err.message || "Server error. Please try again later.");
+      setError(err.response?.data?.error || err.message || "Registration failed");
     } finally {
       setLoading(false);
     }

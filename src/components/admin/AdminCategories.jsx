@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { API_BASE_URL } from "../../api.js";
-import { adminApi, getAuthHeaders } from "./adminHelpers.jsx";
+import api from "../../api.js";
+import { adminApi } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
 
 export default function AdminCategories() {
@@ -62,29 +62,19 @@ export default function AdminCategories() {
   const addCategory = async () => {
     if (!newCategoryName.trim()) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/categories`, {
-        method: "POST",
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ name: newCategoryName.trim() }),
-      });
-      if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || "Failed to add category"); }
+      await api.post("/categories", { name: newCategoryName.trim() });
       showToast("Category added", "success");
       setNewCategoryName("");
       fetchCategories();
     } catch (err) {
-      showToast(err.message, "error");
+      showToast(err.response?.data?.error || err.message, "error");
     }
   };
 
   const addSubcategory = async () => {
     if (!newSubcategoryName.trim() || !newSubcategoryParent) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/subcategories`, {
-        method: "POST",
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ name: newSubcategoryName.trim(), categoryId: newSubcategoryParent }),
-      });
-      if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || "Failed to add subcategory"); }
+      await api.post("/subcategories", { name: newSubcategoryName.trim(), categoryId: newSubcategoryParent });
       showToast("Subcategory added", "success");
       setNewSubcategoryName("");
       setNewSubcategoryParent("");
@@ -97,11 +87,7 @@ export default function AdminCategories() {
   const deleteCategory = async (id) => {
     if (!window.confirm("Delete this category, all its subcategories, and all companies under them?")) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/categories/${id}`, {
-        method: "DELETE",
-        headers: getAuthHeaders(),
-      });
-      if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || "Failed to delete category"); }
+      await api.delete(`/categories/${id}`);
       showToast("Category deleted", "success");
       fetchCategories();
     } catch (err) {
@@ -112,11 +98,7 @@ export default function AdminCategories() {
   const deleteSubcategory = async (id) => {
     if (!window.confirm("Delete this subcategory and all companies in it?")) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/subcategories/${id}`, {
-        method: "DELETE",
-        headers: getAuthHeaders(),
-      });
-      if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || "Failed to delete subcategory"); }
+      await api.delete(`/subcategories/${id}`);
       showToast("Subcategory deleted", "success");
       fetchCategories();
     } catch (err) {

@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link } from 'react-router-dom';
@@ -42,32 +42,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      // Safely parse response: handle non-JSON responses (e.g. rate limiter HTML)
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        throw new Error("Server error. Please try again later.");
-      }
-
-      if (!res.ok) {
-        if (data.needsVerification) {
-          setNeedsVerification(true);
-          setVerificationEmail(data.email);
-          setError("Please verify your email before logging in. Check your inbox for the verification link.");
-          setLoading(false);
-          return;
-        }
-        throw new Error(data.error || "Invalid email or password");
-      }
+      const { data } = await api.post("/auth/login", { email, password });
 
       // Save token and user data via AuthProvider
       login({
@@ -92,7 +67,14 @@ export default function Login() {
       }, 1500);
 
     } catch (err) {
-      setError(err.message);
+      const errData = err.response?.data;
+      if (errData?.needsVerification) {
+        setNeedsVerification(true);
+        setVerificationEmail(errData.email);
+        setError("Please verify your email before logging in. Check your inbox for the verification link.");
+      } else {
+        setError(errData?.error || err.message || "Invalid email or password");
+      }
     } finally {
       setLoading(false);
     }
@@ -115,11 +97,7 @@ export default function Login() {
     setResendLoading(true);
     setResendSuccess("");
     try {
-      await fetch(`${API_BASE_URL}/auth/resend-verification`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: verificationEmail }),
-      });
+      await api.post("/auth/resend-verification", { email: verificationEmail });
       setResendSuccess("Verification email sent! Check your inbox.");
       setError("");
     } catch (err) {
@@ -137,16 +115,9 @@ export default function Login() {
       setLoading(true);
       setError("");
 
-      const res = await fetch(`${API_BASE_URL}/auth/google`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          credential: credentialResponse.credential,
-        }),
+      const { data } = await api.post("/auth/google", {
+        credential: credentialResponse.credential,
       });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Google login failed");
 
       // Save token and user via AuthProvider
       login({
@@ -162,7 +133,7 @@ export default function Login() {
         navigate("/", { replace: true });
       }, 1500);
     } catch (err) {
-      setError(err.message || "Google login failed. Please try again.");
+      setError(err.response?.data?.error || err.message || "Google login failed. Please try again.");
     } finally {
       setLoading(false);
     }
