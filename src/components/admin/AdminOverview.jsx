@@ -1,9 +1,9 @@
+import Loader from "../Loader.jsx";
+
 export default function AdminOverview({ stats, setActiveSection }) {
   if (!stats) {
     return (
-      <div className="admin-loading">
-        <div className="admin-spinner"></div>
-      </div>
+      <Loader />
     );
   }
 

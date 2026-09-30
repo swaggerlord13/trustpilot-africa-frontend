@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import api from "../../api.js";
 import { useToast } from "../Toast.jsx";
+import ButtonSpinner from "../ButtonSpinner.jsx";
 
 export default function DashboardProfile({ company, setCompany, companyId }) {
   const showToast = useToast();
@@ -120,7 +121,7 @@ export default function DashboardProfile({ company, setCompany, companyId }) {
             >
               {logoUploading ? (
                 <>
-                  <div className="animate-spin w-5 h-5 border-2 border-brand-500 border-t-transparent rounded-full"></div>
+                  <ButtonSpinner />
                   Uploading...
                 </>
               ) : (

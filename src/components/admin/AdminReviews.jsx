@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { adminApi, StarDisplay, formatDate, Pagination, toggleSelect, toggleSelectAll } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
+import Loader from "../Loader.jsx";
 
 export default function AdminReviews() {
   const showToast = useToast();
@@ -80,7 +81,7 @@ export default function AdminReviews() {
       </div>
 
       {loading ? (
-        <div className="admin-loading"><div className="admin-spinner"></div></div>
+        <Loader />
       ) : (
         <div className="admin-table-wrap">
           <table className="admin-table">

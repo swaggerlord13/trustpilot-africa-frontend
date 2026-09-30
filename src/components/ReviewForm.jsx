@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../components/AuthProvider.jsx";
+import ButtonSpinner from "../components/ButtonSpinner.jsx";
 
 export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
   const [rating, setRating] = useState(0);
@@ -226,7 +227,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
           >
             {submitting ? (
               <span className="flex items-center justify-center gap-2">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <ButtonSpinner color="border-white" />
                 Submitting Review...
               </span>
             ) : (

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { adminApi, formatDate } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
+import Loader from "../Loader.jsx";
 
 export default function AdminClaims() {
   const showToast = useToast();
@@ -54,7 +55,7 @@ export default function AdminClaims() {
       </div>
 
       {claimsLoading ? (
-        <div className="admin-loading"><div className="admin-spinner"></div></div>
+        <Loader />
       ) : claims.length === 0 ? (
         <div className="admin-empty-state" style={{ textAlign: "center", padding: "3rem 1rem" }}>
           <div style={{

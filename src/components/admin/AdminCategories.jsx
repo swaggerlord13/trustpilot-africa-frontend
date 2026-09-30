@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import api from "../../api.js";
 import { adminApi } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
+import Loader from "../Loader.jsx";
 
 export default function AdminCategories() {
   const showToast = useToast();
@@ -143,7 +144,7 @@ export default function AdminCategories() {
       </div>
 
       {loading ? (
-        <div className="admin-loading"><div className="admin-spinner"></div></div>
+        <Loader />
       ) : (
         <div className="admin-categories-list">
           {categories.map((cat) => (

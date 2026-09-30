@@ -6,6 +6,8 @@ import ReviewBox from "../components/ReviewBox";
 import Footer from "../components/Footer.jsx";
 import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../components/AuthProvider.jsx";
+import Loader from "../components/Loader.jsx";
+import ButtonSpinner from "../components/ButtonSpinner.jsx";
 
 export default function ProfilePage() {
   const { isLoggedIn, logout, updateUser } = useAuth();
@@ -163,9 +165,7 @@ export default function ProfilePage() {
     return (
       <>
         <Header />
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-brand-500"></div>
-        </div>
+        <Loader />
       </>
     );
   }
@@ -380,7 +380,7 @@ export default function ProfilePage() {
                     >
                       {profileImageUploading ? (
                         <>
-                          <div className="animate-spin w-5 h-5 border-2 border-brand-500 border-t-transparent rounded-full"></div>
+                          <ButtonSpinner />
                           Uploading...
                         </>
                       ) : (

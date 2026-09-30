@@ -1,4 +1,5 @@
 import api from "../api.js";
+import ButtonSpinner from "./ButtonSpinner.jsx";
 import ReviewBox from "./ReviewBox.jsx";
 import "../styles/ReviewsText.css";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -282,7 +283,7 @@ export default function OptimizedReviewsPage({ companyId }) {
           >
             {loadingMore ? (
               <span className="flex items-center gap-2">
-                <i className="bx bx-loader-alt bx-spin"></i> Loading...
+                <ButtonSpinner size="w-4 h-4" /> Loading...
               </span>
             ) : (
               `Show More Reviews (${reviews.length} of ${pagination.total})`
