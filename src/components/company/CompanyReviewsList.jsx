@@ -135,6 +135,7 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
                     user={review.user}
                     date={review.date}
                     companyimage={review.companyimage}
+                    companyUrl={review.companyUrl}
                     category={review.category}
                   />
 

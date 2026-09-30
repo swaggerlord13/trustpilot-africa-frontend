@@ -52,6 +52,7 @@ export default function CompanyPage() {
       company: review.company.name,
       url: `/company/${review.company.slug}`,
       companyimage: review.company.logo || "",
+      companyUrl: review.company.url || "",
       category: review.company.category?.name || "General",
       createdAt: review.createdAt,
       companyReply: review.companyReply || null,

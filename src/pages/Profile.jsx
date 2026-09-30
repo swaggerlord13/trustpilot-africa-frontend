@@ -103,6 +103,7 @@ export default function ProfilePage() {
           company: review.company?.name,
           url: `/company/${review.company?.slug}`,
           companyimage: review.company?.logo || "",
+          companyUrl: review.company?.url || "",
           category: review.company?.category?.name || "General",
         }));
 
@@ -296,6 +297,7 @@ export default function ProfilePage() {
                       user={review.user}
                       date={review.date}
                       companyimage={review.companyimage}
+                      companyUrl={review.companyUrl}
                       category={review.category}
                     />
                   ))}
