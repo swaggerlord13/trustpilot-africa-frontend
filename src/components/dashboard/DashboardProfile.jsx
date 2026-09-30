@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
-import api, { API_BASE_URL } from "../../api.js";
-import { useAuth } from "../AuthProvider.jsx";
+import api from "../../api.js";
 import { useToast } from "../Toast.jsx";
 
 export default function DashboardProfile({ company, setCompany, companyId }) {
@@ -15,8 +14,6 @@ export default function DashboardProfile({ company, setCompany, companyId }) {
   const [logoUploading, setLogoUploading] = useState(false);
   const logoInputRef = useRef(null);
 
-  const { token } = useAuth();
-  const getAuthHeaders = () => ({ Authorization: `Bearer ${token}` });
 
   const handleLogoUpload = async (file) => {
     if (!file) return;
@@ -24,9 +21,8 @@ export default function DashboardProfile({ company, setCompany, companyId }) {
     try {
       const formData = new FormData();
       formData.append("logo", file);
-      const res = await api.post(`${API_BASE_URL}/upload/company-logo`, formData, {
+      const res = await api.post("/upload/company-logo", formData, {
         headers: {
-          ...getAuthHeaders(),
           "Content-Type": "multipart/form-data",
         },
       });
@@ -46,9 +42,8 @@ export default function DashboardProfile({ company, setCompany, companyId }) {
     setProfileSaving(true);
     try {
       await api.put(
-        `${API_BASE_URL}/company-dashboard/${companyId}/profile`,
-        profileForm,
-        { headers: getAuthHeaders() }
+        `/company-dashboard/${companyId}/profile`,
+        profileForm
       );
       setCompany((prev) => ({ ...prev, ...profileForm }));
       setEditMode(false);

@@ -1,4 +1,4 @@
-import api, { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import ReviewBox from "./ReviewBox.jsx";
 import "../styles/ReviewsText.css";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -49,13 +49,13 @@ export default function OptimizedReviewsPage({ companyId }) {
 
       // Fetch company info only once
       if (!companyInfoRef.current) {
-        const companyRes = await api.get(`${API_BASE_URL}/companies/slug/${companyId}/with-ratings`);
+        const companyRes = await api.get(`/companies/slug/${companyId}/with-ratings`);
         companyInfoRef.current = companyRes.data.company;
       }
       const company = companyInfoRef.current;
 
       const reviewsRes = await api.get(
-        `${API_BASE_URL}/reviews/company/${companyId}?sort=${sort}&page=${page}&limit=20`
+        `/reviews/company/${companyId}?sort=${sort}&page=${page}&limit=20`
       );
 
       const { reviews: rawReviews, pagination: pag } = reviewsRes.data;
@@ -96,7 +96,7 @@ export default function OptimizedReviewsPage({ companyId }) {
 
   const fetchHomepageReviews = useCallback(async () => {
     try {
-      const response = await api.get(`${API_BASE_URL}/companies/latest-best-reviews`);
+      const response = await api.get(`/companies/latest-best-reviews`);
 
       const formattedReviews = response.data.reviews.map((review) => ({
         _id: review._id,

@@ -1,4 +1,4 @@
-import api, { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import Header from "./Header";
@@ -8,7 +8,7 @@ import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../components/AuthProvider.jsx";
 
 export default function ProfilePage() {
-  const { token, logout, updateUser } = useAuth();
+  const { isLoggedIn, logout, updateUser } = useAuth();
   const [user, setUser] = useState(null);
   const [userReviews, setUserReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,10 +41,9 @@ export default function ProfilePage() {
     formDataUpload.append('profileImage', file);
 
     try {
-      const response = await api.post(`${API_BASE_URL}/upload/user-profile`, formDataUpload, {
+      const response = await api.post(`/upload/user-profile`, formDataUpload, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
         },
       });
 
@@ -64,15 +63,13 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        if (!token) {
+        if (!isLoggedIn) {
           window.location.href = "/login";
           return;
         }
 
         // Get user profile
-        const userRes = await api.get(`${API_BASE_URL}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const userRes = await api.get(`/auth/me`);
 
         setUser(userRes.data);
         setFormData({
@@ -85,7 +82,7 @@ export default function ProfilePage() {
 
         // Get user's reviews
         const reviewsRes = await api.get(
-          `${API_BASE_URL}/reviews/user/${userRes.data._id}`
+          `/reviews/user/${userRes.data._id}`
         );
 
         // Map reviews to ReviewBox format
@@ -111,9 +108,7 @@ export default function ProfilePage() {
 
         // Fetch claimed companies
         try {
-          const claimsRes = await api.get(`${API_BASE_URL}/company-claims/my-companies`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const claimsRes = await api.get(`/company-claims/my-companies`);
           // API returns a plain array, not { companies: [...] }
           setMyCompanies(Array.isArray(claimsRes.data) ? claimsRes.data : []);
         } catch (err) {
@@ -144,11 +139,8 @@ export default function ProfilePage() {
     e.preventDefault();
     try {
       const res = await api.put(
-        `${API_BASE_URL}/auth/me`,
-        formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        `/auth/me`,
+        formData
       );
 
       setUser(res.data);

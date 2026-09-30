@@ -1,4 +1,4 @@
-import api, { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import ReviewForm from "../components/ReviewForm";
@@ -29,7 +29,7 @@ export default function CompanyPage() {
   // Claim state
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [claimStatus, setClaimStatus] = useState(null);
-  const { isLoggedIn, token } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     if (location.search.includes('openReview=true')) {
@@ -65,7 +65,7 @@ export default function CompanyPage() {
       else setLoadingMore(true);
 
       const reviewsRes = await api.get(
-        `${API_BASE_URL}/reviews/company/${companyData._id}/with-replies?sort=${sort}&page=${page}&limit=20`
+        `/reviews/company/${companyData._id}/with-replies?sort=${sort}&page=${page}&limit=20`
       );
 
       const mapped = mapReviews(reviewsRes.data.reviews);
@@ -87,15 +87,13 @@ export default function CompanyPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const companyRes = await api.get(`${API_BASE_URL}/companies/slug/${slug}`);
+        const companyRes = await api.get(`/companies/slug/${slug}`);
         setCompany(companyRes.data);
 
         const [_, claimsRes] = await Promise.all([
           fetchReviews(companyRes.data, "newest", 1),
-          token
-            ? api.get(`${API_BASE_URL}/company-claims/my-claims`, {
-                headers: { Authorization: `Bearer ${token}` },
-              }).catch(() => null)
+          isLoggedIn
+            ? api.get("/company-claims/my-claims").catch(() => null)
             : Promise.resolve(null)
         ]);
 

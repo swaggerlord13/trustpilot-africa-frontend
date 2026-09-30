@@ -1,4 +1,4 @@
-import api, { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Loader from "./Loader";
@@ -193,7 +193,7 @@ export default function LazyLoadingCompanyCards() {
   useEffect(() => {
     const fetchRandomCategories = async () => {
       try {
-        const response = await api.get(`${API_BASE_URL}/companies/best-by-category`);
+        const response = await api.get(`/companies/best-by-category`);
         setCategoryData(response.data.categories || []);
         setLoading(false);
       } catch (err) {

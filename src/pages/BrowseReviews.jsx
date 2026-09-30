@@ -1,4 +1,4 @@
-import api, { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "../pages/Header";
@@ -33,7 +33,7 @@ const BrowseReviews = () => {
       setLoading(true);
       try {
         const response = await api.get(
-          `${API_BASE_URL}/reviews/browse-mixed?page=${currentPage}&limit=20${debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ""}`
+          `/reviews/browse-mixed?page=${currentPage}&limit=20${debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ""}`
         );
         setReviews(response.data.reviews || []);
         setPagination(response.data.pagination || {});

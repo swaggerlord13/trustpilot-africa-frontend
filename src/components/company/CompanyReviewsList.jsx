@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import api, { API_BASE_URL } from "../../api.js";
+import api from "../../api.js";
 import ReviewBox from "../ReviewBox";
 import StarRating from "../StarRatings";
 import ScrollDots from "../ScrollDots.jsx";
@@ -24,17 +24,15 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
   const [userReplyingTo, setUserReplyingTo] = useState(null);
   const [userReplyContent, setUserReplyContent] = useState("");
 
-  const { user: currentUser, token } = useAuth();
+  const { user: currentUser } = useAuth();
 
   const handleReply = async (reviewId) => {
     if (!replyContent.trim() || replyContent.length < 5) return;
     setReplyLoading(true);
     try {
-      // token from useAuth
       const res = await api.post(
-        `${API_BASE_URL}/company-dashboard/${company._id}/reviews/${reviewId}/reply`,
-        { content: replyContent },
-        { headers: { Authorization: `Bearer ${token}` } }
+        `/company-dashboard/${company._id}/reviews/${reviewId}/reply`,
+        { content: replyContent }
       );
       setReviews((prev) =>
         prev.map((r) => (r._id === reviewId ? { ...r, companyReply: res.data.reply } : r))
@@ -51,11 +49,9 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
 
   const handleEditReview = async (reviewId) => {
     try {
-      // token from useAuth
       await api.put(
-        `${API_BASE_URL}/reviews/${reviewId}`,
-        { comment: editComment, rating: editRating },
-        { headers: { Authorization: `Bearer ${token}` } }
+        `/reviews/${reviewId}`,
+        { comment: editComment, rating: editRating }
       );
       setReviews(prev => prev.map(r => r._id === reviewId ? { ...r, comment: editComment, rating: editRating } : r));
       setEditingReview(null);
@@ -68,8 +64,7 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
   const handleDeleteReview = async (reviewId) => {
     if (!window.confirm("Are you sure you want to delete your review? This cannot be undone.")) return;
     try {
-      // token from useAuth
-      await api.delete(`${API_BASE_URL}/reviews/${reviewId}`, { headers: { Authorization: `Bearer ${token}` } });
+      await api.delete(`/reviews/${reviewId}`);
       setReviews(prev => prev.filter(r => r._id !== reviewId));
       showToast("Review deleted", "success");
     } catch (err) {
@@ -80,11 +75,9 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
   const handleUserReply = async (reviewId) => {
     if (!userReplyContent.trim()) return;
     try {
-      // token from useAuth
       const res = await api.post(
-        `${API_BASE_URL}/reviews/${reviewId}/user-reply`,
-        { content: userReplyContent },
-        { headers: { Authorization: `Bearer ${token}` } }
+        `/reviews/${reviewId}/user-reply`,
+        { content: userReplyContent }
       );
       setReviews(prev => prev.map(r => r._id === reviewId ? { ...r, userReply: res.data } : r));
       setUserReplyingTo(null);

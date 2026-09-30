@@ -1,4 +1,4 @@
-import api, { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "./Header.jsx";
@@ -7,7 +7,6 @@ import Loader from "../components/Loader.jsx";
 import DashboardOverview from "../components/dashboard/DashboardOverview.jsx";
 import DashboardReviews from "../components/dashboard/DashboardReviews.jsx";
 import DashboardProfile from "../components/dashboard/DashboardProfile.jsx";
-import { useAuth } from "../components/AuthProvider.jsx";
 
 export default function CompanyDashboard() {
   const { companyId } = useParams();
@@ -27,25 +26,21 @@ export default function CompanyDashboard() {
   const [reviewPage, setReviewPage] = useState(1);
   const [totalReviewPages, setTotalReviewPages] = useState(1);
 
-  const { token } = useAuth();
-  const getAuthHeaders = () => ({ Authorization: `Bearer ${token}` });
 
   // Fetch company info, stats, and reviews
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const headers = { headers: getAuthHeaders() };
-
         const [statsRes, reviewsRes] = await Promise.all([
-          api.get(`${API_BASE_URL}/company-dashboard/${companyId}/stats`, headers),
-          api.get(`${API_BASE_URL}/company-dashboard/${companyId}/reviews?sort=${reviewSort}&page=${reviewPage}&limit=10`, headers),
+          api.get(`/company-dashboard/${companyId}/stats`),
+          api.get(`/company-dashboard/${companyId}/reviews?sort=${reviewSort}&page=${reviewPage}&limit=10`),
         ]);
 
         setStats(statsRes.data);
         setReviews(reviewsRes.data.reviews);
         setTotalReviewPages(reviewsRes.data.totalPages);
 
-        const companyRes = await api.get(`${API_BASE_URL}/companies/by-id/${companyId}`);
+        const companyRes = await api.get(`/companies/by-id/${companyId}`);
         setCompany(companyRes.data);
         setLoading(false);
       } catch (err) {

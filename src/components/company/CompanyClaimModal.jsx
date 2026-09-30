@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api, { API_BASE_URL } from "../../api.js";
+import api from "../../api.js";
 import { useAuth } from "../AuthProvider.jsx";
 import { useToast } from "../Toast.jsx";
 
@@ -16,7 +16,7 @@ export default function CompanyClaimModal({ company, onClose, onClaimSubmitted }
     setClaimLoading(true);
     try {
       await api.post(
-        `${API_BASE_URL}/company-claims`,
+        "/company-claims",
         {
           companyId: company._id,
           role: claimForm.role,

@@ -1,4 +1,4 @@
-import api, { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../pages/Header";
@@ -20,7 +20,7 @@ const FullReviewPage = () => {
       setCompanyReply(null);
       try {
         // Fetch the main review
-        const reviewResponse = await api.get(`${API_BASE_URL}/reviews/${reviewId}`);
+        const reviewResponse = await api.get(`/reviews/${reviewId}`);
         const reviewData = reviewResponse.data;
 
         // Format the review data
@@ -48,7 +48,7 @@ const FullReviewPage = () => {
 
         // Fetch company reply for this review
         try {
-          const replyRes = await api.get(`${API_BASE_URL}/reviews/${reviewId}/replies`);
+          const replyRes = await api.get(`/reviews/${reviewId}/replies`);
           setCompanyReply(replyRes.data || null);
         } catch (err) {
           setCompanyReply(null);
@@ -57,7 +57,7 @@ const FullReviewPage = () => {
         // Fetch related reviews from the same company
         if (reviewData.company?._id) {
           const relatedResponse = await api.get(
-            `${API_BASE_URL}/reviews/company/${reviewData.company._id}`
+            `/reviews/company/${reviewData.company._id}`
           );
           
           const related = relatedResponse.data

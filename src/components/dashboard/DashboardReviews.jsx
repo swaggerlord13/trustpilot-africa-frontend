@@ -1,6 +1,5 @@
 import { useState } from "react";
-import api, { API_BASE_URL } from "../../api.js";
-import { useAuth } from "../AuthProvider.jsx";
+import api from "../../api.js";
 import StarRating from "../StarRatings.jsx";
 import { useToast } from "../Toast.jsx";
 
@@ -14,17 +13,14 @@ export default function DashboardReviews({ companyId, stats, reviews, setReviews
   const [editingReply, setEditingReply] = useState(null);
   const [editReplyContent, setEditReplyContent] = useState("");
 
-  const { token } = useAuth();
-  const getAuthHeaders = () => ({ Authorization: `Bearer ${token}` });
 
   const handleReply = async (reviewId) => {
     if (!replyContent.trim()) return;
     setReplyLoading(true);
     try {
       const res = await api.post(
-        `${API_BASE_URL}/company-dashboard/${companyId}/reviews/${reviewId}/reply`,
-        { content: replyContent },
-        { headers: getAuthHeaders() }
+        `/company-dashboard/${companyId}/reviews/${reviewId}/reply`,
+        { content: replyContent }
       );
       setReviews((prev) =>
         prev.map((r) => (r._id === reviewId ? { ...r, reply: res.data.reply } : r))
@@ -44,9 +40,8 @@ export default function DashboardReviews({ companyId, stats, reviews, setReviews
     setReplyLoading(true);
     try {
       const res = await api.put(
-        `${API_BASE_URL}/company-dashboard/${companyId}/reviews/${reviewId}/reply`,
-        { content: editReplyContent },
-        { headers: getAuthHeaders() }
+        `/company-dashboard/${companyId}/reviews/${reviewId}/reply`,
+        { content: editReplyContent }
       );
       setReviews((prev) =>
         prev.map((r) => (r._id === reviewId ? { ...r, reply: res.data.reply } : r))
@@ -65,8 +60,7 @@ export default function DashboardReviews({ companyId, stats, reviews, setReviews
     if (!window.confirm("Are you sure you want to delete this reply?")) return;
     try {
       await api.delete(
-        `${API_BASE_URL}/company-dashboard/${companyId}/reviews/${reviewId}/reply`,
-        { headers: getAuthHeaders() }
+        `/company-dashboard/${companyId}/reviews/${reviewId}/reply`
       );
       setReviews((prev) =>
         prev.map((r) => (r._id === reviewId ? { ...r, reply: null } : r))

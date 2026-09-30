@@ -1,4 +1,4 @@
-import api, { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import { useState, useEffect, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Header from "../pages/Header";
@@ -42,8 +42,8 @@ export default function BrowseCompanies() {
     const loadFilters = async () => {
       try {
         const [catRes, locRes] = await Promise.all([
-          api.get(API_BASE_URL + "/categories"),
-          api.get(API_BASE_URL + "/companies/locations"),
+          api.get("/categories"),
+          api.get("/companies/locations"),
         ]);
         setCategories(catRes.data || []);
         setLocations(locRes.data || { cities: [], countries: [] });
@@ -68,7 +68,7 @@ export default function BrowseCompanies() {
       params.set("page", currentPage);
       params.set("limit", "20");
 
-      const res = await api.get(API_BASE_URL + "/companies/search?" + params.toString());
+      const res = await api.get("/companies/search?" + params.toString());
       setCompanies(res.data.companies || []);
       setPagination(res.data.pagination || {});
     } catch (err) {

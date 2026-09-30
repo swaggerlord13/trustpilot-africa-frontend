@@ -1,4 +1,4 @@
-import api, { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, Link, useNavigate} from "react-router-dom";
 import Header from "../pages/Header";
@@ -45,7 +45,7 @@ const CategoryCompanies = () => {
       };
 
       const response = await api.get(
-        `${API_BASE_URL}/categories/${slug}/companies-paginated`,
+        `/categories/${slug}/companies-paginated`,
         { params }
       );
 
@@ -111,7 +111,7 @@ const CategoryCompanies = () => {
         };
 
         const response = await api.get(
-          `${API_BASE_URL}/categories/${slug}/companies-paginated`,
+          `/categories/${slug}/companies-paginated`,
           { params }
         );
 
@@ -144,7 +144,7 @@ const CategoryCompanies = () => {
     const newCompany = { name, url: url || "", city: city || "", country: country || "" };
     
     try {
-      const response = await api.post(`${API_BASE_URL}/companies`, newCompany);
+      const response = await api.post(`/companies`, newCompany);
       
       setIsModalOpen(false);
       navigate(`/company/${response.data.slug}?openReview=true`);

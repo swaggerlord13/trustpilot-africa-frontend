@@ -1,4 +1,4 @@
-import api, { API_BASE_URL } from "../api.js";
+import api from "../api.js";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/Toast.jsx";
@@ -11,7 +11,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
   const [submitting, setSubmitting] = useState(false);
   const [hoveredStar, setHoveredStar] = useState(0);
   const showToast = useToast();
-  const { token, user: authUser, isLoggedIn, logout } = useAuth();
+  const { user: authUser, isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
 
   // Restore saved draft if it matches this company
@@ -66,15 +66,12 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
 
     try {
       const res = await api.post(
-        `${API_BASE_URL}/reviews`,
+        "/reviews",
         {
           companyId,
           rating,
           comment: comment.trim(),
           title: title.trim() || "Review"
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
