@@ -1,4 +1,5 @@
 import api from "../api.js";
+import ButtonSpinner from "../components/ButtonSpinner.jsx";
 import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -119,7 +120,7 @@ export default function ResetPassword() {
               >
                 {loading ? (
                   <span className="btn-content">
-                    <div className="spinner"></div>
+                    <ButtonSpinner color="border-white" />
                     Resetting...
                   </span>
                 ) : (

@@ -1,4 +1,5 @@
 import api from "../api.js";
+import ButtonSpinner from "../components/ButtonSpinner.jsx";
 import Header from "../pages/Header.jsx";
 import { Link } from 'react-router-dom';
 import '../styles/Register.css';
@@ -350,7 +351,7 @@ export default function Register() {
               >
                 {loading ? (
                   <span className="btn-content">
-                    <div className="spinner"></div>
+                    <ButtonSpinner color="border-white" />
                     Creating Account...
                   </span>
                 ) : (

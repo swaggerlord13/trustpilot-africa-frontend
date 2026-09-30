@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../components/AuthProvider.jsx";
-import ButtonSpinner from "../components/ButtonSpinner.jsx";
+import ButtonSpinner from "./ButtonSpinner.jsx";
 
 export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
   const [rating, setRating] = useState(0);

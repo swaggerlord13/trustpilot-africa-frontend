@@ -1,6 +1,6 @@
 import api from "../api.js";
 import ButtonSpinner from "../components/ButtonSpinner.jsx";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../pages/Header";
 import Loader from "../components/Loader";
@@ -99,37 +99,19 @@ const CategoryCompanies = () => {
 
   // Fetch companies from backend with pagination
   useEffect(() => {
-    const fetchInitialCompanies = async () => {
-      setLoading(true);
-      try {
-        const params = {
-          page: currentPage,
-          limit: itemsPerPage,
-          search: search.trim(),
-          sort
-        };
+    if (slug) {
+      fetchCompanies(search, sort, currentPage, true);
+    }
+  }, [slug, currentPage, itemsPerPage, fetchCompanies]); // sort and search handled by their own handlers to avoid double-fetch
 
-        const response = await api.get(
-          `/categories/${slug}/companies-paginated`,
-          { params }
-        );
-
-        setCompanies(response.data.companies || []);
-        setPagination(response.data.pagination || {});
-        setCategory(response.data.category || {});
-
-      } catch (err) {
-        console.error("Error fetching companies:", err);
-        setCompanies([]);
-      } finally {
-        setLoading(false);
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debouncedFetchRef.current) {
+        clearTimeout(debouncedFetchRef.current);
       }
     };
-
-    if (slug) {
-      fetchInitialCompanies();
-    }
-  }, [slug, currentPage, itemsPerPage]); // sort and search handled by their own handlers to avoid double-fetch
+  }, []);
 
   // Handle sort change
   const handleSortChange = (newSort) => {

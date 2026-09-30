@@ -53,7 +53,7 @@ export default function useCompanyReply(companyId, setReviews, showToast, replyF
       setEditReplyContent("");
     } catch (err) {
       console.error("Edit reply error:", err);
-      showToast("Failed to update reply", "error");
+      showToast(err.response?.data?.error || "Failed to update reply", "error");
     } finally {
       setReplyLoading(false);
     }
@@ -70,7 +70,7 @@ export default function useCompanyReply(companyId, setReviews, showToast, replyF
       );
     } catch (err) {
       console.error("Delete reply error:", err);
-      showToast("Failed to delete reply", "error");
+      showToast(err.response?.data?.error || "Failed to delete reply", "error");
     }
   };
 

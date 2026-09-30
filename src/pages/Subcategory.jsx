@@ -1,5 +1,5 @@
 import api from "../api.js";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "../pages/Header";
 import Loader from "../components/Loader";
