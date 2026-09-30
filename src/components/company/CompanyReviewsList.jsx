@@ -5,6 +5,8 @@ import StarRating from "../StarRatings";
 import ScrollDots from "../ScrollDots.jsx";
 import { useToast } from "../Toast.jsx";
 import { useAuth } from "../AuthProvider.jsx";
+import useCompanyReply from "../../hooks/useCompanyReply.js";
+import ButtonSpinner from "../ButtonSpinner.jsx";
 import ReviewSortBar from "../ReviewSortBar.jsx";
 import "../../styles/ReviewSortBar.css";
 
@@ -12,10 +14,10 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
   const showToast = useToast();
   const scrollRef = useRef(null);
 
-  // Company admin reply state
-  const [replyingTo, setReplyingTo] = useState(null);
-  const [replyContent, setReplyContent] = useState("");
-  const [replyLoading, setReplyLoading] = useState(false);
+  const {
+    replyingTo, replyContent, setReplyContent, replyLoading,
+    handleReply, startReply, cancelReply,
+  } = useCompanyReply(company._id, setReviews, showToast, "companyReply");
 
   // User review actions state
   const [editingReview, setEditingReview] = useState(null);
@@ -25,27 +27,6 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
   const [userReplyContent, setUserReplyContent] = useState("");
 
   const { user: currentUser } = useAuth();
-
-  const handleReply = async (reviewId) => {
-    if (!replyContent.trim() || replyContent.length < 5) return;
-    setReplyLoading(true);
-    try {
-      const res = await api.post(
-        `/company-dashboard/${company._id}/reviews/${reviewId}/reply`,
-        { content: replyContent }
-      );
-      setReviews((prev) =>
-        prev.map((r) => (r._id === reviewId ? { ...r, companyReply: res.data.reply } : r))
-      );
-      setReplyingTo(null);
-      setReplyContent("");
-    } catch (err) {
-      console.error("Reply error:", err);
-      showToast(err.response?.data?.error || "Failed to post reply", "error");
-    } finally {
-      setReplyLoading(false);
-    }
-  };
 
   const handleEditReview = async (reviewId) => {
     try {
@@ -198,7 +179,7 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
                             <span className="text-xs text-slate-400 dark:text-slate-500">{replyContent.length}/1000</span>
                             <div className="flex gap-2">
                               <button
-                                onClick={() => { setReplyingTo(null); setReplyContent(""); }}
+                                onClick={() => {cancelReply()}}
                                 className="px-4 py-2 text-sm bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-none rounded-lg cursor-pointer font-semibold hover:bg-slate-200 dark:hover:bg-slate-600"
                               >
                                 Cancel
@@ -216,7 +197,7 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
                       ) : (
                         <div className="mb-4">
                           <button
-                            onClick={() => setReplyingTo(review._id)}
+                            onClick={() => startReply(review._id)}
                             className="bg-transparent border-none text-green-600 dark:text-green-400 font-semibold text-sm cursor-pointer py-1 px-0 hover:text-green-700 dark:hover:text-green-300"
                           >
                             <i className="bx bx-reply mr-1"></i>
@@ -312,7 +293,7 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
               >
                 {loadingMore ? (
                   <span className="flex items-center gap-2">
-                    <i className="bx bx-loader-alt bx-spin"></i> Loading...
+                    <ButtonSpinner size="w-4 h-4" /> Loading...
                   </span>
                 ) : (
                   `Show More Reviews (${reviews.length} of ${pagination.total})`

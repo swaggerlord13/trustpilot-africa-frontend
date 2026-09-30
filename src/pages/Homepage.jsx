@@ -1,12 +1,13 @@
 import api from "../api.js";
+import ButtonSpinner from "../components/ButtonSpinner.jsx";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../pages/Header.jsx";
 import AddCompanyModal from "../components/AddCompanyModal.jsx";
+import useAddCompany from "../hooks/useAddCompany.js";
 import LazyLoadingCompanyCards from "../components/LazyLoadingCompanyCards.jsx";
 import OptimizedReviewsPage from "../components/OptimizedReviewsPage.jsx";
 import Footer from "../components/Footer.jsx";
-import { useToast } from "../components/Toast.jsx";
 import "../styles/Homepage.css";
 import { useAuth } from "../components/AuthProvider.jsx";
 
@@ -85,11 +86,10 @@ function StatCard({ icon, value, suffix, label, color }) {
 
 function Homepage() {
   const navigate = useNavigate();
-  const showToast = useToast();
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isModalOpen, openModal, closeModal, handleAddCompany } = useAddCompany();
   const [defaultCompanyName, setDefaultCompanyName] = useState("");
   const [stats, setStats] = useState({ companies: 0, reviews: 0, users: 0, categories: 0 });
   const searchTimeout = useRef(null);
@@ -141,17 +141,7 @@ function Homepage() {
     }
   };
 
-  const handleAddCompany = async ({ name, url, city, country }) => {
-    const newCompany = { name, url: url || "", city: city || "", country: country || "" };
-    try {
-      const { data: savedCompany } = await api.post("/companies", newCompany);
-      setIsModalOpen(false);
-      navigate(`/company/${savedCompany.slug}?openReview=true`);
-    } catch (err) {
-      console.error("Error creating company:", err);
-      showToast(`Error adding company: ${err.response?.data?.message || err.message}`, "error");
-    }
-  };
+
 
   const { isLoggedIn } = useAuth();
 
@@ -193,7 +183,7 @@ function Homepage() {
             <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-slate-800 shadow-2xl rounded-xl max-h-80 overflow-y-auto z-50 border border-slate-200 dark:border-slate-700" style={{backdropFilter:"none"}}>
               {isSearching ? (
                 <div className="flex items-center justify-center py-4 text-slate-400">
-                  <i className="bx bx-loader-alt bx-spin mr-2"></i> Searching...
+                  <ButtonSpinner size="w-4 h-4" className="mr-2" /> Searching...
                 </div>
               ) : suggestions.length > 0 ? (
                 <>
@@ -242,7 +232,7 @@ function Homepage() {
                       className="px-4 py-2 rounded-xl text-white bg-brand-500 hover:bg-brand-600 transition font-semibold text-sm"
                       onClick={() => {
                         setDefaultCompanyName(search);
-                        setIsModalOpen(true);
+                        openModal();
                       }}
                     >
                       <i className="bx bx-plus mr-1"></i>
@@ -543,7 +533,7 @@ function Homepage() {
       {/* Add Company Modal */}
       <AddCompanyModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={closeModal}
         onAddCompany={handleAddCompany}
         defaultName={defaultCompanyName}
       />

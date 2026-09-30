@@ -1,18 +1,16 @@
 import api from "../api.js";
 import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Header from "../pages/Header";
 import Loader from "../components/Loader";
 import StarRating from "../components/StarRatings";
 import AddCompanyModal from "../components/AddCompanyModal";
+import useAddCompany from "../hooks/useAddCompany.js";
 import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
-import { useToast } from "../components/Toast.jsx";
 
 const Subcategory = () => {
-  const navigate = useNavigate();
   const { slug, subSlug } = useParams();
-  const showToast = useToast();
   const [categoryName, setCategoryName] = useState("");
   const [subCategoryName, setSubCategoryName] = useState("");
   const [companies, setCompanies] = useState([]);
@@ -25,7 +23,16 @@ const Subcategory = () => {
   const itemsPerPage = 6;
 
   // Modal state
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isModalOpen, openModal, closeModal, handleAddCompany } = useAddCompany({
+    onSuccess: (savedCompany) => {
+      setCompanies(prev => [{
+        ...savedCompany,
+        avgRating: 0,
+        reviews: [],
+        reviewCount: 0,
+      }, ...prev]);
+    },
+  });
   const [defaultCompanyName, setDefaultCompanyName] = useState("");
 
   useEffect(() => {
@@ -79,36 +86,7 @@ const Subcategory = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginated = filtered.slice(startIndex, startIndex + itemsPerPage);
 
-  // Add company handler
-  const handleAddCompany = async ({ name, url, city, country }) => {
-    const newCompany = { 
-      name, 
-      url: url || "",
-      city: city || "",
-      country: country || "",
-    };
-    
-    try {
-      const { data: savedCompany } = await api.post("/companies", newCompany);
-      
-      // Add the new company with empty reviews
-      const newCompanyWithReviews = {
-        ...savedCompany,
-        avgRating: 0,
-        reviews: [],
-        reviewCount: 0
-      };
-      
-      setCompanies(prev => [newCompanyWithReviews, ...prev]);
-      setIsModalOpen(false);
-      
-      navigate(`/company/${savedCompany.slug}?openReview=true`);
-      
-    } catch (err) {
-      console.error("Error creating company:", err);
-      showToast(`Error adding company: ${err.response?.data?.message || err.message}`, "error");
-    }
-  };
+
 
   return (
     <>
@@ -160,7 +138,7 @@ const Subcategory = () => {
               className="px-4 py-2 rounded-lg bg-brand-500 text-white hover:bg-brand-600"
               onClick={() => {
                 setDefaultCompanyName(search);
-                setIsModalOpen(true);
+                openModal();
               }}
             >
               + Add New Company
@@ -275,7 +253,7 @@ const Subcategory = () => {
         {/* Add company modal */}
         <AddCompanyModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={closeModal}
           onAddCompany={handleAddCompany}
           defaultName={defaultCompanyName}
         />

@@ -1,21 +1,20 @@
 import api from "../api.js";
+import ButtonSpinner from "../components/ButtonSpinner.jsx";
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { useParams, Link, useNavigate} from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Header from "../pages/Header";
 import Loader from "../components/Loader";
 import StarRating from "../components/StarRatings";
 import AddCompanyModal from "../components/AddCompanyModal";
+import useAddCompany from "../hooks/useAddCompany.js";
 import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
-import { useToast } from "../components/Toast.jsx";
 
 const CategoryCompanies = () => {
   const { slug } = useParams();
-  const navigate = useNavigate();
   const searchInputRef = useRef(null);
   
   // Data states
-  const showToast = useToast();
   const [companies, setCompanies] = useState([]);
   const [pagination, setPagination] = useState({});
   const [category, setCategory] = useState({});
@@ -63,7 +62,7 @@ const CategoryCompanies = () => {
   }, [slug, itemsPerPage]);
 
   // Modal state
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isModalOpen, openModal, closeModal, handleAddCompany } = useAddCompany();
   const [defaultCompanyName, setDefaultCompanyName] = useState("");
 
   // Handle search input change with debouncing
@@ -139,26 +138,7 @@ const CategoryCompanies = () => {
     fetchCompanies(search, newSort, 1, false);
   };
 
-  // Handle add company
-  const handleAddCompany = async ({ name, url, city, country }) => {
-    const newCompany = { name, url: url || "", city: city || "", country: country || "" };
-    
-    try {
-      const response = await api.post(`/companies`, newCompany);
-      
-      setIsModalOpen(false);
-      navigate(`/company/${response.data.slug}?openReview=true`);
-      
-    } catch (err) {
-      console.error("Error creating company:", err);
-      if (err.response && err.response.status === 409) {
-        // Let modal handle duplicate error display
-        throw err;
-      }
-      showToast(`Error adding company: ${err.message}`, "error");
-      throw err;
-    }
-  };
+
 
   if (loading) {
     return (
@@ -214,7 +194,7 @@ const CategoryCompanies = () => {
                 />
                 <div className="absolute left-4 top-3.5 text-slate-400">
                   {searchLoading ? (
-                    <div className="animate-spin w-5 h-5 border-2 border-brand-500 border-t-transparent rounded-full"></div>
+                    <ButtonSpinner />
                   ) : (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -241,7 +221,7 @@ const CategoryCompanies = () => {
               </div>
               {searchLoading && (
                 <p className="text-sm text-brand-500 mt-2 flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+                  <ButtonSpinner size="w-4 h-4" />
                   Searching...
                 </p>
               )}
@@ -291,7 +271,7 @@ const CategoryCompanies = () => {
               className="px-6 py-3 bg-brand-500 text-white rounded-xl hover:bg-brand-600 transition-colors font-semibold"
               onClick={() => {
                 setDefaultCompanyName(search);
-                setIsModalOpen(true);
+                openModal();
               }}
             >
               + Add New Company
@@ -462,7 +442,7 @@ const CategoryCompanies = () => {
         {/* Add Company Modal */}
         <AddCompanyModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={closeModal}
           onAddCompany={handleAddCompany}
           defaultName={defaultCompanyName}
         />
