@@ -86,10 +86,10 @@ export default function Privacy() {
           <p>
             For privacy-related questions, contact us at{" "}
             <a
-              href="mailto:privacy@trustpilot.africa"
+              href="mailto:privacy@trustpilotafrica.com"
               className="text-brand-500 hover:text-brand-600 hover:underline"
             >
-              privacy@trustpilot.africa
+              privacy@trustpilotafrica.com
             </a>
             .
           </p>

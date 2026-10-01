@@ -86,10 +86,10 @@ export default function Terms() {
           <p>
             If you have questions about these terms, please contact us at{" "}
             <a
-              href="mailto:hello@trustpilot.africa"
+              href="mailto:hello@trustpilotafrica.com"
               className="text-brand-500 hover:text-brand-600 hover:underline"
             >
-              hello@trustpilot.africa
+              hello@trustpilotafrica.com
             </a>
             .
           </p>

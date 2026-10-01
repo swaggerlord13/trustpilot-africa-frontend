@@ -80,8 +80,14 @@ export default function CompanyGoogleReviews({ company }) {
       </div>
 
       <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-lg px-4 py-2 mb-6 text-sm text-amber-800 dark:text-amber-300">
-        These reviews are sourced from Google and may not reflect the views of Trustpilotafrica users.
+        These reviews are sourced from Google (last 2 years only) and may not reflect the views of Trustpilotafrica users.
       </div>
+
+      {!data.reviews?.length && (
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          No Google reviews from the last 2 years. Older reviews are available on Google Maps.
+        </p>
+      )}
 
       <div className="space-y-6">
         {(data.reviews || []).map((review) => (
