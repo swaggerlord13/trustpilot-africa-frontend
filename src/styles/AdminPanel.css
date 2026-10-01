@@ -819,6 +819,117 @@
   color: #cbd5e1;
 }
 
+/* ─── Import from Google ──────────────────── */
+.admin-gimport-form {
+  margin-bottom: 20px;
+}
+
+.admin-gimport-row {
+  flex-wrap: wrap;
+}
+
+.admin-gimport-row input {
+  min-width: 220px;
+}
+
+.admin-gimport-row .admin-gimport-country {
+  flex: 0 1 220px;
+}
+
+.admin-gimport-row .admin-btn-primary,
+.admin-gimport-toolbar .admin-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 110px;
+}
+
+.admin-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-gimport-hint {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.admin-gimport-toolbar {
+  justify-content: space-between;
+}
+
+.admin-gimport-count {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.admin-gimport-name {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.admin-gimport-sub {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.admin-gimport-select {
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #0f172a;
+  background: #fff;
+  max-width: 220px;
+}
+
+.admin-gimport-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-gimport-status a {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2563eb;
+  white-space: nowrap;
+}
+
+.admin-badge-imported {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.admin-gimport-error {
+  font-size: 12px;
+  color: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .admin-gimport-name { color: #f1f5f9; }
+  :root:not([data-theme="light"]) .admin-gimport-hint,
+  :root:not([data-theme="light"]) .admin-gimport-sub,
+  :root:not([data-theme="light"]) .admin-gimport-count { color: #94a3b8; }
+  :root:not([data-theme="light"]) .admin-gimport-select { background: #0f172a; border-color: #334155; color: #e2e8f0; }
+  :root:not([data-theme="light"]) .admin-badge-imported { background: rgba(34, 197, 94, 0.15); color: #86efac; }
+  :root:not([data-theme="light"]) .admin-gimport-status a { color: #93c5fd; }
+  :root:not([data-theme="light"]) .admin-gimport-error { color: #fca5a5; }
+}
+
+:root[data-theme="dark"] .admin-gimport-name { color: #f1f5f9; }
+:root[data-theme="dark"] .admin-gimport-hint,
+:root[data-theme="dark"] .admin-gimport-sub,
+:root[data-theme="dark"] .admin-gimport-count { color: #94a3b8; }
+:root[data-theme="dark"] .admin-gimport-select { background: #0f172a; border-color: #334155; color: #e2e8f0; }
+:root[data-theme="dark"] .admin-badge-imported { background: rgba(34, 197, 94, 0.15); color: #86efac; }
+:root[data-theme="dark"] .admin-gimport-status a { color: #93c5fd; }
+:root[data-theme="dark"] .admin-gimport-error { color: #fca5a5; }
+
 /* ─── Dark mode support ───────────────────── */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .admin-layout {
