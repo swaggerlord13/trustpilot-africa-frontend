@@ -6,6 +6,8 @@ import Loader from "../components/Loader";
 import Header from "../pages/Header";
 import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
+// Reviews of the brand as a whole, with write/edit/delete
+import BrandReviews from "../components/brand/BrandReviews.jsx";
 
 // Locations loaded per page / "Load more" click
 const PAGE_SIZE = 20;
@@ -60,6 +62,27 @@ export default function BrandPage() {
   const [moreError, setMoreError] = useState("");
   // Current brand + filters; lets "Load more" drop an answer for old filters
   const listKey = useRef("");
+  // Brand currently shown, so a late header refresh for another brand is ignored
+  const slugRef = useRef(slug);
+  slugRef.current = slug;
+  // Number of the newest header refresh; an older one that answers late is ignored
+  const summaryGen = useRef(0);
+
+  // Re-read the header numbers quietly (no loading screen), e.g. after the
+  // user posts a brand review, so the overall rating updates
+  const refreshSummary = () => {
+    // Brand and number of this refresh
+    const forSlug = slug;
+    const gen = ++summaryGen.current;
+    api
+      .get(`/brands/${encodeURIComponent(forSlug)}`)
+      // Apply only the newest refresh, and only if still on the same brand
+      .then((res) => {
+        if (slugRef.current === forSlug && gen === summaryGen.current) setSummary(res.data);
+      })
+      // Keep the numbers already shown if this fails
+      .catch(() => {});
+  };
 
   // Load the brand header whenever the slug changes
   useEffect(() => {
@@ -204,7 +227,7 @@ export default function BrandPage() {
   }
 
   // Header data
-  const { brand, avgRating, reviewCount, ratingBreakdown, locationCount, states } = summary;
+  const { brand, avgRating, reviewCount, ratingBreakdown, locationCount, states, brandReviewCount = 0 } = summary;
   // Cities of the selected state, for the city filter
   const cities = states.find((s) => s.state === state)?.cities || [];
   // Website as a full link (older data may lack the https:// part)
@@ -270,7 +293,9 @@ export default function BrandPage() {
                   <StarRating rating={reviewCount ? Math.round(avgRating) : 0} />
                 </div>
                 <div className="text-sm text-slate-500 dark:text-slate-400">
-                  {reviewCount} review{reviewCount !== 1 ? "s" : ""} across all locations
+                  {reviewCount} review{reviewCount !== 1 ? "s" : ""}
+                  {/* Say how many are about the brand itself, when there are any */}
+                  {brandReviewCount > 0 ? ` (${brandReviewCount} of the brand, ${reviewCount - brandReviewCount} of locations)` : " across all locations"}
                 </div>
               </div>
             </div>
@@ -404,6 +429,9 @@ export default function BrandPage() {
               </div>
             )}
           </div>
+
+          {/* Reviews of the brand as a whole; refresh the header rating after changes */}
+          <BrandReviews brand={brand} onChanged={refreshSummary} />
         </div>
       </div>
       <Footer />

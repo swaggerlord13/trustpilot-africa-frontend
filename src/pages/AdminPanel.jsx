@@ -14,6 +14,8 @@ import AdminClaims from "../components/admin/AdminClaims.jsx";
 import AdminGoogleImport from "../components/admin/AdminGoogleImport.jsx";
 // Brands: group a business's locations under one brand page
 import AdminBrands from "../components/admin/AdminBrands.jsx";
+// Moderation of reviews of whole brands
+import AdminBrandReviews from "../components/admin/AdminBrandReviews.jsx";
 import { adminApi } from "../components/admin/adminHelpers.jsx";
 
 // ─── Main Component (shell only) ────────────────────────
@@ -48,6 +50,8 @@ export default function AdminPanel() {
     // Brands and their locations
     { key: "brands", icon: "bx-store", label: "Brands" },
     { key: "reviews", icon: "bx-message-square-detail", label: "Reviews" },
+    // Reviews of whole brands (not single locations)
+    { key: "brand-reviews", icon: "bx-message-square-dots", label: "Brand Reviews" },
     { key: "users", icon: "bx-group", label: "Users" },
     { key: "categories", icon: "bx-folder", label: "Categories" },
     { key: "claims", icon: "bx-badge-check", label: "Claims" },
@@ -124,6 +128,7 @@ export default function AdminPanel() {
           {activeSection === "companies" && <AdminCompanies />}
           {activeSection === "brands" && <AdminBrands />}
           {activeSection === "reviews" && <AdminReviews />}
+          {activeSection === "brand-reviews" && <AdminBrandReviews />}
           {activeSection === "categories" && <AdminCategories />}
           {activeSection === "claims" && <AdminClaims />}
           {activeSection === "google-import" && <AdminGoogleImport />}

@@ -19,7 +19,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Optional background calls (e.g. "do I already have a review here?") pass
+    // { skipAuthRedirect: true } so an expired login doesn't throw the user
+    // off a public page; real actions still redirect to log in
+    if (error.response?.status === 401 && !error.config?.skipAuthRedirect) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       // Only redirect if not already on login page

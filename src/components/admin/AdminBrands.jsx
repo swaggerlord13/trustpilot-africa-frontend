@@ -38,6 +38,12 @@ export default function AdminBrands() {
 
   // Number of the newest list request; older answers that arrive late are ignored
   const requestId = useRef(0);
+  // Page and search shown right now; a save/delete that finishes later
+  // refreshes these, not the ones from when the button was clicked
+  const viewRef = useRef({ page, search });
+  viewRef.current = { page, search };
+  // Reload the list exactly as it is shown now
+  const refreshCurrent = () => fetchBrands(viewRef.current.page, viewRef.current.search);
 
   // Load one page of brands for the current search
   const fetchBrands = useCallback(async (pg, term) => {
@@ -54,8 +60,10 @@ export default function AdminBrands() {
       const pages = Math.max(1, data.totalPages || 1);
       // This page no longer exists (e.g. its last brand was deleted): go to the last page
       if (pg > pages) {
+        // Show the last page and load it now (if the page number already
+        // equals it, setPage alone would not reload and the loader would stick)
         setPage(pages);
-        return;
+        return fetchBrands(pages, term);
       }
       // Store the brands and the page count
       setBrands(data.brands || []);
@@ -120,7 +128,7 @@ export default function AdminBrands() {
       showToast(isNew ? "Brand created" : "Brand updated", "success");
       // Close the form and refresh the list
       setEditing(null);
-      fetchBrands(page, search);
+      refreshCurrent();
     } catch (err) {
       // e.g. "A brand with this name already exists"
       showToast(err.message, "error");
@@ -136,7 +144,7 @@ export default function AdminBrands() {
     try {
       await adminApi(`/admin/brands/${brand._id}`, { method: "DELETE" });
       showToast("Brand deleted", "success");
-      fetchBrands(page, search);
+      refreshCurrent();
     } catch (err) {
       showToast(err.message, "error");
     }
@@ -302,7 +310,7 @@ export default function AdminBrands() {
           brand={managing}
           onClose={() => {
             setManaging(null);
-            fetchBrands(page, search);
+            refreshCurrent();
           }}
         />
       )}
