@@ -150,10 +150,14 @@ function Homepage() {
       <Header />
 
       {/* ═══════════════════════ HERO ═══════════════════════ */}
-      <div className="hero-section flex flex-col items-center justify-center w-full min-h-[520px] py-16 px-4 relative overflow-hidden bg-gradient-to-br from-brand-50 via-white to-coral-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-        {/* Subtle decorative circles */}
-        <div className="absolute top-[-120px] right-[-80px] w-[400px] h-[400px] rounded-full bg-brand-100/30 blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-[-80px] left-[-60px] w-[300px] h-[300px] rounded-full bg-coral-100/30 blur-3xl pointer-events-none"></div>
+      {/* z-20: the search results list that hangs below the hero sits above the sections after it */}
+      <div className="hero-section flex flex-col items-center justify-center w-full min-h-[520px] py-16 px-4 relative z-20 bg-gradient-to-br from-brand-50 via-white to-coral-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        {/* Subtle decorative circles, trimmed to the hero by their own frame
+            (the hero itself isn't clipped, so search results can overflow it) */}
+        <div className="hero-decor" aria-hidden="true">
+          <div className="absolute top-[-120px] right-[-80px] w-[400px] h-[400px] rounded-full bg-brand-100/30 blur-3xl"></div>
+          <div className="absolute bottom-[-80px] left-[-60px] w-[300px] h-[300px] rounded-full bg-coral-100/30 blur-3xl"></div>
+        </div>
 
         {/* Logo */}
         <img src="trustpilotafricalogo.png" alt="Logo" className="w-[80px] sm:w-[120px] mb-4 relative z-10" />

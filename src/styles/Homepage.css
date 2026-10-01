@@ -8,10 +8,21 @@
   justify-content: center;
   padding: 60px 24px 48px;
   background: linear-gradient(160deg, #F8FAFC 0%, #EEF4FF 40%, #F1F5F9 100%);
-  overflow: hidden;
+  /* Not clipped: the search results list must be able to hang below the
+     hero over the next section. The decorations are trimmed by .hero-decor */
+  overflow: visible;
 }
 
-.hero-section::before {
+/* Frame that trims the decorative glows to the hero's edges (so they never
+   cause sideways scrolling) without trimming the search results */
+.hero-decor {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-decor::before {
   content: '';
   position: absolute;
   top: -40%;
@@ -22,7 +33,7 @@
   pointer-events: none;
 }
 
-.hero-section::after {
+.hero-decor::after {
   content: '';
   position: absolute;
   bottom: -30%;
