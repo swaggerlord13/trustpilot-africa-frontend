@@ -1,55 +1,38 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import ErrorScreen from "./ErrorScreen";
 
+// Last-resort catch for errors outside the router (providers, router itself).
+// Route-level errors are handled by RouteError. This sits OUTSIDE the router,
+// so its fallback must not use router components like <Link>.
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
+    // hasError switches rendering to the fallback screen
     this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error) {
+    // Remember the error so the next render shows the fallback
     return { hasError: true, error };
   }
 
   componentDidCatch(error, errorInfo) {
+    // Log details for debugging; visitors only see the friendly screen
     console.error("ErrorBoundary caught:", error, errorInfo);
   }
 
   render() {
+    // Something crashed: show the shared error screen (plain links only)
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 px-4">
-          <div className="text-center max-w-md">
-            <div className="w-16 h-16 mx-auto mb-6 bg-coral-50 rounded-full flex items-center justify-center">
-              <i className="bx bx-error-circle text-3xl text-coral-500"></i>
-            </div>
-            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-3">
-              Something went wrong
-            </h1>
-            <p className="text-slate-600 dark:text-slate-300 mb-6">
-              We hit an unexpected error. Try refreshing the page or going back
-              to the homepage.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <button
-                onClick={() => window.location.reload()}
-                className="px-6 py-3 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors font-semibold"
-              >
-                Refresh Page
-              </button>
-              <Link
-                to="/"
-                className="px-6 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-200 transition-colors font-semibold"
-                onClick={() => this.setState({ hasError: false, error: null })}
-              >
-                Go Home
-              </Link>
-            </div>
-          </div>
-        </div>
+        <ErrorScreen
+          title="Something went wrong"
+          message="We hit an unexpected error. Try refreshing the page or going back to the homepage."
+        />
       );
     }
 
+    // Normal case: render the app
     return this.props.children;
   }
 }
