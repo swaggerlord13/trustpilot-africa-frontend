@@ -100,14 +100,17 @@ export default function RegisterBusiness() {
     setCompanyData({ ...companyData, [name]: value });
   };
 
+  // Hide an error message automatically after 6 seconds
   useEffect(() => {
-    if (error || success) {
-      const timer = setTimeout(() => {
-        setError("");
-      }, 6000);
-      return () => clearTimeout(timer);
-    }
-  }, [error, success]);
+    // Nothing to hide
+    if (!error) return;
+    // Clear the error once the time is up
+    const timer = setTimeout(() => {
+      setError("");
+    }, 6000);
+    // Cancel the timer if the error changes or the page closes first
+    return () => clearTimeout(timer);
+  }, [error]);
 
   // Validate Step 1 before moving to Step 2
   const handleNextStep = () => {
