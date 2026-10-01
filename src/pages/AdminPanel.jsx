@@ -12,6 +12,8 @@ import AdminReviews from "../components/admin/AdminReviews.jsx";
 import AdminCategories from "../components/admin/AdminCategories.jsx";
 import AdminClaims from "../components/admin/AdminClaims.jsx";
 import AdminGoogleImport from "../components/admin/AdminGoogleImport.jsx";
+// Brands: group a business's locations under one brand page
+import AdminBrands from "../components/admin/AdminBrands.jsx";
 import { adminApi } from "../components/admin/adminHelpers.jsx";
 
 // ─── Main Component (shell only) ────────────────────────
@@ -43,6 +45,8 @@ export default function AdminPanel() {
   const navItems = [
     { key: "overview", icon: "bx-grid-alt", label: "Overview" },
     { key: "companies", icon: "bx-buildings", label: "Companies" },
+    // Brands and their locations
+    { key: "brands", icon: "bx-store", label: "Brands" },
     { key: "reviews", icon: "bx-message-square-detail", label: "Reviews" },
     { key: "users", icon: "bx-group", label: "Users" },
     { key: "categories", icon: "bx-folder", label: "Categories" },
@@ -118,6 +122,7 @@ export default function AdminPanel() {
           )}
           {activeSection === "users" && <AdminUsers />}
           {activeSection === "companies" && <AdminCompanies />}
+          {activeSection === "brands" && <AdminBrands />}
           {activeSection === "reviews" && <AdminReviews />}
           {activeSection === "categories" && <AdminCategories />}
           {activeSection === "claims" && <AdminClaims />}

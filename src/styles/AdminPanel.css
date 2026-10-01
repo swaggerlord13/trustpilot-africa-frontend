@@ -1153,3 +1153,67 @@
     flex-direction: column;
   }
 }
+
+/* ─── Brand locations dialog ──────────────── */
+/* Wider dialog: location names and addresses are long */
+.admin-modal-wide {
+  max-width: 680px;
+}
+
+/* Section titles inside the dialog ("In this brand", "Suggestions") */
+.admin-brandloc-heading {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 18px 0 6px;
+}
+
+/* First heading needs no top gap */
+.admin-modal-body .admin-brandloc-heading:first-of-type {
+  margin-top: 0;
+}
+
+/* Checkbox + text row; overrides the full-width modal label/input styles */
+.admin-modal-body .admin-brandloc-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Checkboxes keep their normal size inside the modal */
+.admin-modal-body .admin-brandloc-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* Text column next to a checkbox stacks name over address */
+.admin-brandloc-check .admin-glink-info {
+  display: flex;
+  flex-direction: column;
+}
+
+/* "Select all" sits above the list */
+.admin-modal-body .admin-brandloc-all {
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* Spacing for the "Load more" button */
+.admin-brandloc-more {
+  margin-top: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .admin-brandloc-heading { color: #f1f5f9; }
+  :root:not([data-theme="light"]) .admin-modal-body .admin-brandloc-check { color: #e2e8f0; }
+}
+
+:root[data-theme="dark"] .admin-brandloc-heading { color: #f1f5f9; }
+:root[data-theme="dark"] .admin-modal-body .admin-brandloc-check { color: #e2e8f0; }
