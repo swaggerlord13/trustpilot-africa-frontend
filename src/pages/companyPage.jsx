@@ -195,6 +195,15 @@ export default function CompanyPage() {
 
               <div className="flex-1">
                 <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100 mb-2">{company.name}</h1>
+                {/* This location belongs to a brand: link to the brand page with all its locations */}
+                {company.brand?.slug && (
+                  <Link
+                    to={`/brand/${company.brand.slug}`}
+                    className="inline-flex items-center gap-1 mb-3 text-sm font-medium text-brand-600 dark:text-brand-300 hover:underline"
+                  >
+                    <i className="bx bx-store"></i> Part of {company.brand.name}. See all locations
+                  </Link>
+                )}
                 <div className="flex flex-wrap items-center gap-4 mb-4">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-brand-50 dark:bg-brand-500/20 text-brand-700 dark:text-brand-300">
                     <i className="bx bx-category mr-1"></i> {company.category?.name || "General"}

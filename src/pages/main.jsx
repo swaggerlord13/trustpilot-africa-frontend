@@ -32,6 +32,8 @@ const Subcategory = lazy(() => import("../pages/Subcategory.jsx"));
 const ProfilePage = lazy(() => import("../pages/Profile.jsx"));
 const AdminPanel = lazy(() => import("../pages/AdminPanel.jsx"));
 const CompanyPage = lazy(() => import("./companyPage.jsx"));
+// Brand page: all locations of one business, e.g. /brand/mtn
+const BrandPage = lazy(() => import("./BrandPage.jsx"));
 const CompanyDashboard = lazy(() => import("./CompanyDashboard.jsx"));
 const BrowseReviews = lazy(() => import("../pages/BrowseReviews.jsx"));
 const BrowseCompanies = lazy(() => import("../pages/BrowseCompanies.jsx"));
@@ -77,6 +79,7 @@ const router = createBrowserRouter([
   { path: "/categories/:slug", element: <CategoryCompanies /> },
   { path: "/categories/:slug/:subSlug", element: <Subcategory /> },
   { path: "/company/:slug", element: <CompanyPage /> },
+  { path: "/brand/:slug", element: <BrandPage /> },
 
   // User
   { path: "/profile", element: <ProtectedRoute><ProfilePage /></ProtectedRoute> },
