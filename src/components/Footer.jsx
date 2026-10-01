@@ -78,10 +78,10 @@ export default function Footer() {
             <p className="text-sm mb-5">
               Have questions? Reach out at{" "}
               <a
-                href="mailto:hello@trustpilot.africa"
+                href="mailto:hello@trustpilotafrica.com"
                 className="text-brand-200 hover:text-white transition-colors"
               >
-                hello@trustpilot.africa
+                hello@trustpilotafrica.com
               </a>
             </p>
             <div className="flex gap-3">
