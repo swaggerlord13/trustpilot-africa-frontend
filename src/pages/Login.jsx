@@ -4,7 +4,9 @@ import '../styles/Login.css';
 import Header from '../pages/Header.jsx';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, useSearchParams } from "react-router-dom";
+// Where to go after logging in (?redirect=), limited to our own site
+import { safeRedirect } from "../utils/authRedirect.js";
 import { GoogleLogin } from "@react-oauth/google";
 import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../components/AuthProvider.jsx";
@@ -26,6 +28,9 @@ export default function Login() {
   const navigate = useNavigate();
   const showToast = useToast();
   const { login, isLoggedIn } = useAuth();
+  // Page to return to after login, e.g. /brand/mtn ("/" when none or unsafe)
+  const [searchParams] = useSearchParams();
+  const returnTo = safeRedirect(searchParams.get("redirect"));
 
   // Auto-hide notifications after 5 seconds
   useEffect(() => {
@@ -61,10 +66,10 @@ export default function Login() {
         localStorage.removeItem("rememberedEmail");
       }
 
-      // Show success message and redirect
+      // Show success message and go back to where the user came from
       showToast("Welcome back! Redirecting...", "success");
       setTimeout(() => {
-        navigate("/", { replace: true });
+        navigate(returnTo, { replace: true });
       }, 1500);
 
     } catch (err) {
@@ -90,8 +95,8 @@ export default function Login() {
     }
   }, []);
 
-  // Already logged in? Send to homepage
-  if (isLoggedIn) return <Navigate to="/" replace />;
+  // Logged in (already, or just now): send to the page they wanted, or home
+  if (isLoggedIn) return <Navigate to={returnTo} replace />;
 
   // Resend verification email
   const handleResendVerification = async () => {
@@ -131,7 +136,7 @@ export default function Login() {
 
       showToast("Welcome! Redirecting...", "success");
       setTimeout(() => {
-        navigate("/", { replace: true });
+        navigate(returnTo, { replace: true });
       }, 1500);
     } catch (err) {
       setError(err.response?.data?.error || err.message || "Google login failed. Please try again.");

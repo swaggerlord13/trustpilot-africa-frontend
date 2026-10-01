@@ -27,7 +27,7 @@ export default function VerifyEmail() {
 
         // Redirect to login after 3 seconds
         setTimeout(() => {
-          navigate("/Login", { replace: true });
+          navigate("/login", { replace: true });
         }, 3000);
       } catch (err) {
         setStatus("error");

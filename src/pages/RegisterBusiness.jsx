@@ -182,7 +182,7 @@ export default function RegisterBusiness() {
       
       // Redirect to login (they need to verify email first)
       setTimeout(() => {
-        navigate("/Login", { replace: true });
+        navigate("/login", { replace: true });
       }, 3500);
 
     } catch (err) {

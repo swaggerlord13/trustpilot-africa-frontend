@@ -1,6 +1,8 @@
 import api from "../../api.js";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+// Login URL that comes back to this brand page afterwards
+import { loginUrl } from "../../utils/authRedirect.js";
 import { useAuth } from "../AuthProvider.jsx";
 import { useToast } from "../Toast.jsx";
 import UserAvatar from "../UserAvatar.jsx";
@@ -213,6 +215,8 @@ function ReviewCard({ review, isMine, onEdit, onDelete, deleting }) {
 export default function BrandReviews({ brand, onChanged }) {
   const { isLoggedIn } = useAuth();
   const showToast = useToast();
+  // Current page, so "Log in" can come back here
+  const location = useLocation();
   // Reviews shown in the list
   const [reviews, setReviews] = useState([]);
   // Paging info from the server
@@ -354,7 +358,7 @@ export default function BrandReviews({ brand, onChanged }) {
         {/* Write / edit / log in, depending on who is looking */}
         {formMode === null && (
           !isLoggedIn ? (
-            <Link to="/login" className="px-5 py-2.5 rounded-lg font-semibold text-white bg-brand-500 hover:bg-brand-600 text-center">
+            <Link to={loginUrl(`${location.pathname}${location.search}`)} className="px-5 py-2.5 rounded-lg font-semibold text-white bg-brand-500 hover:bg-brand-600 text-center">
               Log in to write a review
             </Link>
           ) : mine ? (

@@ -1,4 +1,6 @@
 import axios from "axios";
+// Login URL that returns to the current page afterwards
+import { loginUrlForCurrentPage } from "./utils/authRedirect.js";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -27,7 +29,8 @@ api.interceptors.response.use(
       localStorage.removeItem("user");
       // Only redirect if not already on login page
       if (!window.location.pathname.includes("/login")) {
-        window.location.href = "/login";
+        // Log in again, then come back to this page
+        window.location.href = loginUrlForCurrentPage();
       }
     }
     return Promise.reject(error);

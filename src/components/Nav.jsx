@@ -1,8 +1,13 @@
 import '../styles/nav.css';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useLocation } from 'react-router-dom';
+// Login URL that comes back to the current page afterwards
+import { loginUrl } from "../utils/authRedirect.js";
 import UserAvatar from "./UserAvatar";
 
 function Nav({ isOpen, onClose, user, onLogout }) {
+  // Current page, so "Login" brings the user back here
+  const location = useLocation();
+
   const handleLinkClick = () => {
     if (onClose) {
       onClose();
@@ -85,10 +90,10 @@ function Nav({ isOpen, onClose, user, onLogout }) {
       ) : (
         <div className="mobile-auth-section">
           <div className="mobile-auth-buttons">
-            <Link to="/Login" onClick={handleLinkClick}>
+            <Link to={loginUrl(`${location.pathname}${location.search}`)} onClick={handleLinkClick}>
               <button className="Loginbutton">Login</button>
             </Link>
-            <Link to="/Register" onClick={handleLinkClick}>
+            <Link to="/register" onClick={handleLinkClick}>
               <button className="Registerbutton">Register</button>
             </Link>
           </div>
