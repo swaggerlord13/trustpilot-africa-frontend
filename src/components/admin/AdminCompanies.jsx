@@ -3,6 +3,7 @@ import { adminApi, formatDate, Pagination, toggleSelect, toggleSelectAll } from 
 import { useToast } from "../Toast.jsx";
 import Loader from "../Loader.jsx";
 import CompanyLogo from "../CompanyLogo";
+import AdminGoogleLinkModal from "./AdminGoogleLinkModal.jsx";
 
 export default function AdminCompanies() {
   const showToast = useToast();
@@ -15,6 +16,7 @@ export default function AdminCompanies() {
   const [editForm, setEditForm] = useState({});
   const [allCategories, setAllCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [linkingCompany, setLinkingCompany] = useState(null);
 
   const fetchCompanies = useCallback(async (pg, search) => {
     setLoading(true);
@@ -75,6 +77,23 @@ export default function AdminCompanies() {
     }
   };
 
+  const unlinkGoogle = async (company) => {
+    if (!window.confirm(`Remove the Google link from "${company.name}"? Its Google reviews will stop showing.`)) return;
+    try {
+      await adminApi(`/google/unlink/${company._id}`, { method: "POST" });
+      showToast("Google link removed", "success");
+      fetchCompanies(companiesPage, companiesSearch);
+    } catch (err) {
+      showToast(err.message, "error");
+    }
+  };
+
+  const handleLinked = () => {
+    showToast("Linked to Google. Its page now shows Google reviews.", "success");
+    setLinkingCompany(null);
+    fetchCompanies(companiesPage, companiesSearch);
+  };
+
   const bulkDeleteCompanies = async () => {
     if (selectedCompanies.length === 0) return;
     if (!window.confirm(`Delete ${selectedCompanies.length} company(ies) and all their reviews? This cannot be undone.`)) return;
@@ -128,6 +147,7 @@ export default function AdminCompanies() {
                 <th>Category</th>
                 <th>Location</th>
                 <th>Website</th>
+                <th>Google</th>
                 <th>Added</th>
                 <th>Actions</th>
               </tr>
@@ -159,6 +179,20 @@ export default function AdminCompanies() {
                       <a href={c.url} target="_blank" rel="noreferrer">{c.url.replace(/^https?:\/\//, "").slice(0, 30)}</a>
                     ) : "-"}
                   </td>
+                  <td>
+                    {c.googlePlaceId ? (
+                      <span className="admin-gimport-status">
+                        <span className="admin-badge admin-badge-imported">Linked</span>
+                        <button className="admin-action-btn" title="Remove Google link" onClick={() => unlinkGoogle(c)}>
+                          <i className="bx bx-unlink"></i>
+                        </button>
+                      </span>
+                    ) : (
+                      <button className="admin-btn-secondary admin-btn-sm" onClick={() => setLinkingCompany(c)}>
+                        <i className="bx bxl-google"></i> Link
+                      </button>
+                    )}
+                  </td>
                   <td>{formatDate(c.createdAt)}</td>
                   <td>
                     <div className="admin-action-group">
@@ -170,13 +204,21 @@ export default function AdminCompanies() {
                 </tr>
               ))}
               {companies.length === 0 && (
-                <tr><td colSpan="7" className="admin-empty">No companies found</td></tr>
+                <tr><td colSpan="8" className="admin-empty">No companies found</td></tr>
               )}
             </tbody>
           </table>
         </div>
       )}
       <Pagination page={companiesPage} setPage={setCompaniesPage} total={companiesTotal} />
+
+      {linkingCompany && (
+        <AdminGoogleLinkModal
+          company={linkingCompany}
+          onClose={() => setLinkingCompany(null)}
+          onLinked={handleLinked}
+        />
+      )}
 
       {/* Edit Company Modal */}
       {editingCompany && (

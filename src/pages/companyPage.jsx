@@ -218,12 +218,14 @@ export default function CompanyPage() {
                     <i className="bx bx-globe mr-2"></i> Visit Website
                   </a>
                 )}
-                {company.source === "google" && (
+                {(company.source === "google" || company.address || company.phone || company.country) && (
                   <div className="flex flex-wrap items-center gap-3 mt-4">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30">
-                      <img src="https://www.google.com/favicon.ico" alt="" className="w-3 h-3" />
-                      Imported from Google
-                    </span>
+                    {company.source === "google" && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30">
+                        <img src="https://www.google.com/favicon.ico" alt="" className="w-3 h-3" />
+                        Imported from Google
+                      </span>
+                    )}
                     {company.address && (
                       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
                         <i className="bx bx-map"></i> {company.address}
