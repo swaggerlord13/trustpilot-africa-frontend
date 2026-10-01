@@ -1,5 +1,6 @@
 import '../styles/nav.css';
 import { NavLink, Link } from 'react-router-dom';
+import UserAvatar from "./UserAvatar";
 
 function Nav({ isOpen, onClose, user, onLogout }) {
   const handleLinkClick = () => {
@@ -63,9 +64,9 @@ function Nav({ isOpen, onClose, user, onLogout }) {
         <div className="mobile-profile-section">
           <div className="profile_info">
           <Link to="/profile" onClick={handleLinkClick} className="profile-link-mobile">
-            <img
+            <UserAvatar
               className="profileimage"
-              src={user.profileImage || "/default-avatar.svg"}
+              src={user.profileImage}
               alt="Profile"
             />
             <span className="user-name">{user.name || "User"}</span>

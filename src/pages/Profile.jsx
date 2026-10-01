@@ -8,6 +8,8 @@ import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../components/AuthProvider.jsx";
 import Loader from "../components/Loader.jsx";
 import ButtonSpinner from "../components/ButtonSpinner.jsx";
+import UserAvatar from "../components/UserAvatar";
+import CompanyLogo from "../components/CompanyLogo";
 
 export default function ProfilePage() {
   const { isLoggedIn, logout, updateUser } = useAuth();
@@ -94,7 +96,7 @@ export default function ProfilePage() {
           comment: review.comment,
           rating: review.rating,
           user: userRes.data.name,
-          image: userRes.data.profileImage || "/default-avatar.svg",
+          image: userRes.data.profileImage || "",
           date: new Date(review.createdAt).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
@@ -184,13 +186,10 @@ export default function ProfilePage() {
             <div className="flex flex-col md:flex-row items-center gap-8">
               {/* Profile Image */}
               <div className="flex flex-col items-center">
-                <img
-                  src={user?.profileImage || "https://avatar.iran.liara.run/public"}
+                <UserAvatar
+                  src={user?.profileImage}
                   alt="Profile"
                   className="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-brand-500"
-                  onError={(e) => {
-                    e.target.src = "https://avatar.iran.liara.run/public";
-                  }}
                 />
                 <button
                   onClick={() => setShowModal(true)}
@@ -244,11 +243,12 @@ export default function ProfilePage() {
                       to={`/company-dashboard/${comp._id}`}
                       className="flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-600 hover:border-brand-300 hover:shadow-md transition-all duration-200"
                     >
-                      <img
-                        src={comp.logo || ""}
-                        alt={comp.name}
-                        className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-600 flex-shrink-0"
-                        onError={(e) => { e.target.src = ""; }}
+                      <CompanyLogo
+                        logo={comp.logo}
+                        url={comp.url}
+                        name={comp.name}
+                        size={48}
+                        className="flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-slate-800 dark:text-slate-100 truncate">{comp.name}</h3>
