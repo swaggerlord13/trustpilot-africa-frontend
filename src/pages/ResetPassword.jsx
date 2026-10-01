@@ -38,7 +38,7 @@ export default function ResetPassword() {
 
       showToast("Password reset successful! Redirecting to login...", "success");
       setTimeout(() => {
-        navigate("/Login", { replace: true });
+        navigate("/login", { replace: true });
       }, 2500);
     } catch (err) {
       setError(err.response?.data?.error || err.message || "Something went wrong");

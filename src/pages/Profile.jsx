@@ -10,6 +10,8 @@ import Loader from "../components/Loader.jsx";
 import ButtonSpinner from "../components/ButtonSpinner.jsx";
 import UserAvatar from "../components/UserAvatar";
 import CompanyLogo from "../components/CompanyLogo";
+// Login URL that returns to a page afterwards
+import { loginUrl } from "../utils/authRedirect.js";
 
 export default function ProfilePage() {
   const { isLoggedIn, logout, updateUser } = useAuth();
@@ -68,7 +70,8 @@ export default function ProfilePage() {
     const fetchUserData = async () => {
       try {
         if (!isLoggedIn) {
-          window.location.href = "/login";
+          // Log in, then come back to the profile
+          window.location.href = loginUrl("/profile");
           return;
         }
 
@@ -124,7 +127,8 @@ export default function ProfilePage() {
         // Only log out on 401 (expired/invalid token), not on server errors or network blips
         if (err.response?.status === 401) {
           logout();
-          window.location.href = "/login";
+          // Log in again, then come back to the profile
+          window.location.href = loginUrl("/profile");
         }
       } finally {
         setLoading(false);

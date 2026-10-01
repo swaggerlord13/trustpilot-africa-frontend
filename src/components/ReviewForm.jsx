@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../components/AuthProvider.jsx";
 import ButtonSpinner from "./ButtonSpinner.jsx";
+// Login URL that returns to the current page afterwards
+import { loginUrlForCurrentPage } from "../utils/authRedirect.js";
 
 export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
   const [rating, setRating] = useState(0);
@@ -111,7 +113,8 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
       if (err.response?.status === 401) {
         showToast("Your session has expired. Please log in again.", "warning");
         logout();
-        setTimeout(() => { navigate("/login"); }, 1500);
+        // Log in again, then come back to this company page
+        setTimeout(() => { navigate(loginUrlForCurrentPage()); }, 1500);
       } else {
         showToast(err.response?.data?.error || "Failed to submit review. Please try again.", "error");
       }

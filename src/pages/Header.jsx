@@ -1,4 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+// Login URL that comes back to the current page afterwards
+import { loginUrl } from "../utils/authRedirect.js";
 import Nav from "../components/Nav.jsx";
 import "../styles/Header.css";
 import { useState, useEffect } from "react";
@@ -10,6 +12,8 @@ export default function Header() {
   const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  // Current page, so "Login" brings the user back here
+  const location = useLocation();
   const { resolved, toggle } = useTheme();
 
   useEffect(() => {
@@ -102,7 +106,7 @@ export default function Header() {
             </>
           ) : (
             <>
-              <Link to="/login" onClick={closeMobileMenu}>
+              <Link to={loginUrl(`${location.pathname}${location.search}`)} onClick={closeMobileMenu}>
                 <button className="Loginbutton">Login</button>
               </Link>
               <Link to="/register" onClick={closeMobileMenu}>
