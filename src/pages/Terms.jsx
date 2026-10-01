@@ -17,7 +17,7 @@ export default function Terms() {
             1. Acceptance of Terms
           </h2>
           <p>
-            By accessing or using TrustPilot Africa, you agree to be bound by
+            By accessing or using Trustpilotafrica, you agree to be bound by
             these Terms of Service. If you do not agree to these terms, please
             do not use our platform.
           </p>
@@ -67,7 +67,7 @@ export default function Terms() {
             6. Limitation of Liability
           </h2>
           <p>
-            TrustPilot Africa provides the platform as-is. We are not
+            Trustpilotafrica provides the platform as-is. We are not
             responsible for the accuracy of user-generated reviews or company
             information. We do not endorse any company listed on our platform.
           </p>

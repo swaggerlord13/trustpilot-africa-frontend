@@ -306,7 +306,7 @@ function Homepage() {
               Simple &amp; Transparent
             </span>
             <h2 className="text-2xl md:text-4xl font-extrabold text-slate-800 dark:text-white mb-3 tracking-tight text-center">
-              How TrustPilot Africa Works
+              How Trustpilotafrica Works
             </h2>
             <p className="text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
               Three simple steps to help you make smarter decisions or grow your business
@@ -418,7 +418,7 @@ function Homepage() {
       <LazyLoadingCompanyCards />
 
 
-      {/* ═══════════════════════ WHY TRUSTPILOT AFRICA ═══════════════════════ */}
+      {/* ═══════════════════════ WHY TRUSTPILOTAFRICA ═══════════════════════ */}
       <section className="py-16 md:py-20 bg-slate-50 dark:bg-slate-800/50">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-14">

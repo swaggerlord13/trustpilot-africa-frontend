@@ -12,7 +12,7 @@ export default function Footer() {
             <Link to="/" className="flex items-center gap-2 mb-4">
               <img
                 src="/trustpilotafricalogo.png"
-                alt="TrustPilot Africa"
+                alt="Trustpilotafrica"
                 className="h-8 brightness-0 invert"
               />
             </Link>
@@ -127,7 +127,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="border-t border-slate-800 mt-12 pt-6 text-center text-sm text-slate-600">
-          <p>&copy; {currentYear} TrustPilot Africa. All rights reserved.</p>
+          <p>&copy; {currentYear} Trustpilotafrica. All rights reserved.</p>
         </div>
       </div>
     </footer>
