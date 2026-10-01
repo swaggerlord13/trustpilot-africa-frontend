@@ -910,6 +910,45 @@
   color: #dc2626;
 }
 
+.admin-glink-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.admin-glink-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-glink-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.admin-glink-info {
+  min-width: 0;
+}
+
+.admin-glink-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .admin-gimport-name { color: #f1f5f9; }
   :root:not([data-theme="light"]) .admin-gimport-hint,
@@ -919,6 +958,8 @@
   :root:not([data-theme="light"]) .admin-badge-imported { background: rgba(34, 197, 94, 0.15); color: #86efac; }
   :root:not([data-theme="light"]) .admin-gimport-status a { color: #93c5fd; }
   :root:not([data-theme="light"]) .admin-gimport-error { color: #fca5a5; }
+  :root:not([data-theme="light"]) .admin-glink-item { border-color: #334155; }
+  :root:not([data-theme="light"]) .admin-glink-loading { color: #94a3b8; }
 }
 
 :root[data-theme="dark"] .admin-gimport-name { color: #f1f5f9; }
@@ -929,6 +970,8 @@
 :root[data-theme="dark"] .admin-badge-imported { background: rgba(34, 197, 94, 0.15); color: #86efac; }
 :root[data-theme="dark"] .admin-gimport-status a { color: #93c5fd; }
 :root[data-theme="dark"] .admin-gimport-error { color: #fca5a5; }
+:root[data-theme="dark"] .admin-glink-item { border-color: #334155; }
+:root[data-theme="dark"] .admin-glink-loading { color: #94a3b8; }
 
 /* ─── Dark mode support ───────────────────── */
 @media (prefers-color-scheme: dark) {
