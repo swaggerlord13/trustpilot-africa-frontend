@@ -89,7 +89,7 @@ function Homepage() {
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const { isModalOpen, openModal, closeModal, handleAddCompany } = useAddCompany();
+  const { isModalOpen, openModal, closeModal, handleAddCompany, canAdd } = useAddCompany();
   const [defaultCompanyName, setDefaultCompanyName] = useState("");
   const [stats, setStats] = useState({ companies: 0, reviews: 0, users: 0, categories: 0 });
   const searchTimeout = useRef(null);
@@ -108,7 +108,7 @@ function Homepage() {
           });
         }
       })
-      .catch(e => { /* stats are best-effort */ });
+      .catch(() => { /* stats are best-effort */ });
   }, []);
 
   // Debounced search
@@ -228,16 +228,19 @@ function Homepage() {
                       <i className="bx bx-search mr-1"></i>
                       Full Search
                     </Link>
-                    <button
-                      className="px-4 py-2 rounded-xl text-white bg-brand-500 hover:bg-brand-600 transition font-semibold text-sm"
-                      onClick={() => {
-                        setDefaultCompanyName(search);
-                        openModal();
-                      }}
-                    >
-                      <i className="bx bx-plus mr-1"></i>
-                      Add Company
-                    </button>
+                    {/* Admins only: the server refuses everyone else */}
+                    {canAdd && (
+                      <button
+                        className="px-4 py-2 rounded-xl text-white bg-brand-500 hover:bg-brand-600 transition font-semibold text-sm"
+                        onClick={() => {
+                          setDefaultCompanyName(search);
+                          openModal();
+                        }}
+                      >
+                        <i className="bx bx-plus mr-1"></i>
+                        Add Company
+                      </button>
+                    )}
                   </div>
                 </div>
               )}

@@ -39,7 +39,8 @@ export default function CompanyDashboard() {
 
         setStats(statsRes.data);
         setReviews(reviewsRes.data.reviews);
-        setTotalReviewPages(reviewsRes.data.totalPages);
+        // The dashboard route reports the page count as pagination.pages
+        setTotalReviewPages(reviewsRes.data.pagination?.pages || 1);
 
         const companyRes = await api.get(`/companies/by-id/${companyId}`);
         setCompany(companyRes.data);

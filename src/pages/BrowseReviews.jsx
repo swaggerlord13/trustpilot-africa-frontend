@@ -31,21 +31,28 @@ const BrowseReviews = () => {
   }, [debouncedSearch]);
 
   useEffect(() => {
+    // A newer search/page replaces this one; its late answer is ignored
+    let ignore = false;
     const fetchMixedReviews = async () => {
       setLoading(true);
       try {
         const response = await api.get(
           `/reviews/browse-mixed?page=${currentPage}&limit=20${debouncedSearch ? `&search=${encodeURIComponent(debouncedSearch)}` : ""}`
         );
+        if (ignore) return;
         setReviews(response.data.reviews || []);
         setPagination(response.data.pagination || {});
       } catch (err) {
+        if (ignore) return;
         console.error("Error fetching mixed reviews:", err);
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
     };
     fetchMixedReviews();
+    return () => {
+      ignore = true;
+    };
   }, [currentPage, debouncedSearch]);
 
   const truncateText = (text, limit = 200) => {

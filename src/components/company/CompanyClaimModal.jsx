@@ -1,6 +1,5 @@
 import { useState } from "react";
 import api from "../../api.js";
-import { useAuth } from "../AuthProvider.jsx";
 import { useToast } from "../Toast.jsx";
 
 export default function CompanyClaimModal({ company, onClose, onClaimSubmitted }) {

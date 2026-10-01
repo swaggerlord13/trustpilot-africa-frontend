@@ -3,6 +3,8 @@ import api from "../../api.js";
 import { useToast } from "../Toast.jsx";
 import ButtonSpinner from "../ButtonSpinner.jsx";
 import CompanyLogo from "../CompanyLogo";
+// Opens saved websites correctly ("acme.com" -> "https://acme.com")
+import { externalUrl } from "../../utils/externalUrl.js";
 
 export default function DashboardProfile({ company, setCompany, companyId }) {
   const showToast = useToast();
@@ -171,10 +173,10 @@ export default function DashboardProfile({ company, setCompany, companyId }) {
               <p className="text-slate-700 dark:text-slate-200 mt-1">{company.description}</p>
             </div>
           )}
-          {company?.url && (
+          {externalUrl(company?.url) && (
             <div>
               <label className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">Website</label>
-              <a href={company.url.startsWith("http") ? company.url : `https://${company.url}`} target="_blank" rel="noreferrer" className="text-brand-500 hover:text-brand-600 block mt-1">
+              <a href={externalUrl(company.url)} target="_blank" rel="noreferrer" className="text-brand-500 hover:text-brand-600 block mt-1">
                 {company.url}
               </a>
             </div>

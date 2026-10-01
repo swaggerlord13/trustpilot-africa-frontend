@@ -17,11 +17,12 @@ function useIsDesktop(breakpoint = 1024) {
     const handle = (e) => setIsDesktop(e.matches);
 
     if (mql.addEventListener) mql.addEventListener("change", handle);
-    else mql.addEventListener(handle);
+    // Old Safari only has the older addListener API
+    else mql.addListener(handle);
 
     return () => {
       if (mql.removeEventListener) mql.removeEventListener("change", handle);
-      else mql.removeEventListener(handle);
+      else mql.removeListener(handle);
     };
   }, [breakpoint]);
 

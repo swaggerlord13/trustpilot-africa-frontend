@@ -4,7 +4,9 @@ import Header from "../pages/Header.jsx";
 import { Link } from 'react-router-dom';
 import '../styles/Register.css';
 import { useState, useEffect } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, useSearchParams } from "react-router-dom";
+// Where to go after signing up (?redirect=), limited to our own site
+import { safeRedirect } from "../utils/authRedirect.js";
 import { GoogleLogin } from "@react-oauth/google";
 import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../components/AuthProvider.jsx";
@@ -31,6 +33,18 @@ export default function Register() {
   const navigate = useNavigate();
   const showToast = useToast();
   const { login, isLoggedIn } = useAuth();
+  // Page to return to after sign-up, e.g. the company page with a review draft
+  const [searchParams] = useSearchParams();
+  const returnTo = safeRedirect(searchParams.get("redirect"));
+  // After a successful sign-up the user is logged in and sent back via
+  // ?redirect=, so the one-time note for the login page is no longer needed
+  const clearLoginReturnNote = () => {
+    try {
+      localStorage.removeItem("loginReturnTo");
+    } catch {
+      // Storage blocked: nothing to clear
+    }
+  };
 
   // Password strength calculator
   const calculatePasswordStrength = (password) => {
@@ -67,7 +81,8 @@ export default function Register() {
   }, [error]);
 
   // Already logged in? Send to homepage
-  if (isLoggedIn) return <Navigate to="/" replace />;
+  // Signed up (or already logged in): back to the page they came from, or home
+  if (isLoggedIn) return <Navigate to={returnTo} replace />;
 
   // Submit form (normal email/password registration)
   const handleSubmit = async (e) => {
@@ -114,7 +129,8 @@ export default function Register() {
 
       // Redirect to login page (they need to verify first)
       setTimeout(() => {
-        navigate("/login", { replace: true });
+        clearLoginReturnNote();
+        navigate(returnTo, { replace: true });
       }, 3000);
 
     } catch (err) {
@@ -152,7 +168,8 @@ export default function Register() {
 
       showToast("Account created! Redirecting...", "success");
       setTimeout(() => {
-        navigate("/", { replace: true });
+        clearLoginReturnNote();
+        navigate(returnTo, { replace: true });
       }, 1500);
     } catch (err) {
       setError(err.response?.data?.error || err.message || "Google sign up failed. Please try again.");

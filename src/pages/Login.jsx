@@ -14,6 +14,20 @@ import { useAuth } from "../components/AuthProvider.jsx";
 const HAS_GOOGLE = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 import Footer from "../components/Footer.jsx";
 
+// One-time return page saved when a guest wrote a review (see ReviewForm),
+// or "". Removed as soon as it's read, so an abandoned draft can't keep
+// redirecting later logins.
+function takeLoginReturnTo() {
+  try {
+    const page = localStorage.getItem("loginReturnTo") || "";
+    localStorage.removeItem("loginReturnTo");
+    return page;
+  } catch {
+    // Storage blocked: no saved page
+    return "";
+  }
+}
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +44,10 @@ export default function Login() {
   const { login, isLoggedIn } = useAuth();
   // Page to return to after login, e.g. /brand/mtn ("/" when none or unsafe)
   const [searchParams] = useSearchParams();
-  const returnTo = safeRedirect(searchParams.get("redirect"));
+  // No ?redirect=: fall back to the page a guest wrote a review on (saved once,
+  // read once per visit here), so after signing up and verifying they land on it
+  const [savedReturn] = useState(takeLoginReturnTo);
+  const returnTo = safeRedirect(searchParams.get("redirect") || savedReturn);
 
   // Auto-hide notifications after 5 seconds
   useEffect(() => {
@@ -106,7 +123,7 @@ export default function Login() {
       await api.post("/auth/resend-verification", { email: verificationEmail });
       setResendSuccess("Verification email sent! Check your inbox.");
       setError("");
-    } catch (err) {
+    } catch {
       setError("Could not resend verification email. Try again later.");
     } finally {
       setResendLoading(false);

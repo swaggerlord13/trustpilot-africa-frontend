@@ -9,6 +9,8 @@ import AddCompanyModal from "../components/AddCompanyModal";
 import useAddCompany from "../hooks/useAddCompany.js";
 import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
+// Opens saved websites correctly ("acme.com" -> "https://acme.com")
+import { externalUrl } from "../utils/externalUrl.js";
 
 const CategoryCompanies = () => {
   const { slug } = useParams();
@@ -62,7 +64,7 @@ const CategoryCompanies = () => {
   }, [slug, itemsPerPage]);
 
   // Modal state
-  const { isModalOpen, openModal, closeModal, handleAddCompany } = useAddCompany();
+  const { isModalOpen, openModal, closeModal, handleAddCompany, canAdd } = useAddCompany();
   const [defaultCompanyName, setDefaultCompanyName] = useState("");
 
   // Handle search input change with debouncing
@@ -244,20 +246,23 @@ const CategoryCompanies = () => {
               {search ? `No companies found for "${search}"` : 'No companies found'}
             </h3>
             <p className="text-slate-500 dark:text-slate-400 mb-6">
-              {search 
-                ? "Try adjusting your search terms or add a new company."
-                : "Be the first to add a company in this category!"
+              {search
+                ? "Try adjusting your search terms."
+                : "No companies in this category yet."
               }
             </p>
-            <button
-              className="px-6 py-3 bg-brand-500 text-white rounded-xl hover:bg-brand-600 transition-colors font-semibold"
-              onClick={() => {
-                setDefaultCompanyName(search);
-                openModal();
-              }}
-            >
-              + Add New Company
-            </button>
+            {/* Admins only: the server refuses everyone else */}
+            {canAdd && (
+              <button
+                className="px-6 py-3 bg-brand-500 text-white rounded-xl hover:bg-brand-600 transition-colors font-semibold"
+                onClick={() => {
+                  setDefaultCompanyName(search);
+                  openModal();
+                }}
+              >
+                + Add New Company
+              </button>
+            )}
           </div>
         ) : (
           <>
@@ -339,10 +344,10 @@ const CategoryCompanies = () => {
                   </div>
 
                   {/* Website Link */}
-                  {company.url && (
+                  {externalUrl(company.url) && (
                     <div className="px-6 pb-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
                       <a
-                        href={company.url.startsWith('http') ? company.url : `https://${company.url}`}
+                        href={externalUrl(company.url)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-brand-500 hover:text-brand-600 truncate block pt-3"

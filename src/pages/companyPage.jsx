@@ -1,5 +1,5 @@
 import api from "../api.js";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import ReviewForm from "../components/ReviewForm";
 import StarRating from "../components/StarRatings";
@@ -7,17 +7,17 @@ import Loader from "../components/Loader";
 import Header from "../pages/Header";
 import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
-import { useToast } from "../components/Toast.jsx";
 import CompanyClaimModal from "../components/company/CompanyClaimModal.jsx";
 import CompanyReviewsList from "../components/company/CompanyReviewsList.jsx";
 import CompanyGoogleReviews from "../components/company/CompanyGoogleReviews.jsx";
 import "../styles/ReviewsText.css";
 import { useAuth } from "../components/AuthProvider.jsx";
+// Opens saved websites correctly ("acme.com" -> "https://acme.com")
+import { externalUrl } from "../utils/externalUrl.js";
 
 export default function CompanyPage() {
   const { slug } = useParams();
   const location = useLocation();
-  const showToast = useToast();
   const [company, setCompany] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,6 +25,17 @@ export default function CompanyPage() {
   const [showReviewForm, setShowReviewForm] = useState(location.search.includes('openReview=true'));
   const [sortBy, setSortBy] = useState("newest");
   const [pagination, setPagination] = useState(null);
+  // Rating over ALL of the company's reviews (not just the page on screen)
+  const [ratingSummary, setRatingSummary] = useState({ avgRating: 0, reviewCount: 0, failed: false });
+  // Company currently shown; answers for a company the user has left are dropped
+  const slugRef = useRef(slug);
+  slugRef.current = slug;
+  // Number of the newest reviews request; older answers are dropped
+  const reviewsRequest = useRef(0);
+
+  // True when the URL asked to open the review form (?openReview=true)
+  const wantsReviewForm = useRef(false);
+  wantsReviewForm.current = location.search.includes("openReview=true");
 
   // Claim state
   const [showClaimModal, setShowClaimModal] = useState(false);
@@ -61,6 +72,8 @@ export default function CompanyPage() {
     }));
 
   const fetchReviews = useCallback(async (companyData, sort, page, append = false) => {
+    // This request's number
+    const requestId = ++reviewsRequest.current;
     try {
       if (!append) setLoading(true);
       else setLoadingMore(true);
@@ -68,6 +81,8 @@ export default function CompanyPage() {
       const reviewsRes = await api.get(
         `/reviews/company/${companyData._id}/with-replies?sort=${sort}&page=${page}&limit=20`
       );
+      // A newer request (other sort, other company) was sent meanwhile
+      if (requestId !== reviewsRequest.current) return;
 
       const mapped = mapReviews(reviewsRes.data.reviews);
 
@@ -80,41 +95,91 @@ export default function CompanyPage() {
     } catch (err) {
       console.error("Error fetching reviews:", err);
     } finally {
-      setLoading(false);
-      setLoadingMore(false);
+      // Only the newest request turns the spinners off
+      if (requestId === reviewsRequest.current) {
+        setLoading(false);
+        setLoadingMore(false);
+      }
+    }
+  }, []);
+
+  // Re-read the overall rating (after load, and after a new review)
+  const refreshRating = useCallback(async (forSlug) => {
+    try {
+      const res = await api.get(`/companies/slug/${encodeURIComponent(forSlug)}/with-ratings`);
+      // Only if the user is still on this company
+      if (slugRef.current === forSlug) {
+        setRatingSummary({ avgRating: res.data.avgRating || 0, reviewCount: res.data.reviewCount || 0, failed: false });
+      }
+    } catch {
+      // Couldn't load it: the header falls back to the reviews on screen
+      if (slugRef.current === forSlug) setRatingSummary((prev) => ({ ...prev, failed: true }));
     }
   }, []);
 
   useEffect(() => {
+    // Ignore answers for this company once the user moves to another one
+    let ignore = false;
+    // Start clean: never show the previous company under the new URL
+    setCompany(null);
+    setReviews([]);
+    setPagination(null);
+    setRatingSummary({ avgRating: 0, reviewCount: 0, failed: false });
+    // Each company starts on "newest", with the form open only if asked for
+    setSortBy("newest");
+    setShowReviewForm(wantsReviewForm.current);
+    setLoading(true);
+
     const fetchData = async () => {
       try {
         const companyRes = await api.get(`/companies/slug/${slug}`);
+        if (ignore) return;
         setCompany(companyRes.data);
+        // Overall rating, in parallel with the first page of reviews
+        refreshRating(slug);
 
-        const [_, claimsRes] = await Promise.all([
-          fetchReviews(companyRes.data, "newest", 1),
-          isLoggedIn
-            ? api.get("/company-claims/my-claims").catch(() => null)
-            : Promise.resolve(null)
-        ]);
+        // First page of reviews, newest first
+        await fetchReviews(companyRes.data, "newest", 1);
 
-        if (claimsRes) {
-          const claimsArray = Array.isArray(claimsRes.data) ? claimsRes.data : [];
-          const companyClaim = claimsArray.find(
-            (c) => c.company?._id === companyRes.data._id || c.company === companyRes.data._id
-          );
-          setClaimStatus(companyClaim ? companyClaim.status : "none");
-        }
-
-        setLoading(false);
+        if (!ignore) setLoading(false);
       } catch (err) {
         console.error("Error fetching company or reviews:", err);
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
     };
 
     if (slug) fetchData();
-  }, [slug, fetchReviews]);
+    // Leaving this company: drop its late answers
+    return () => {
+      ignore = true;
+    };
+  }, [slug, fetchReviews, refreshRating]);
+
+  // The user's claim on this company. Separate from the page load, so logging
+  // in or out only refreshes this (and never wipes a review being typed)
+  const companyId = company?._id;
+  useEffect(() => {
+    // Ignore a late answer for another company or login state
+    let ignore = false;
+    // Unknown until checked; never carry over the previous company's status
+    setClaimStatus(null);
+    if (!companyId || !isLoggedIn) return undefined;
+    api
+      .get("/company-claims/my-claims")
+      .then((claimsRes) => {
+        if (ignore) return;
+        const claimsArray = Array.isArray(claimsRes.data) ? claimsRes.data : [];
+        const companyClaim = claimsArray.find(
+          (c) => c.company?._id === companyId || c.company === companyId
+        );
+        setClaimStatus(companyClaim ? companyClaim.status : "none");
+      })
+      // Couldn't check: show no claim buttons rather than a wrong one
+      .catch(() => {});
+    return () => {
+      ignore = true;
+    };
+  }, [companyId, isLoggedIn]);
 
   const handleSortChange = (newSort) => {
     setSortBy(newSort);
@@ -130,16 +195,23 @@ export default function CompanyPage() {
   const handleReviewAdded = (newReview) => {
     setReviews([newReview, ...reviews]);
     setShowReviewForm(false);
+    // The overall rating and count changed
+    refreshRating(slug);
   };
 
-  const avgRating = reviews.length > 0
-    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
-    : 0;
+  // Overall average and count across ALL reviews. If that lookup failed, fall
+  // back to the reviews on screen and the list's total so the header isn't empty
+  const shownReviewCount = ratingSummary.failed ? (pagination?.total ?? reviews.length) : ratingSummary.reviewCount;
+  const fallbackAvg = reviews.length ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
+  const avgRating = ratingSummary.failed
+    ? (reviews.length ? fallbackAvg.toFixed(1) : 0)
+    : (ratingSummary.reviewCount > 0 ? ratingSummary.avgRating.toFixed(1) : 0);
 
+  // Colour by the rounded star value: 1-2 red, 3 amber, 4-5 green
   const getRatingColor = (rating) => {
     const numRating = parseFloat(rating);
-    if (numRating <= 2) return "text-red-500";
-    if (numRating === 3) return "text-yellow-500";
+    if (numRating < 2.5) return "text-red-500";
+    if (numRating < 3.5) return "text-yellow-500";
     return "text-green-500";
   };
 
@@ -217,9 +289,9 @@ export default function CompanyPage() {
                 {company.description && (
                   <p className="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">{company.description}</p>
                 )}
-                {company.url && (
+                {externalUrl(company.url) && (
                   <a
-                    href={company.url.startsWith('http') ? company.url : `https://${company.url}`}
+                    href={externalUrl(company.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors duration-200 font-semibold"
@@ -267,7 +339,7 @@ export default function CompanyPage() {
                   </div>
                 )}
                 <div className="text-sm text-slate-500 dark:text-slate-400">
-                  Based on {pagination?.total ?? reviews.length} review{(pagination?.total ?? reviews.length) !== 1 ? 's' : ''}
+                  Based on {shownReviewCount} review{shownReviewCount !== 1 ? 's' : ''}
                 </div>
               </div>
             </div>
@@ -332,6 +404,8 @@ export default function CompanyPage() {
             pagination={pagination}
             onLoadMore={handleLoadMore}
             loadingMore={loadingMore}
+            // Edit/delete changes the overall rating
+            onReviewsChanged={() => refreshRating(slug)}
           />
 
           {/* Google Reviews Section */}

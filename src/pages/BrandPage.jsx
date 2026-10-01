@@ -8,6 +8,8 @@ import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
 // Reviews of the brand as a whole, with write/edit/delete
 import BrandReviews from "../components/brand/BrandReviews.jsx";
+// Opens saved websites correctly ("acme.com" -> "https://acme.com")
+import { externalUrl } from "../utils/externalUrl.js";
 
 // Locations loaded per page / "Load more" click
 const PAGE_SIZE = 20;
@@ -231,7 +233,7 @@ export default function BrandPage() {
   // Cities of the selected state, for the city filter
   const cities = states.find((s) => s.state === state)?.cities || [];
   // Website as a full link (older data may lack the https:// part)
-  const websiteHref = brand.website && (brand.website.startsWith("http") ? brand.website : `https://${brand.website}`);
+  const websiteHref = externalUrl(brand.website);
 
   return (
     <>

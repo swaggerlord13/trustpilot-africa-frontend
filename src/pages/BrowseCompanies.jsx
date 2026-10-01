@@ -1,5 +1,5 @@
 import api from "../api.js";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Header from "../pages/Header";
 import Footer from "../components/Footer.jsx";
@@ -28,14 +28,20 @@ export default function BrowseCompanies() {
   const [locations, setLocations] = useState({ cities: [], countries: [], countryToCities: {} });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  // Debounce search input
+  // Debounce search input. Only a real change of the text resets to page 1,
+  // so opening a shared link like ?q=bank&page=3 stays on page 3
   useEffect(() => {
+    // Text already searched for (e.g. on first load): nothing to do
+    if (query === debouncedQuery) return;
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
       setCurrentPage(1);
     }, 400);
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [query, debouncedQuery]);
+
+  // Number of the newest search; slower, older answers are ignored
+  const searchRequest = useRef(0);
 
   // Load categories and locations for filter dropdowns
   useEffect(() => {
@@ -56,6 +62,8 @@ export default function BrowseCompanies() {
 
   // Fetch companies
   const fetchCompanies = useCallback(async () => {
+    // This search's number
+    const requestId = ++searchRequest.current;
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -69,13 +77,17 @@ export default function BrowseCompanies() {
       params.set("limit", "20");
 
       const res = await api.get("/companies/search?" + params.toString());
+      // A newer search was started meanwhile: its results win
+      if (requestId !== searchRequest.current) return;
       setCompanies(res.data.companies || []);
       setPagination(res.data.pagination || {});
     } catch (err) {
+      if (requestId !== searchRequest.current) return;
       console.error("Error searching companies:", err);
       setCompanies([]);
     } finally {
-      setLoading(false);
+      // Only the newest search turns the loader off
+      if (requestId === searchRequest.current) setLoading(false);
     }
   }, [debouncedQuery, city, country, category, minRating, sort, currentPage]);
 

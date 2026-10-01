@@ -27,11 +27,12 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
           setRating(draft.rating || 0);
           setComment(draft.comment || "");
           setTitle(draft.title || "");
-          localStorage.removeItem("pendingReview");
+          // Kept until the review is actually posted (removed on success below),
+          // so it survives e.g. "please verify your email first"
           showToast("Your saved draft has been restored!", "success");
         }
       }
-    } catch (e) { /* ignore parse errors */ }
+    } catch { /* ignore parse errors */ }
   }, [companyId]);
 
   const handleSubmit = async (e) => {
@@ -48,9 +49,14 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
         returnUrl: window.location.pathname
       };
       localStorage.setItem("pendingReview", JSON.stringify(pendingReview));
-      showToast("Create an account to publish your review. We\'ll save your draft!", "info", 5000);
+      // Page to open after logging in (used once by the login page), with the
+      // review form open so the draft shows up
+      const returnPage = `${window.location.pathname}?openReview=true`;
+      localStorage.setItem("loginReturnTo", returnPage);
+      showToast("Create an account to publish your review. We'll save your draft!", "info", 5000);
       setTimeout(() => {
-        navigate("/register");
+        // Sign up, then come straight back here (the draft is restored on this page)
+        navigate(`/register?redirect=${encodeURIComponent(returnPage)}`);
       }, 1500);
       return;
     }
@@ -92,6 +98,10 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
           day: "numeric",
         }),
         company: companyName,
+        // Author id, so Edit/Delete show on the new review straight away
+        userId: authUser?._id || null,
+        // Link to this company page
+        url: window.location.pathname,
         companyimage: res.data.company?.logo || res.data.company?.companyImage || "",
         companyUrl: res.data.company?.url || "",
         category: "Company",
@@ -107,6 +117,8 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
       setRating(5);
       
       localStorage.removeItem("pendingReview");
+      // Posted: the "come back to this page after login" note is done too
+      localStorage.removeItem("loginReturnTo");
       showToast("Review submitted successfully!", "success");
     } catch (err) {
       console.error("Error submitting review:", err);

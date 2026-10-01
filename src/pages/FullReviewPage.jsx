@@ -7,6 +7,8 @@ import StarRating from "../components/StarRatings";
 import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
 import UserAvatar from "../components/UserAvatar";
+// Opens saved websites correctly ("acme.com" -> "https://acme.com")
+import { externalUrl } from "../utils/externalUrl.js";
 
 const FullReviewPage = () => {
   const { reviewId } = useParams();
@@ -16,12 +18,19 @@ const FullReviewPage = () => {
   const [companyReply, setCompanyReply] = useState(null);
 
   useEffect(() => {
+    // Clicking a related review reuses this page: drop answers for the old one
+    let ignore = false;
+    // Start clean so the previous review never shows under the new URL
+    setReview(null);
+    setRelatedReviews([]);
+    setLoading(true);
     const fetchReviewData = async () => {
       // Clear previous review's reply so it doesn't bleed into the next one
       setCompanyReply(null);
       try {
         // Fetch the main review
         const reviewResponse = await api.get(`/reviews/${reviewId}`);
+        if (ignore) return;
         const reviewData = reviewResponse.data;
 
         // Format the review data
@@ -50,8 +59,9 @@ const FullReviewPage = () => {
         // Fetch company reply for this review
         try {
           const replyRes = await api.get(`/reviews/${reviewId}/replies`);
+          if (ignore) return;
           setCompanyReply(replyRes.data || null);
-        } catch (err) {
+        } catch {
           setCompanyReply(null);
         }
 
@@ -61,7 +71,8 @@ const FullReviewPage = () => {
             `/reviews/company/${reviewData.company._id}`
           );
           
-          const related = relatedResponse.data
+          // The list endpoint returns { reviews, pagination }, not a bare array
+          const related = (relatedResponse.data.reviews || [])
             .filter(r => r._id !== reviewId) // Exclude current review
             .slice(0, 3) // Limit to 3 related reviews
             .map(r => ({
@@ -77,19 +88,24 @@ const FullReviewPage = () => {
               })
             }));
           
+          if (ignore) return;
           setRelatedReviews(related);
         }
 
       } catch (err) {
         console.error("Error fetching review:", err);
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
     };
 
     if (reviewId) {
       fetchReviewData();
     }
+    // Leaving this review: ignore its late answers
+    return () => {
+      ignore = true;
+    };
   }, [reviewId]);
 
   if (loading) {
@@ -237,9 +253,9 @@ const FullReviewPage = () => {
                     {review.company}
                   </h4>
                   <p className="text-slate-600 dark:text-slate-300 mb-2">{review.category}</p>
-                  {review.companyUrl && (
+                  {externalUrl(review.companyUrl) && (
                     <a
-                      href={review.companyUrl.startsWith('http') ? review.companyUrl : `https://${review.companyUrl}`}
+                      href={externalUrl(review.companyUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-brand-500 hover:text-brand-600 text-sm"
