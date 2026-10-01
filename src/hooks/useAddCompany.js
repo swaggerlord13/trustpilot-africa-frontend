@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api.js";
 import { useToast } from "../components/Toast.jsx";
+// Only admins may create companies (the server enforces this too)
+import { useAuth } from "../components/AuthProvider.jsx";
 
 /**
  * Shared hook for the "Add a Company" modal flow.
@@ -14,6 +16,9 @@ export default function useAddCompany({ onSuccess } = {}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const showToast = useToast();
+  // Show "Add Company" only to admins; for everyone else the server would refuse
+  const { isAdmin } = useAuth();
+  const canAdd = Boolean(isAdmin);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -32,5 +37,5 @@ export default function useAddCompany({ onSuccess } = {}) {
     }
   };
 
-  return { isModalOpen, openModal, closeModal, handleAddCompany };
+  return { isModalOpen, openModal, closeModal, handleAddCompany, canAdd };
 }

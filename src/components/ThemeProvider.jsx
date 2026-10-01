@@ -44,7 +44,7 @@ export default function ThemeProvider({ children }) {
 
   // Persist mode choice
   useEffect(() => {
-    try { localStorage.setItem("tp-theme", mode); } catch {}
+    try { localStorage.setItem("tp-theme", mode); } catch { /* storage blocked (private mode): theme just isn't remembered */ }
   }, [mode]);
 
   const toggle = () => {

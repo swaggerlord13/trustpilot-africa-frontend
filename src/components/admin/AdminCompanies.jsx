@@ -4,6 +4,8 @@ import { useToast } from "../Toast.jsx";
 import Loader from "../Loader.jsx";
 import CompanyLogo from "../CompanyLogo";
 import AdminGoogleLinkModal from "./AdminGoogleLinkModal.jsx";
+// Opens saved websites correctly ("acme.com" -> "https://acme.com")
+import { externalUrl } from "../../utils/externalUrl.js";
 
 export default function AdminCompanies() {
   const showToast = useToast();
@@ -175,8 +177,8 @@ export default function AdminCompanies() {
                   </td>
                   <td>{c.city && c.country ? `${c.city}, ${c.country}` : c.country || "-"}</td>
                   <td className="admin-url-cell">
-                    {c.url ? (
-                      <a href={c.url} target="_blank" rel="noreferrer">{c.url.replace(/^https?:\/\//, "").slice(0, 30)}</a>
+                    {externalUrl(c.url) ? (
+                      <a href={externalUrl(c.url)} target="_blank" rel="noopener noreferrer">{c.url.replace(/^https?:\/\//, "").slice(0, 30)}</a>
                     ) : "-"}
                   </td>
                   <td>

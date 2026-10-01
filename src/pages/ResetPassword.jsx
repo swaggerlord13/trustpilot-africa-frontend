@@ -34,7 +34,7 @@ export default function ResetPassword() {
     setLoading(true);
 
     try {
-      const { data } = await api.put(`/auth/reset-password/${token}`, { password });
+      await api.put(`/auth/reset-password/${token}`, { password });
 
       showToast("Password reset successful! Redirecting to login...", "success");
       setTimeout(() => {

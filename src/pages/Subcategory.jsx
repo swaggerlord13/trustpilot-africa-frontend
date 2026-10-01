@@ -8,6 +8,8 @@ import AddCompanyModal from "../components/AddCompanyModal";
 import useAddCompany from "../hooks/useAddCompany.js";
 import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
+// Opens saved websites correctly ("acme.com" -> "https://acme.com")
+import { externalUrl } from "../utils/externalUrl.js";
 
 const Subcategory = () => {
   const { slug, subSlug } = useParams();
@@ -23,7 +25,7 @@ const Subcategory = () => {
   const itemsPerPage = 6;
 
   // Modal state
-  const { isModalOpen, openModal, closeModal, handleAddCompany } = useAddCompany({
+  const { isModalOpen, openModal, closeModal, handleAddCompany, canAdd } = useAddCompany({
     onSuccess: (savedCompany) => {
       setCompanies(prev => [{
         ...savedCompany,
@@ -134,15 +136,18 @@ const Subcategory = () => {
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center gap-3">
             <p className="text-slate-500 dark:text-slate-400 italic">No companies found.</p>
-            <button
-              className="px-4 py-2 rounded-lg bg-brand-500 text-white hover:bg-brand-600"
-              onClick={() => {
-                setDefaultCompanyName(search);
-                openModal();
-              }}
-            >
-              + Add New Company
-            </button>
+            {/* Admins only: the server refuses everyone else */}
+            {canAdd && (
+              <button
+                className="px-4 py-2 rounded-lg bg-brand-500 text-white hover:bg-brand-600"
+                onClick={() => {
+                  setDefaultCompanyName(search);
+                  openModal();
+                }}
+              >
+                + Add New Company
+              </button>
+            )}
           </div>
         ) : (
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -165,10 +170,10 @@ const Subcategory = () => {
                     >
                       {company.name}
                     </Link>
-                    {company.url && (
+                    {externalUrl(company.url) && (
                       <p className="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[200px]">
                         <a
-                          href={company.url}
+                          href={externalUrl(company.url)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:text-brand-500"

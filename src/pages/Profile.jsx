@@ -123,7 +123,7 @@ export default function ProfilePage() {
           const claimsRes = await api.get(`/company-claims/my-companies`);
           // API returns a plain array, not { companies: [...] }
           setMyCompanies(Array.isArray(claimsRes.data) ? claimsRes.data : []);
-        } catch (err) {
+        } catch {
           console.log("No claimed companies");
         }
       } catch (err) {

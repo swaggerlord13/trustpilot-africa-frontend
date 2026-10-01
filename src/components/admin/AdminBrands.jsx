@@ -4,6 +4,8 @@ import { useToast } from "../Toast.jsx";
 import Loader from "../Loader.jsx";
 import CompanyLogo from "../CompanyLogo";
 import AdminBrandLocations from "./AdminBrandLocations.jsx";
+// Opens saved websites correctly ("acme.com" -> "https://acme.com")
+import { externalUrl } from "../../utils/externalUrl.js";
 
 // Empty form used when creating a brand
 const EMPTY_FORM = { name: "", website: "", logo: "", description: "", category: "" };
@@ -214,8 +216,8 @@ export default function AdminBrands() {
                   </td>
                   {/* Website without the https:// prefix */}
                   <td className="admin-url-cell">
-                    {b.website ? (
-                      <a href={b.website} target="_blank" rel="noopener noreferrer">
+                    {externalUrl(b.website) ? (
+                      <a href={externalUrl(b.website)} target="_blank" rel="noopener noreferrer">
                         {b.website.replace(/^https?:\/\//, "").replace(/\/$/, "").slice(0, 30)}
                       </a>
                     ) : "-"}

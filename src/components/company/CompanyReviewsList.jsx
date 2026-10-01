@@ -10,7 +10,7 @@ import ButtonSpinner from "../ButtonSpinner.jsx";
 import ReviewSortBar from "../ReviewSortBar.jsx";
 import "../../styles/ReviewSortBar.css";
 
-export default function CompanyReviewsList({ company, reviews, setReviews, claimStatus, sortBy, onSortChange, pagination, onLoadMore, loadingMore }) {
+export default function CompanyReviewsList({ company, reviews, setReviews, claimStatus, sortBy, onSortChange, pagination, onLoadMore, loadingMore, onReviewsChanged }) {
   const showToast = useToast();
   const scrollRef = useRef(null);
 
@@ -37,6 +37,8 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
       setReviews(prev => prev.map(r => r._id === reviewId ? { ...r, comment: editComment, rating: editRating } : r));
       setEditingReview(null);
       showToast("Review updated!", "success");
+      // The company's overall rating changed
+      onReviewsChanged?.();
     } catch (err) {
       showToast(err.response?.data?.error || "Failed to update review", "error");
     }
@@ -48,6 +50,8 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
       await api.delete(`/reviews/${reviewId}`);
       setReviews(prev => prev.filter(r => r._id !== reviewId));
       showToast("Review deleted", "success");
+      // The company's overall rating changed
+      onReviewsChanged?.();
     } catch (err) {
       showToast(err.response?.data?.error || "Failed to delete review", "error");
     }
@@ -60,7 +64,8 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
         `/reviews/${reviewId}/user-reply`,
         { content: userReplyContent }
       );
-      setReviews(prev => prev.map(r => r._id === reviewId ? { ...r, userReply: res.data } : r));
+      // The server answers { success, reply }: show the reply itself
+      setReviews(prev => prev.map(r => r._id === reviewId ? { ...r, userReply: res.data.reply } : r));
       setUserReplyingTo(null);
       setUserReplyContent("");
       showToast("Reply posted!", "success");
@@ -68,10 +73,6 @@ export default function CompanyReviewsList({ company, reviews, setReviews, claim
       showToast(err.response?.data?.error || "Failed to post reply", "error");
     }
   };
-
-  const avgRating = reviews.length > 0
-    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
-    : 0;
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-100 dark:border-slate-700">

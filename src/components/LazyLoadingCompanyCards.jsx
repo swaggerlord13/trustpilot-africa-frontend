@@ -1,5 +1,5 @@
 import api from "../api.js";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Loader from "./Loader";
 import StarRating from "./StarRatings";
@@ -7,7 +7,7 @@ import ScrollDots from "./ScrollDots.jsx";
 import CompanyLogo from "./CompanyLogo";
 
 // Individual Category Section Component with Intersection Observer
-const CategorySection = ({ category, companies, index }) => {
+const CategorySection = ({ category, companies }) => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
   const scrollRef = useRef(null);
