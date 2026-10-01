@@ -4,6 +4,7 @@ import "../styles/Header.css";
 import { useState, useEffect } from "react";
 import { useTheme } from "../components/ThemeProvider.jsx";
 import { useAuth } from "../components/AuthProvider.jsx";
+import UserAvatar from "../components/UserAvatar";
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -82,9 +83,9 @@ export default function Header() {
           {user ? (
             <>
               <Link to="/profile" onClick={closeMobileMenu} className="profile-link">
-                <img
+                <UserAvatar
                   className="profileimage"
-                  src={user.profileImage || "/default-avatar.svg"}
+                  src={user.profileImage}
                   alt="Profile"
                 />
                 <span>{user.name || "User"}</span>

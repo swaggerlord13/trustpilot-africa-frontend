@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import api from "../../api.js";
 import { useToast } from "../Toast.jsx";
 import ButtonSpinner from "../ButtonSpinner.jsx";
+import CompanyLogo from "../CompanyLogo";
 
 export default function DashboardProfile({ company, setCompany, companyId }) {
   const showToast = useToast();
@@ -158,12 +159,7 @@ export default function DashboardProfile({ company, setCompany, companyId }) {
       ) : (
         <div className="space-y-4">
           <div className="flex items-start gap-4">
-            <img
-              src={company?.logo || ""}
-              alt={company?.name}
-              className="w-16 h-16 rounded-xl object-cover border border-slate-200 dark:border-slate-600"
-              onError={(e) => { e.target.src = ""; }}
-            />
+            <CompanyLogo logo={company?.logo} url={company?.url} name={company?.name} size={64} />
             <div>
               <h4 className="text-xl font-bold text-slate-800 dark:text-slate-100">{company?.name}</h4>
               <p className="text-slate-500 dark:text-slate-400 text-sm">{company?.category?.name || "General"}</p>

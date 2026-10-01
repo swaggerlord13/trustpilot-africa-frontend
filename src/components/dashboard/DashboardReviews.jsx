@@ -1,6 +1,7 @@
 import StarRating from "../StarRatings.jsx";
 import { useToast } from "../Toast.jsx";
 import useCompanyReply from "../../hooks/useCompanyReply.js";
+import UserAvatar from "../UserAvatar";
 
 export default function DashboardReviews({ companyId, stats, reviews, setReviews, reviewSort, setReviewSort, reviewPage, setReviewPage, totalReviewPages }) {
   const showToast = useToast();
@@ -44,11 +45,10 @@ export default function DashboardReviews({ companyId, stats, reviews, setReviews
             {/* Review Header */}
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3">
-                <img
-                  src={review.user?.profileImage || "/default-avatar.svg"}
+                <UserAvatar
+                  src={review.user?.profileImage}
                   alt={review.user?.name}
                   className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-600"
-                  onError={(e) => { e.target.src = "/default-avatar.svg"; }}
                 />
                 <div>
                   <p className="font-semibold text-slate-800 dark:text-slate-100">{review.user?.name || "Anonymous"}</p>
