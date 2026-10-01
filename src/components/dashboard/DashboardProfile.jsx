@@ -45,16 +45,20 @@ export default function DashboardProfile({ company, setCompany, companyId }) {
   const handleSaveProfile = async () => {
     setProfileSaving(true);
     try {
-      await api.put(
+      const res = await api.put(
         `/company-dashboard/${companyId}/profile`,
         profileForm
       );
-      setCompany((prev) => ({ ...prev, ...profileForm }));
+      // Show what the server actually saved (e.g. "acme.com" is stored as "https://acme.com/")
+      const saved = res.data?.company || profileForm;
+      setCompany((prev) => ({ ...prev, description: saved.description, url: saved.url, logo: saved.logo }));
+      setProfileForm((prev) => ({ ...prev, description: saved.description, url: saved.url, logo: saved.logo }));
       setEditMode(false);
       showToast("Company profile updated!", "success");
     } catch (err) {
       console.error("Profile save error:", err);
-      showToast("Failed to update profile", "error");
+      // The server's reason, e.g. "Website must be a valid http(s) link"
+      showToast(err.response?.data?.error || "Failed to update profile", "error");
     } finally {
       setProfileSaving(false);
     }
@@ -82,6 +86,8 @@ export default function DashboardProfile({ company, setCompany, companyId }) {
               value={profileForm.description}
               onChange={(e) => setProfileForm({ ...profileForm, description: e.target.value })}
               rows="4"
+              // Same limit as the server
+              maxLength={2000}
               className="w-full p-3 border border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 outline-none dark:bg-slate-700 resize-none text-slate-800 dark:text-slate-100"
             />
           </div>
