@@ -1,5 +1,20 @@
 import React, { useState } from "react";
-import { getDomain, getUsableImage } from "../utils/imageUtils";
+
+/**
+ * Extracts the domain from a URL string.
+ * e.g. "https://www.flutterwave.com/about" -> "flutterwave.com"
+ */
+function getDomain(url) {
+  if (!url) return null;
+  try {
+    let cleaned = url.trim();
+    if (!cleaned.startsWith("http")) cleaned = "https://" + cleaned;
+    const hostname = new URL(cleaned).hostname;
+    return hostname.replace(/^www\./, "");
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Picks a background color from the company name.
@@ -19,34 +34,26 @@ function nameColor(name) {
 }
 
 /**
- * CompanyLogo: the one place that decides which logo to show for a company.
+ * CompanyLogo: tries multiple logo sources before falling back to a letter.
  *
  * Chain: DB logo -> Google Favicon (high-res 128px) -> letter avatar
  *
- * Placeholder logo URLs from the API are ignored so they fall through to the
- * favicon. Google Favicon covers virtually every website on the internet,
+ * Google Favicon covers virtually every website on the internet,
  * so this catches African companies reliably.
  */
-const CompanyLogo = ({ logo, url, name, size = 56, className = "" }) => {
-  // Track failed URLs (not booleans) so new props get a fresh attempt
-  const [failed, setFailed] = useState(() => new Set());
-  const markFailed = (src) => setFailed((prev) => new Set(prev).add(src));
+const CompanyLogo = ({ logo, url, name = "?", size = 56, className = "" }) => {
+  const [imgFailed, setImgFailed] = useState(false);
+  const [googleFailed, setGoogleFailed] = useState(false);
 
-  const displayName = (name || "").trim() || "?";
-  const letter = displayName.charAt(0).toUpperCase();
-  const bg = nameColor(displayName);
-
-  const logoSrc = getUsableImage(logo);
   const domain = getDomain(url);
-  const faviconSrc = domain
-    ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`
-    : null;
+  const letter = name.charAt(0).toUpperCase();
+  const bg = nameColor(name);
 
   const wrapperStyle = {
     width: size,
     height: size,
     minWidth: size,
-    borderRadius: Math.min(12, Math.round(size / 4)),
+    borderRadius: 12,
     overflow: "hidden",
     display: "flex",
     alignItems: "center",
@@ -62,14 +69,14 @@ const CompanyLogo = ({ logo, url, name, size = 56, className = "" }) => {
   };
 
   // 1. Stored logo from DB
-  if (logoSrc && !failed.has(logoSrc)) {
+  if (logo && !imgFailed) {
     return (
       <div style={wrapperStyle} className={className}>
         <img
-          src={logoSrc}
-          alt={displayName}
+          src={logo}
+          alt={name}
           style={imgStyle}
-          onError={() => markFailed(logoSrc)}
+          onError={() => setImgFailed(true)}
           loading="lazy"
         />
       </div>
@@ -77,14 +84,14 @@ const CompanyLogo = ({ logo, url, name, size = 56, className = "" }) => {
   }
 
   // 2. Google Favicon API (high-res 128px). Covers almost every website
-  if (faviconSrc && !failed.has(faviconSrc)) {
+  if (domain && !googleFailed) {
     return (
       <div style={wrapperStyle} className={className}>
         <img
-          src={faviconSrc}
-          alt={displayName}
-          style={{ ...imgStyle, padding: size > 40 ? 8 : size > 28 ? 4 : 2 }}
-          onError={() => markFailed(faviconSrc)}
+          src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
+          alt={name}
+          style={{ ...imgStyle, padding: size > 40 ? 8 : 4 }}
+          onError={() => setGoogleFailed(true)}
           loading="lazy"
         />
       </div>
@@ -100,8 +107,6 @@ const CompanyLogo = ({ logo, url, name, size = 56, className = "" }) => {
         border: "none",
       }}
       className={className}
-      role="img"
-      aria-label={displayName}
     >
       <span
         style={{
@@ -111,7 +116,6 @@ const CompanyLogo = ({ logo, url, name, size = 56, className = "" }) => {
           lineHeight: 1,
           userSelect: "none",
         }}
-        aria-hidden="true"
       >
         {letter}
       </span>

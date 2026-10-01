@@ -6,8 +6,6 @@ import Loader from "../components/Loader";
 import StarRating from "../components/StarRatings";
 import Footer from "../components/Footer.jsx";
 import { useAuth } from "../components/AuthProvider.jsx";
-import UserAvatar from "../components/UserAvatar";
-import CompanyLogo from "../components/CompanyLogo";
 
 const BrowseReviews = () => {
   const { isLoggedIn } = useAuth();
@@ -122,10 +120,13 @@ const BrowseReviews = () => {
                 <div className="p-6 pb-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <UserAvatar
+                      <img
                         src={review.userImage}
                         alt={review.user}
                         className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-600"
+                        onError={(e) => {
+                          e.target.src = "/default-avatar.svg";
+                        }}
                       />
                       <div>
                         <p className="font-semibold text-slate-800 dark:text-slate-100">{review.user}</p>
@@ -185,11 +186,13 @@ const BrowseReviews = () => {
                     to={review.url}
                     className="flex items-center gap-3 hover:bg-slate-100 rounded-lg p-2 -m-2 transition-colors"
                   >
-                    <CompanyLogo
-                      logo={review.companyImage}
-                      url={review.companyUrl}
-                      name={review.company}
-                      size={32}
+                    <img
+                      src={review.companyImage}
+                      alt={review.company}
+                      className="w-8 h-8 rounded-lg object-cover border border-slate-200 dark:border-slate-600"
+                      onError={(e) => {
+                        e.target.src = "";
+                      }}
                     />
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-slate-700 dark:text-slate-200 truncate">{review.company}</p>

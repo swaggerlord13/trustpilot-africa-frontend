@@ -7,7 +7,6 @@ import Loader from "../components/Loader.jsx";
 import DashboardOverview from "../components/dashboard/DashboardOverview.jsx";
 import DashboardReviews from "../components/dashboard/DashboardReviews.jsx";
 import DashboardProfile from "../components/dashboard/DashboardProfile.jsx";
-import CompanyLogo from "../components/CompanyLogo";
 
 export default function CompanyDashboard() {
   const { companyId } = useParams();
@@ -108,7 +107,12 @@ export default function CompanyDashboard() {
           {/* Dashboard Header */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg dark:shadow-slate-900/50 p-6 mb-6 border border-slate-100 dark:border-slate-700">
             <div className="flex flex-col md:flex-row items-start gap-4">
-              <CompanyLogo logo={company?.logo} url={company?.url} name={company?.name} size={64} />
+              <img
+                src={company?.logo || ""}
+                alt={company?.name}
+                className="w-16 h-16 rounded-xl object-cover border border-slate-200 dark:border-slate-600"
+                onError={(e) => { e.target.src = ""; }}
+              />
               <div className="flex-1">
                 <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{company?.name}</h1>
                 <p className="text-slate-500 dark:text-slate-400 text-sm">{company?.category?.name || "General"}</p>

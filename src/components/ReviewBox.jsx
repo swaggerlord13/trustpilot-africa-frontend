@@ -1,10 +1,12 @@
 import '../styles/ReviewBox.css'
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import StarRating from './StarRatings';
 import CompanyLogo from './CompanyLogo';
-import UserAvatar from './UserAvatar';
 
 export default function ReviewBox({ _id, title, comment, rating, user, date, company, url, image, companyimage, companyUrl, category }) {
+  const [imageError, setImageError] = useState(false);
+
   const charLimits = {
     mobile: 137,
     tablet: 215,
@@ -22,11 +24,22 @@ export default function ReviewBox({ _id, title, comment, rating, user, date, com
   const isLong = comment.length > charLimit;
   const displayText = isLong ? comment.slice(0, charLimit) + " ..." : comment;
 
+  const handleImageError = (e) => {
+    if (!imageError) {
+      e.target.src = "/default-avatar.svg";
+      setImageError(true);
+    }
+  };
+
   return (
     <div className="Reviewcomments">
       {/* Reviewer */}
       <div className="profiledetails">
-        <UserAvatar src={image} alt={`${user}'s profile`} />
+        <img 
+          src={image} 
+          alt={`${user}'s profile`}
+          onError={handleImageError}
+        />
         <p><strong>{user}</strong></p>
       </div>
 

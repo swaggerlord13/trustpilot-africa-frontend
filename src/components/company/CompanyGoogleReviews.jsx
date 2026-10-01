@@ -1,5 +1,3 @@
-import UserAvatar from "../UserAvatar";
-
 export default function CompanyGoogleReviews({ company }) {
   if (!company.googleReviews || company.googleReviews.length === 0) return null;
 
@@ -31,10 +29,11 @@ export default function CompanyGoogleReviews({ company }) {
         {company.googleReviews.map((review, index) => (
           <div key={index} className="border-b border-slate-100 dark:border-slate-700 pb-6 last:border-0 last:pb-0">
             <div className="flex items-start gap-4">
-              <UserAvatar
-                src={review.profilePhotoUrl}
+              <img
+                src={review.profilePhotoUrl || '/default-avatar.svg'}
                 alt={review.authorName}
                 className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-600"
+                onError={(e) => { e.target.src = '/default-avatar.svg'; }}
               />
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">

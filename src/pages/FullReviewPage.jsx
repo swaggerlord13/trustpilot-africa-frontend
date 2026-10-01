@@ -6,7 +6,6 @@ import Loader from "../components/Loader";
 import StarRating from "../components/StarRatings";
 import Footer from "../components/Footer.jsx";
 import CompanyLogo from "../components/CompanyLogo";
-import UserAvatar from "../components/UserAvatar";
 
 const FullReviewPage = () => {
   const { reviewId } = useParams();
@@ -31,7 +30,7 @@ const FullReviewPage = () => {
           comment: reviewData.comment,
           rating: reviewData.rating,
           user: reviewData.user?.name || "Anonymous",
-          userImage: reviewData.user?.profileImage || "",
+          userImage: reviewData.user?.profileImage || "/default-avatar.svg",
           date: new Date(reviewData.createdAt).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
@@ -153,10 +152,13 @@ const FullReviewPage = () => {
             <div className="p-8 pb-6">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-4">
-                  <UserAvatar
+                  <img
                     src={review.userImage}
                     alt={review.user}
                     className="w-16 h-16 rounded-full object-cover border-2 border-slate-200 dark:border-slate-600"
+                    onError={(e) => {
+                      e.target.src = "/default-avatar.svg";
+                    }}
                   />
                   <div>
                     <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">{review.user}</h2>

@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { adminApi, formatDate } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
 import Loader from "../Loader.jsx";
-import CompanyLogo from "../CompanyLogo";
-import UserAvatar from "../UserAvatar";
 
 export default function AdminClaims() {
   const showToast = useToast();
@@ -89,19 +87,20 @@ export default function AdminClaims() {
                 <tr key={claim._id}>
                   <td>
                     <div className="admin-company-cell">
-                      <CompanyLogo
-                        logo={claim.company?.logo}
-                        url={claim.company?.url}
-                        name={claim.company?.name}
-                        size={32}
+                      <img
+                        src={claim.company?.logo || ""}
+                        alt=""
+                        className="admin-company-logo"
+                        onError={(e) => { e.target.src = ""; }}
                       />
                       <span>{claim.company?.name || "Unknown"}</span>
                     </div>
                   </td>
                   <td>
                     <div className="admin-user-cell">
-                      <UserAvatar
-                        src={claim.user?.profileImage}
+                      <img
+                        src={claim.user?.profileImage || "https://avatar.iran.liara.run/public"}
+                        alt=""
                         className="admin-avatar"
                       />
                       <div>

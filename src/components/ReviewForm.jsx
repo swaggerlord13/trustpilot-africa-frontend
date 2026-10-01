@@ -82,7 +82,7 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
         comment: res.data.comment,
         rating: res.data.rating,
         user: user.name,
-        image: user.profileImage || "",
+        image: user.profileImage || "/default-avatar.svg",
         date: new Date().toLocaleDateString("en-US", {
           year: "numeric",
           month: "long", 
@@ -90,7 +90,6 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
         }),
         company: companyName,
         companyimage: res.data.company?.logo || res.data.company?.companyImage || "",
-        companyUrl: res.data.company?.url || "",
         category: "Company",
         createdAt: new Date()
       };

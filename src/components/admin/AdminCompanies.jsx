@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { adminApi, formatDate, Pagination, toggleSelect, toggleSelectAll } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
 import Loader from "../Loader.jsx";
-import CompanyLogo from "../CompanyLogo";
 
 export default function AdminCompanies() {
   const showToast = useToast();
@@ -144,7 +143,12 @@ export default function AdminCompanies() {
                   </td>
                   <td>
                     <div className="admin-company-cell">
-                      <CompanyLogo logo={c.logo} url={c.url} name={c.name} size={32} />
+                      <img
+                        src={c.logo || ""}
+                        alt=""
+                        className="admin-company-logo"
+                        onError={(e) => { e.target.src = ""; }}
+                      />
                       <span>{c.name}</span>
                     </div>
                   </td>

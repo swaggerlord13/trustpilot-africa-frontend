@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { adminApi, StarDisplay, formatDate, Pagination, toggleSelect, toggleSelectAll } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
 import Loader from "../Loader.jsx";
-import CompanyLogo from "../CompanyLogo";
-import UserAvatar from "../UserAvatar";
 
 export default function AdminReviews() {
   const showToast = useToast();
@@ -116,19 +114,20 @@ export default function AdminReviews() {
                   </td>
                   <td>
                     <div className="admin-company-cell">
-                      <CompanyLogo
-                        logo={r.company?.logo}
-                        url={r.company?.url}
-                        name={r.company?.name}
-                        size={24}
+                      <img
+                        src={r.company?.logo || ""}
+                        alt=""
+                        className="admin-company-logo-sm"
+                        onError={(e) => { e.target.src = ""; }}
                       />
                       <span>{r.company?.name || "Deleted"}</span>
                     </div>
                   </td>
                   <td>
                     <div className="admin-user-cell">
-                      <UserAvatar
-                        src={r.user?.profileImage}
+                      <img
+                        src={r.user?.profileImage || "https://avatar.iran.liara.run/public"}
+                        alt=""
                         className="admin-avatar-sm"
                       />
                       <span>{r.user?.name || "Deleted"}</span>

@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { adminApi, formatDate, Pagination, toggleSelect, toggleSelectAll } from "./adminHelpers.jsx";
 import { useToast } from "../Toast.jsx";
 import Loader from "../Loader.jsx";
-import UserAvatar from "../UserAvatar";
 
 export default function AdminUsers() {
   const showToast = useToast();
@@ -114,8 +113,9 @@ export default function AdminUsers() {
                   </td>
                   <td>
                     <div className="admin-user-cell">
-                      <UserAvatar
-                        src={u.profileImage}
+                      <img
+                        src={u.profileImage || "https://avatar.iran.liara.run/public"}
+                        alt=""
                         className="admin-avatar"
                       />
                       <span>{u.name}</span>

@@ -67,7 +67,7 @@ export default function OptimizedReviewsPage({ companyId }) {
         comment: review.comment,
         rating: review.rating,
         user: review.user?.name || "Anonymous",
-        image: review.user?.profileImage || "",
+        image: review.user?.profileImage || "/default-avatar.svg",
         date: new Date(review.createdAt).toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
