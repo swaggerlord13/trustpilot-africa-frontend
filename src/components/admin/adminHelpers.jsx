@@ -10,7 +10,10 @@ export async function adminApi(path, opts = {}) {
     const res = await api({ url: path, method, ...config });
     return res.data;
   } catch (err) {
-    throw new Error(err.response?.data?.error || err.message || "Request failed");
+    const error = new Error(err.response?.data?.error || err.message || "Request failed");
+    error.status = err.response?.status;
+    error.data = err.response?.data;
+    throw error;
   }
 }
 

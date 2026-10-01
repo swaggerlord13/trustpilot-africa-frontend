@@ -11,6 +11,7 @@ import AdminCompanies from "../components/admin/AdminCompanies.jsx";
 import AdminReviews from "../components/admin/AdminReviews.jsx";
 import AdminCategories from "../components/admin/AdminCategories.jsx";
 import AdminClaims from "../components/admin/AdminClaims.jsx";
+import AdminGoogleImport from "../components/admin/AdminGoogleImport.jsx";
 import { adminApi } from "../components/admin/adminHelpers.jsx";
 
 // ─── Main Component (shell only) ────────────────────────
@@ -46,6 +47,7 @@ export default function AdminPanel() {
     { key: "users", icon: "bx-group", label: "Users" },
     { key: "categories", icon: "bx-folder", label: "Categories" },
     { key: "claims", icon: "bx-badge-check", label: "Claims" },
+    { key: "google-import", icon: "bxl-google", label: "Import from Google" },
   ];
 
   const handleLogout = () => {
@@ -119,6 +121,7 @@ export default function AdminPanel() {
           {activeSection === "reviews" && <AdminReviews />}
           {activeSection === "categories" && <AdminCategories />}
           {activeSection === "claims" && <AdminClaims />}
+          {activeSection === "google-import" && <AdminGoogleImport />}
         </div>
       </main>
     </div>
