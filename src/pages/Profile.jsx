@@ -14,7 +14,8 @@ import CompanyLogo from "../components/CompanyLogo";
 import { loginUrl } from "../utils/authRedirect.js";
 
 export default function ProfilePage() {
-  const { isLoggedIn, logout, updateUser } = useAuth();
+  // login(): saves the fresh token the server returns after a password change
+  const { isLoggedIn, logout, updateUser, login } = useAuth();
   const [user, setUser] = useState(null);
   const [userReviews, setUserReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,6 +25,8 @@ export default function ProfilePage() {
     email: "",
     profileImage: "",
     password: "",
+    // Needed only when changing the email or password
+    currentPassword: "",
   });
 
   // New states for image upload
@@ -84,6 +87,7 @@ export default function ProfilePage() {
           email: userRes.data.email,
           profileImage: userRes.data.profileImage || "",
           password: "",
+          currentPassword: "",
         });
         setProfileImagePreview(userRes.data.profileImage || "");
 
@@ -143,26 +147,54 @@ export default function ProfilePage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Changing the email or password needs the current password (server rule)
+  const emailChanged = Boolean(user && formData.email.trim().toLowerCase() !== (user.email || "").toLowerCase());
+  const needsCurrentPassword = emailChanged || formData.password.length > 0;
+
+  // Close the edit window and forget anything typed in it (a cancelled
+  // password or email change must not be sent on a later save)
+  const closeEditModal = () => {
+    setShowModal(false);
+    setFormData((prev) => ({
+      ...prev,
+      name: user?.name || prev.name,
+      email: user?.email || prev.email,
+      password: "",
+      currentPassword: "",
+    }));
+  };
+
   // Submit profile update
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.put(
-        `/auth/me`,
-        formData
-      );
+      // Only send what changed; the current password only when it's needed
+      const body = { name: formData.name, profileImage: formData.profileImage };
+      if (emailChanged) body.email = formData.email.trim();
+      if (formData.password) body.password = formData.password;
+      if (needsCurrentPassword) body.currentPassword = formData.currentPassword;
+
+      const res = await api.put(`/auth/me`, body);
 
       setUser(res.data);
-      updateUser({
+      // Saved account details for the header and other pages
+      const savedUser = {
         _id: res.data._id,
         name: res.data.name,
         email: res.data.email,
         profileImage: res.data.profileImage || "",
         isAdmin: res.data.isAdmin || false
-      });
-      
+      };
+      // A password change signs out other devices and returns a fresh token:
+      // keep it, or this browser would be signed out too
+      if (res.data.token) login(savedUser, res.data.token);
+      else updateUser(savedUser);
+
+      // Clear the password boxes and show the saved email
+      setFormData((prev) => ({ ...prev, email: res.data.email, password: "", currentPassword: "" }));
       setShowModal(false);
-      showToast("Profile updated successfully!", "success");
+      // e.g. "We sent a link to new@x.com. Your email changes once you click it."
+      showToast(res.data.message || "Profile updated successfully!", "success", res.data.message ? 8000 : undefined);
     } catch (err) {
       showToast(err.response?.data?.error || "Something went wrong", "error");
     }
@@ -408,14 +440,36 @@ export default function ProfilePage() {
                       value={formData.password}
                       onChange={handleChange}
                       placeholder="Leave blank to keep current password"
+                      minLength={8}
+                      autoComplete="new-password"
                       className="w-full p-3 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200"
                     />
                   </div>
 
+                  {/* Shown only when changing the email or password */}
+                  {needsCurrentPassword && (
+                    <div>
+                      <label htmlFor="profile-current-password" className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
+                        Current Password <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="profile-current-password"
+                        type="password"
+                        name="currentPassword"
+                        value={formData.currentPassword}
+                        onChange={handleChange}
+                        placeholder="Needed to change your email or password"
+                        autoComplete="current-password"
+                        required
+                        className="w-full p-3 border-2 border-slate-200 dark:border-slate-600 rounded-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-100 outline-none transition-all duration-200"
+                      />
+                    </div>
+                  )}
+
                   <div className="flex gap-3 pt-4">
                     <button
                       type="button"
-                      onClick={() => setShowModal(false)}
+                      onClick={closeEditModal}
                       className="flex-1 px-4 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors duration-200 font-semibold"
                     >
                       Cancel

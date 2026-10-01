@@ -28,7 +28,8 @@ export default function CompanyClaimModal({ company, onClose, onClaimSubmitted }
       onClose();
     } catch (err) {
       console.error("Claim error:", err);
-      showToast(err.response?.data?.message || "Failed to submit claim", "error");
+      // The server sends its reason as "error" (e.g. "Please verify your email first")
+      showToast(err.response?.data?.error || err.response?.data?.message || "Failed to submit claim", "error");
     } finally {
       setClaimLoading(false);
     }
