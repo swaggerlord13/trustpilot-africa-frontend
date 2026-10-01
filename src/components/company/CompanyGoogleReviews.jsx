@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import api from "../../api.js";
-import useFetch from "../../hooks/useFetch";
 import UserAvatar from "../UserAvatar";
 
 const Stars = ({ rating, className = "text-sm" }) => (
@@ -22,17 +22,35 @@ const Stars = ({ rating, className = "text-sm" }) => (
  * and require each review to credit its author and link back to Google Maps.
  */
 export default function CompanyGoogleReviews({ company }) {
-  const hasGoogleLink = Boolean(company?._id && company?.googlePlaceId);
+  const companyId = company?._id;
+  const hasGoogleLink = Boolean(companyId && company?.googlePlaceId);
 
-  const { data, loading, error } = useFetch(
-    () => api.get(`/google/reviews/${company._id}`).then((res) => res.data),
-    [company?._id, company?.googlePlaceId],
-    { immediate: hasGoogleLink }
-  );
+  // { companyId, data } or { companyId, failed: true }. Keyed by company so
+  // the previous company's reviews never show while the next ones load.
+  const [state, setState] = useState(null);
 
-  if (!hasGoogleLink || error) return null;
+  useEffect(() => {
+    if (!hasGoogleLink) return;
+    let ignore = false; // set when the user moves to another company first
+    api
+      .get(`/google/reviews/${companyId}`)
+      .then((res) => {
+        if (!ignore) setState({ companyId, data: res.data });
+      })
+      .catch(() => {
+        if (!ignore) setState({ companyId, failed: true });
+      });
+    return () => {
+      ignore = true;
+    };
+  }, [companyId, hasGoogleLink]);
 
-  if (loading) {
+  if (!hasGoogleLink) return null;
+
+  const current = state?.companyId === companyId ? state : null;
+  if (current?.failed) return null;
+
+  if (!current) {
     return (
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8 mt-8 border border-slate-100 dark:border-slate-700 animate-pulse">
         <div className="h-7 bg-slate-200 dark:bg-slate-700 rounded w-1/3 mb-6"></div>
@@ -42,7 +60,8 @@ export default function CompanyGoogleReviews({ company }) {
     );
   }
 
-  if (!data || (!data.rating && !data.reviews?.length)) return null;
+  const { data } = current;
+  if (!data.rating && !data.reviews?.length) return null;
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8 mt-8 border border-slate-100 dark:border-slate-700">
@@ -65,7 +84,7 @@ export default function CompanyGoogleReviews({ company }) {
       </div>
 
       <div className="space-y-6">
-        {data.reviews.map((review) => (
+        {(data.reviews || []).map((review) => (
           <div
             key={`${review.authorUri || review.authorName}-${review.publishTime}`}
             className="border-b border-slate-100 dark:border-slate-700 pb-6 last:border-0 last:pb-0"
