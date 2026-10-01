@@ -15,8 +15,8 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Clear any old error before trying again
     setError("");
-    setSuccess("");
     setLoading(true);
 
     try {

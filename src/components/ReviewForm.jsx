@@ -81,8 +81,9 @@ export default function ReviewForm({ companyId, companyName, onReviewAdded }) {
         title: res.data.title || title || "Review",
         comment: res.data.comment,
         rating: res.data.rating,
-        user: user.name,
-        image: user.profileImage || "",
+        // Logged-in user's name and photo, from the login session
+        user: authUser?.name || "Anonymous",
+        image: authUser?.profileImage || "",
         date: new Date().toLocaleDateString("en-US", {
           year: "numeric",
           month: "long", 
