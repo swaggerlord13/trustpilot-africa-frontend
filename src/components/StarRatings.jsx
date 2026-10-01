@@ -1,12 +1,9 @@
+// Shared colour scale for stars
+import { starColor } from "../utils/starColor.js";
+
 function StarRating({ rating }) {
-  let activeColor;
-  if (rating <=2) {
-    activeColor = "#EF4444";
-  } else if (rating === 3) {
-    activeColor = "#F59E0B";
-  }else {
-    activeColor = "#22C55E";
-  }
+  // Same colour scale everywhere stars are shown
+  const activeColor = starColor(rating);
   const stars = [];
   for (let i = 0; i < 5; i++) {
     stars.push(
