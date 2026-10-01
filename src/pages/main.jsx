@@ -6,6 +6,10 @@ import { ToastProvider } from "../components/Toast.jsx";
 import ThemeProvider from "../components/ThemeProvider.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "../components/AuthProvider.jsx";
+// Friendly page for crashes and failed page loads (replaces React Router's default)
+import RouteError from "../components/RouteError.jsx";
+// Lets RouteError auto-reload again once the app has been running normally
+import { markAppStableLater } from "../utils/chunkReload.js";
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -50,10 +54,13 @@ const router = createBrowserRouter([
         <AdminPanel />
       </ProtectedRoute>
     ),
+    // Show our friendly error page if the admin panel fails to load or crashes
+    errorElement: <RouteError />,
   },
 
   // Regular site pages: wrapped in RootLayout (header + footer)
-  { element: <RootLayout />, children: [
+  // errorElement: friendly error page for any site page that fails to load or crashes
+  { element: <RootLayout />, errorElement: <RouteError />, children: [
   { path: "/", element: <App /> },
   { path: "/about", element: <About /> },
   { path: "/login", element: <Login /> },
@@ -85,6 +92,9 @@ const router = createBrowserRouter([
   { path: "*", element: <NotFound /> },
   ]},
 ]);
+
+// After the app runs normally for a while, allow a future one-time auto-reload
+markAppStableLater();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
