@@ -208,7 +208,7 @@ export default function Register() {
                 <i className='bx bxs-user-plus'></i>
               </div>
               <h1>Create Account</h1>
-              <p>Join thousands of users on TrustPilot Africa</p>
+              <p>Join thousands of users on Trustpilotafrica</p>
             </div>
 
             <form onSubmit={handleSubmit} className="register-form">
@@ -406,7 +406,7 @@ export default function Register() {
           {/* Right side - Benefits */}
           <div className="register-benefits">
             <div className="benefits-content">
-              <h2>Why Join TrustPilot Africa?</h2>
+              <h2>Why Join Trustpilotafrica?</h2>
               <div className="benefit-list">
                 <div className="benefit-item">
                   <div className="benefit-icon">

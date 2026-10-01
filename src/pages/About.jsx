@@ -11,7 +11,7 @@ export default function About() {
       <section className="bg-gradient-to-br from-brand-500 to-brand-800 text-white py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
-            About TrustPilot Africa
+            About Trustpilotafrica
           </h1>
           <p className="text-lg md:text-xl text-brand-100 max-w-2xl mx-auto">
             We're building Africa's most trusted review platform, a place where
@@ -30,7 +30,7 @@ export default function About() {
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
               In many African markets, there's no reliable way to know whether a
               company delivers on its promises before you hand over your money.
-              TrustPilot Africa exists to change that.
+              Trustpilotafrica exists to change that.
             </p>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               We give everyday consumers a voice and give businesses a reason

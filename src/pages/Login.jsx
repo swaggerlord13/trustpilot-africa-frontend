@@ -167,7 +167,7 @@ export default function Login() {
                 <i className='bx bxs-star'></i>
               </div>
               <h1>Welcome Back</h1>
-              <p>Sign in to continue to TrustPilot Africa</p>
+              <p>Sign in to continue to Trustpilotafrica</p>
             </div>
 
             {needsVerification && (

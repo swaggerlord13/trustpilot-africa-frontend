@@ -68,7 +68,7 @@ export default function AdminPanel() {
       {/* ─── Sidebar ───────────────────────────────── */}
       <aside className={`admin-sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="admin-sidebar-header">
-          <img src="/trustpilotafricalogo.png" alt="TrustPilot Africa" className="admin-sidebar-logo" />
+          <img src="/trustpilotafricalogo.png" alt="Trustpilotafrica" className="admin-sidebar-logo" />
           <span className="admin-sidebar-title">Admin</span>
         </div>
 
